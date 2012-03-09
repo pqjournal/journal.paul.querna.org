@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Announcing Nodul.es: CPAN for Node.js</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Announcing Nodul.es: CPAN for Node.js</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Last weekend, our team named &#8220;Ponies for Orphans&#8221; participated in the <a href='http://nodeknockout.com/'>Node Knockout</a> competition.  The team included 3 of my co-workers from Cloudkick, <a href='http://russellhaering.com/'>Russell</a>, <a href='http://www.tomaz-muraus.info/'>Tomaz</a>, Logan, and myself. In 48 hours, we had to build a project based on Node.js.</p>
+
+<p>We were brainstorming ideas before the competition, thinking about all the cool things we could do;  We even planned out some multiplayer game ideas.  We quickly figured out that none of us had done anything extensive with Canvas or SVG, and the existing 3rd party libraries aren&#8217;t very comprehensive, with the possible exception of <a href='http://processingjs.org/'>Processing.js</a>. We also felt that we wanted something that would continue to be used after the competition.  We refocused our ideas on projects that would work well with our team composition of being backend programers, and eventually settled on Nodul.es:</p>
+
+<p>Nodul.es: CPAN for Node.js</p>
+
+<p><a href='http://nodul.es/'>Nodul.es</a> is a web based view of the <a href='http://github.com/isaacs/npm'>NPM package repository</a> for Node.js.  Our goal was simple, implement what we liked about <a href='http://search.cpan.org/'>CPAN for Perl</a> and <a href='http://pypi.python.org/pypi'>Python&#8217;s PyPi</a>in 48 hours of coding.</p>
+
+<p>Currently you can browse by:</p>
+
+<p>* <a href='http://nodul.es/authors/'>Author</a></p>
+
+<p>* <a href='http://nodul.es/categories/'>Categories</a></p>
+
+<p>* <a href='http://nodul.es/modules/'>Alphabetical listing</a></p>
+
+<p>Let&#8217;s look at an example of a module page;  <a href='http://nodul.es/modules/compress'>Tim Smart&#8217;s node-compress module</a> is a good example.  We pull out metadata from both the NPM repository, the latest commit from Github, and find all modules that have a dependency upon it.</p>
+
+<h2 id='internals_of_nodules'>Internals of Nodul.es</h2>
+
+<p>Nodul.es is built around Node.js, using its asynchronous abilities extensively.</p>
+
+<p>We split the system into 3 main components:</p>
+
+<p>* <a href='http://github.com/cloudkick/nodul.es/blob/nko-release/lib/services/indexer.js'>Indexer</a>:  Indexes the raw data about packages from the NPM Registry.  This is just a raw JSON dump from NPM&#8217;s CouchDB backend.</p>
+
+<p>* <a href='http://github.com/cloudkick/nodul.es/blob/nko-release/lib/services/source_downloader.js'>Source Downloader</a>: Downloads the latest releases of all NPM modules, and extracts them so we can get extra metadata out about the module.</p>
+
+<p>* <a href='http://github.com/cloudkick/nodul.es/blob/nko-release/lib/services/http.js'>Webapp</a>: The <em>simple</em> part, pulls data out of our datastore, and displays html pages to end users.</p>
+
+<p>All of these services interact MongoDB, which provides data storage for all of the indexed data, and ways to get it back out for webpages.</p>
+
+<p>We also used several external dependencies in building Nodul.es:</p>
+
+<p>* <a href='http://github.com/caolan/async'>async</a> - For flow control of asynchronous operations.</p>
+
+<p>* <a href='http://github.com/clement/clutch'>clutch</a> - For URL routing inside the webapp.</p>
+
+<p>* <a href='http://github.com/raycmorgan/Mu'>Mu</a> - For HTML Templating in the webapp.</p>
+
+<p>* <a href='http://github.com/felixge/node-paperboy/'>paperboy</a> - For static file serving (ie, CSS/javascript) in the media subdirectory.</p>
+
+<p>* <a href='http://code.google.com/p/google-code-prettify/'>prettify</a> - For code highlighting, for a feature not released!</p>
+
+<p>* <a href='http://www.diveintojavascript.com/projects/sprintf-for-javascript'>sprintf</a> - For string formatting, in the logs, nice logs are good.</p>
+
+<h2 id='whats_next_for_nodules'>What&#8217;s next for Nodul.es</h2>
+
+<p>We built Nodul.es in 48 hours, and until the voting is over, we aren&#8217;t allowed to change it.  But we have a ton of features partially completed that we had to pull because we didn&#8217;t want to ship broken and incomplete features, they include:</p>
+
+<p>* Source Browser:  We want to provide a similar source browsing experience to CPAN in this respect, letting you quickly see how someone is doing something.  We already have most of the infrastructure for this, because we have downloaded the source tarballs.</p>
+
+<p>* Sitemaps:  We are adding <a href='http://www.sitemaps.org/'>Sitemaps</a>, so that all search engines can find the modules easily.  Currently finding modules is an odd combination of using command line tools or getting lucky with a web search.</p>
+
+<p>* More Github integration: The vast majority of Node.js modules are hosted on Github, so we want to do things like show module development activity, and use that to provide sorts on things like Category pages.</p>
+
+<p>* Your ideas: <a href='http://github.com/cloudkick/nodul.es'>Nodul.es is open source</a>.  We want to make it the best module browser for any language out there.  Submit Ideas, submit pull requests, lets get going!</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/08/23/writing-node-js-native-extensions/" title="Writing Node.js Native Extensions">&larr; Writing Node.js Native Extensions</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/09/04/limiting-concurrency-node-js/" title="Limiting Concurrency in Node.js">Limiting Concurrency in Node.js &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>02 September 2010</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>OpenSSL memory use in Node.js</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>OpenSSL memory use in Node.js</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Last Thursday I went to the Joyent office for <a href='http://blog.nodejs.org/2011/03/23/office-hours/'>Node Office Hours</a> &#8211; I wanted to talk to <a href='http://blog.izs.me/'>Isaac</a> about running a <a href='https://github.com/isaacs/npm/blob/master/doc/registry.md'>private NPM registry</a>.</p>
+
+<p>Isaac answered my questions about private NPM registries, but <a href='https://github.com/mranney'>Matt Ranney</a> explained a more interesting problem. He was dialed into a conference call line for Node Office hours (he is currently living in Hawaii.) Matt explained that he is using the new <a href='http://nodejs.org/docs/v0.4/api/tls.html'>TLS module in Node v0.4</a>, and it was using <strong>1 megabyte of memory per connection!</strong> Using 1mb per connection made us think there must be something wrong in Node.js itself, so we wrote up a simple test case client and server.</p>
+
+<p>The TLS server says &#8220;welcome&#8221; to a newly connected client, and then echos anything it receives back to the client:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>tls</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;tls&#39;</span><span class='p'>);</span>
+<span class='kd'>var</span> <span class='nx'>fs</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;fs&#39;</span><span class='p'>);</span>
+
+<span class='kd'>var</span> <span class='nx'>options</span> <span class='o'>=</span> <span class='p'>{</span>
+  <span class='nx'>key</span><span class='o'>:</span> <span class='nx'>fs</span><span class='p'>.</span><span class='nx'>readFileSync</span><span class='p'>(</span><span class='s1'>&#39;test_key.pem&#39;</span><span class='p'>),</span>
+  <span class='nx'>cert</span><span class='o'>:</span> <span class='nx'>fs</span><span class='p'>.</span><span class='nx'>readFileSync</span><span class='p'>(</span><span class='s1'>&#39;test_cert.pem&#39;</span><span class='p'>),</span>
+<span class='p'>};</span>
+
+<span class='nx'>tls</span><span class='p'>.</span><span class='nx'>createServer</span><span class='p'>(</span><span class='nx'>options</span><span class='p'>,</span> <span class='kd'>function</span> <span class='p'>(</span><span class='nx'>s</span><span class='p'>)</span> <span class='p'>{</span>
+  <span class='nx'>s</span><span class='p'>.</span><span class='nx'>write</span><span class='p'>(</span><span class='s2'>&quot;welcome!\n&quot;</span><span class='p'>);</span>
+  <span class='nx'>console</span><span class='p'>.</span><span class='nx'>log</span><span class='p'>(</span><span class='s1'>&#39;got client&#39;</span><span class='p'>);</span>
+  <span class='nx'>s</span><span class='p'>.</span><span class='nx'>pipe</span><span class='p'>(</span><span class='nx'>s</span><span class='p'>);</span>
+<span class='p'>}).</span><span class='nx'>listen</span><span class='p'>(</span><span class='mi'>8000</span><span class='p'>);</span>
+<span class='nx'>console</span><span class='p'>.</span><span class='nx'>log</span><span class='p'>(</span><span class='s1'>&#39;127.0.0.1:8000&#39;</span><span class='p'>);</span>
+</code></pre>
+</div>
+<p>The client spawns 200 connections, and writes &#8216;hello&#8217; to the server every 5 seconds for each connection:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>tls</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;tls&#39;</span><span class='p'>);</span>
+
+<span class='kd'>function</span> <span class='nx'>go</span><span class='p'>()</span> <span class='p'>{</span>
+  <span class='kd'>var</span> <span class='nx'>s</span> <span class='o'>=</span> <span class='kc'>null</span><span class='p'>;</span>
+  <span class='nx'>s</span> <span class='o'>=</span> <span class='nx'>tls</span><span class='p'>.</span><span class='nx'>connect</span><span class='p'>(</span><span class='mi'>8000</span><span class='p'>,</span> <span class='s1'>&#39;127.0.0.1&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='nx'>setInterval</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+      <span class='nx'>s</span><span class='p'>.</span><span class='nx'>write</span><span class='p'>(</span><span class='s1'>&#39;hello\n&#39;</span><span class='p'>);</span>
+    <span class='p'>},</span> <span class='mi'>5000</span><span class='p'>);</span>
+  <span class='p'>});</span>  
+<span class='p'>};</span>
+
+<span class='kd'>var</span> <span class='nx'>i</span><span class='p'>;</span>
+<span class='k'>for</span> <span class='p'>(</span><span class='nx'>i</span> <span class='o'>=</span> <span class='mi'>0</span><span class='p'>;</span> <span class='nx'>i</span><span class='o'>&lt;</span><span class='mi'>200</span><span class='p'>;</span> <span class='nx'>i</span><span class='o'>++</span><span class='p'>)</span> <span class='p'>{</span>
+  <span class='nx'>go</span><span class='p'>();</span>
+<span class='p'>}</span>
+</code></pre>
+</div>
+<p>Running the client and server on my laptop, the server used almost 200 megabytes of memory. This meant the high memory usage per-connection is not just a problem with Matt&#8217;s application, but something deeper in Node.js.</p>
+
+<p>At this point the Linux users are trembling, unsure how to debug the issue. Luckily, I still use <a href='http://en.wikipedia.org/wiki/Mac_OS_X'>Steve&#8217;s operating system</a>, and I fired up <a href='http://en.wikipedia.org/wiki/Instruments_(application'>Instruments.app</a>) to start taking a look at the problem.</p>
+
+<h2 id='those_pesky_certificate_authority_certificates'>Those Pesky Certificate Authority Certificates</h2>
+
+<p>Using the builtin <em>Allocations</em> instrument, I was looking for how memory was being used. I expected to just see a large blob of allocation being done inside <a href='http://code.google.com/p/v8/'>v8</a>, since Instruments and DTrace that power it do not have visibility inside the VMs internals. Unexpectedly, it quickly became apparent our main use of memory was the <code>node::crypto::SecureContext::AddRootCerts</code> function. After going back to the Javascript, we could see that for every new TLS connection being made, Node was re-parsing the list of root-certificate authorities from their string forms, into the <code>X509_STORE</code> object used by OpenSSL: <a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/pre-fix.jpg'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/pre-fix.jpg' alt='' /></a></p>
+
+<p>Just by commenting out one line of Javascript, we were able to reduce memory usage by 20%, and increased the performance of the HTTPS server from 70 requests/second to 700 requests/second.</p>
+
+<p><a href='http://tinyclouds.org/'>Ryan</a> changed the Node crypto code to use a single global CA store for the default root certificates in <a href='https://github.com/joyent/node/commit/5c35dff4192b0e204ab4145b7f9dcdba6e76a93e
+'>5c35dff41</a>. The current <em>fix is a hack</em>, the correct long term fix is to better use <a href='http://www.openssl.org/docs/ssl/SSL_new.html'>SSL_new</a> with a shared <code>SSL_CTX*</code>, but that will require a larger refactoring of <code>node_crypto.cc</code>.</p>
+
+<h2 id='zlib_big_buffers_r_us'>Zlib: Big Buffers &#8220;R&#8221; us</h2>
+
+<p>We thought after fixing the obvious bug in parsing the certificates, we might be done. We went back to the profiling in Instruments.app, and discovered memory usage still was over 500kb per connection: <a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/compression.jpg'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/compression.jpg' alt='' /></a></p>
+
+<p>We dove into the OpenSSL codebase, and found that Zlib Compression is enabled by default, and there isn&#8217;t an easy way to turn it off. The <a href='http://www.openssl.org/docs/ssl/SSL_COMP_add_compression_method.html
+'>documentation for SSL_COMP_add_compression_method</a> says:</p>
+
+<blockquote>
+<p>Unlike the mechanisms to set a cipher list, there is no method available to restrict the list of compression method on a per connection basis.</p>
+</blockquote>
+
+<p>Recent versions of OpenSSL (&gt;1.0.0) have added <code>SSL_OP_NO_COMPRESSION</code> that can be disable compression per-connection via <a href='http://www.openssl.org/docs/ssl/SSL_CTX_set_options.html'>SSL_CTX_set_options</a>. However, most Linux distributions are still using variations of OpenSSL 0.9.8, meaning this option isn&#8217;t viable for most users.</p>
+
+<p>As an alternative, it is possible to zero out the global list of all OpenSSL compression methods after initializing OpenSSL:</p>
+<div class='highlight'><pre><code class='c'><span class='kt'>void</span> <span class='nf'>disable_openssl_compression</span><span class='p'>()</span> <span class='p'>{</span>
+  <span class='n'>STACK_OF</span><span class='p'>(</span><span class='n'>SSL_COMP</span><span class='p'>)</span><span class='o'>*</span> <span class='n'>comp_methods</span> <span class='o'>=</span> <span class='n'>SSL_COMP_get_compression_methods</span><span class='p'>();</span>
+  <span class='n'>sk_SSL_COMP_zero</span><span class='p'>(</span><span class='n'>comp_methods</span><span class='p'>);</span>
+<span class='p'>};</span>
+</code></pre>
+</div>
+<p>This is a <em>terrible hack</em>, but it enabled us to test the effect of disabling compression on the server side, and after seeing the results, I think it is worth it.</p>
+
+<p>With this change, we ran the test again, and see an amazing thing, we are only using about 15 megabytes of memory, and we can actually see the v8 garbage collector doing work now: <a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/all-fixed.jpg'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/all-fixed.jpg' alt='' /></a></p>
+
+<h2 id='ship_it_to_production'>Ship it to production</h2>
+
+<p>Going back to Matt&#8217;s original problem, he is using Node.js as part of the server side infrastructure for <a href='http://voxer.com/'>Voxer, a communication application for mobile devices</a>. He applied the patches, and provided this graph from Cacti showing the massive improvement in free memory:</p>
+
+<p><a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/Cacti.png'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/Cacti.png' alt='' /></a></p>
+
+<h2 id='what_about_twisted_python'>What about Twisted Python?</h2>
+
+<p>At <a href='https://www.cloudkick.com/'>Rackspace/Cloudkick</a> we use <a href='http://twistedmatrix.com/trac/'>Twisted Python</a> for many production services, including several with many thousands of open TLS connections. We had always just assumed the high memory usage was an issue in Twisted Python itself, not something in OpenSSL. We had tried looking at the memory usage using <a href='http://www.aminus.net/wiki/Dowser'>Dowser</a>, but we never got far, as it always looked like Python wasn&#8217;t misbehaving. This now makes sense, because the OpenSSL objects used in <a href='http://packages.python.org/pyOpenSSL/'>pyOpenSSL</a> wouldn&#8217;t be counted by Dowser.</p>
+
+<p>pyOpenSSL is a limited binding of the most useful functions in OpenSSL, so it doesn&#8217;t provide bindings to the functions that can manipulate the OpenSSL Compression settings. I decided to use the <a href='http://docs.python.org/library/ctypes.html'>ctypes module</a> to avoid needing to distribute a C based extension to disable OpenSSL compression:</p>
+<div class='highlight'><pre><code class='python'><span class='k'>def</span> <span class='nf'>disableSSLCompression</span><span class='p'>(</span><span class='bp'>self</span><span class='p'>):</span>
+  <span class='k'>try</span><span class='p'>:</span>
+    <span class='kn'>import</span> <span class='nn'>ctypes</span>
+    <span class='kn'>import</span> <span class='nn'>glob</span>
+    <span class='n'>openssl</span> <span class='o'>=</span> <span class='n'>ctypes</span><span class='o'>.</span><span class='n'>CDLL</span><span class='p'>(</span><span class='bp'>None</span><span class='p'>,</span> <span class='n'>ctypes</span><span class='o'>.</span><span class='n'>RTLD_GLOBAL</span><span class='p'>)</span>
+    <span class='k'>try</span><span class='p'>:</span>
+      <span class='n'>f</span> <span class='o'>=</span> <span class='n'>openssl</span><span class='o'>.</span><span class='n'>SSL_COMP_get_compression_methods</span>
+    <span class='k'>except</span> <span class='ne'>AttributeError</span><span class='p'>:</span>
+      <span class='n'>ssllib</span> <span class='o'>=</span> <span class='nb'>sorted</span><span class='p'>(</span><span class='n'>glob</span><span class='o'>.</span><span class='n'>glob</span><span class='p'>(</span><span class='s'>&quot;/usr/lib/libssl.so.*&quot;</span><span class='p'>))[</span><span class='mi'>0</span><span class='p'>]</span>
+      <span class='n'>openssl</span> <span class='o'>=</span> <span class='n'>ctypes</span><span class='o'>.</span><span class='n'>CDLL</span><span class='p'>(</span><span class='n'>ssllib</span><span class='p'>,</span> <span class='n'>ctypes</span><span class='o'>.</span><span class='n'>RTLD_GLOBAL</span><span class='p'>)</span>
+
+    <span class='n'>openssl</span><span class='o'>.</span><span class='n'>SSL_COMP_get_compression_methods</span><span class='o'>.</span><span class='n'>restype</span> <span class='o'>=</span> <span class='n'>ctypes</span><span class='o'>.</span><span class='n'>c_void_p</span>
+    <span class='n'>openssl</span><span class='o'>.</span><span class='n'>sk_zero</span><span class='o'>.</span><span class='n'>argtypes</span> <span class='o'>=</span> <span class='p'>[</span><span class='n'>ctypes</span><span class='o'>.</span><span class='n'>c_void_p</span><span class='p'>]</span>
+    <span class='n'>openssl</span><span class='o'>.</span><span class='n'>sk_zero</span><span class='p'>(</span><span class='n'>openssl</span><span class='o'>.</span><span class='n'>SSL_COMP_get_compression_methods</span><span class='p'>())</span>
+  <span class='k'>except</span> <span class='ne'>Exception</span><span class='p'>,</span> <span class='n'>e</span><span class='p'>:</span>
+    <span class='n'>log</span><span class='o'>.</span><span class='n'>msg</span><span class='p'>(</span><span class='s'>&#39;disableSSLCompression: Failed:&#39;</span><span class='p'>)</span>
+    <span class='n'>log</span><span class='o'>.</span><span class='n'>msg</span><span class='p'>(</span><span class='n'>e</span><span class='p'>)</span>
+</code></pre>
+</div>
+<p>We deployed this to one Twisted Python Service as a test, and you can see the impact on memory use, dropping form 1.15 gigabytes to around 300 megabytes:</p>
+
+<p><a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/twisted-memory.jpg'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/twisted-memory.jpg' alt='' /></a></p>
+
+<h2 id='conclusion'>Conclusion</h2>
+
+<p>While compression in TLS can be helpful in some situations with bulk data transfers, the method by which OpenSSL has done it is disappointing. Enabling a feature by default that has such a large impact on memory usage, and not having a reasonable way to disable it is bad library design.</p>
+
+<p>If you have specific applications using TLS that don&#8217;t benefit from compression or have many thousands of mostly idle connections, consider disabling OpenSSL&#8217;s compression methods to save yourself about 500kb of memory per connection.</p>
+
+<p><strong>PS:</strong> <a href='http://news.ycombinator.com/item?id=2411349'>agl on HN</a> mentioned that OpenSSL &gt; 1.0.0 also has <code>SSL_MODE_RELEASE_BUFFERS</code> which greatly reduces memory usage of a connection &#8211; this is <a href='https://github.com/joyent/node/blob/v0.4.5/src/node_crypto.cc#L622-625'>already done in Node.js if available</a>, but if you are updating older code be sure to add this too.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/12/16/rackspace-acquires-cloudkick/" title="Rackspace acquires Cloudkick">&larr; Rackspace acquires Cloudkick</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2011/12/03/technology-experiences/" title="Technology enables better Support Experiences">Technology enables better Support Experiences &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>05 April 2011</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>progress on apache 2.4</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>progress on apache 2.4</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>My <a href='http://journal.paul.querna.org/articles/2008/11/26/todo/'>todo list</a> from before thanksgiving:</p>
+
+<blockquote />
+
+<blockquote />
+
+<blockquote>
+<p>* Improve the Simple MPM.</p>
+</blockquote>
+
+<blockquote>
+<p>* Integrate Lua and mod_wombat into httpd trunk.</p>
+</blockquote>
+
+<blockquote>
+<p>* Improve the FastCGI Support in httpd turnk.</p>
+</blockquote>
+
+<blockquote>
+<p>* Finish my little infrastructure stats &amp; graphs project.</p>
+</blockquote>
+
+<p>Well, I did get something working on my Infrastructure Stats Project.  You can see the <a href='http://www.apache.org/dev/stats/'>work in progress here</a>.  It uses <a href='http://code.google.com/p/flot/'>flot</a> and <a href='http://jquery.com/'>jquery</a> to draw graphs of the mail and code commits at the ASF since the Apache Project started in 1996.</p>
+
+<p>I didn&#8217;t get around to most of my httpd goals, since every time I work on the Simple MPM, the fact that KQueue causes a kernel panic on OSX kinda discourages me.  I was hoping that the latest kernels from Apple would fix the problem, but they don&#8217;t.</p>
+
+<p>I did manage to commit 4 new modules to httpd trunk however:</p>
+
+<p>* <a href='https://svn.apache.org/repos/asf/httpd/httpd/trunk/modules/cluster/README.heartbeat'>mod_heartbeat</a> - Generates <a href='http://en.wikipedia.org/wiki/Multicast'>Multicast</a> heartbeat messages containing the status of the server.</p>
+
+<p>* <a href='https://svn.apache.org/repos/asf/httpd/httpd/trunk/modules/cluster/README.heartmonitor'>mod_heartmonitor</a> - Collects these Multicast heartbeats for other modules to use.</p>
+
+<p>* <a href='https://svn.apache.org/repos/asf/httpd/httpd/trunk/modules/filters/mod_ratelimit.c'>mod_ratelimit</a> - Bandwidth Rate Limiting for Clients.</p>
+
+<p>* <a href='https://svn.apache.org/repos/asf/httpd/httpd/trunk/modules/proxy/mod_lbmethod_heartbeat.c'>mod_lbmethod_heartbeat</a> - Module to <a href='http://httpd.apache.org/docs/trunk/mod/mod_proxy_balancer.html'>Load Balance mod_proxy_balancer workers</a> using the data from the heartbeats.</p>
+
+<p>mod_heartbeat, mod_heartmonitor, and mod_ratelimit were all originally written at <a href='http://www.joost.com/'>Joost</a>, and my employer was nice enough to let us contribute them back to Apache.</p>
+
+<p>I&#8217;ve also announced the <a href='http://mail-archives.apache.org/mod_mbox/httpd-dev/200811.mbox/%3C49302488.5000002@force-elite.com%3E'>intent to roll the first 2.3.0-alpha release next weekend</a>.  Hopefully this means within a few months, a new stable 2.4.x branch will come out.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2008/11/29/joost-on-the-iphone/" title="joost on the iphone">&larr; joost on the iphone</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2008/12/23/mod_v8/" title="mod_v8">mod_v8 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>30 November 2008</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

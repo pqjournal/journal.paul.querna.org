@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>zfs+freebsd pain</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>zfs+freebsd pain</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Having some fun times with people.apache.org:</p>
+
+<pre><code>minotaur# uname -a
+FreeBSD minotaur.apache.org 7.2-STABLE FreeBSD 7.2-STABLE #0: Wed Aug  5 01:05:27 UTC 2009     root@loki.apache.org:/usr/obj/usr/src/sys/MINOTAUR  amd64
+minotaur# zpool status
+  pool: tank
+ state: DEGRADED
+status: One or more devices is currently being resilvered.  The pool will
+        continue to function, possibly in a degraded state.
+action: Wait for the resilver to complete.
+ scrub: resilver in progress for 0h1m, 0.01% done, 266h36m to go
+config:
+
+        NAME           STATE     READ WRITE CKSUM
+        tank           DEGRADED     0     0     0
+          raidz2       DEGRADED     0     0     0
+            replacing  DEGRADED     0     0     0
+              da14     UNAVAIL      3   570     0  experienced I/O failures
+              da0      ONLINE       0     0     0  6.24M resilvered
+            da1        ONLINE       0     0     0  4.06M resilvered
+            da2        ONLINE       0     0     0  4.15M resilvered
+            da3        ONLINE       0     0     0  4.09M resilvered
+            da4        ONLINE       0     0     0  4.14M resilvered
+            da5        ONLINE       0     0     0  4.10M resilvered
+            da6        ONLINE       0     0     0  4.15M resilvered
+            da7        ONLINE       0     0     0  4.11M resilvered
+            da8        ONLINE       0     0     0  4.17M resilvered
+            da9        ONLINE       0     0     0  4.08M resilvered
+            da10       ONLINE       0     0     0  4.13M resilvered
+            da11       ONLINE       0     0     0  4.14M resilvered
+            da12       ONLINE       0     0     0  4.14M resilvered
+            da13       ONLINE       0     0     0  4.08M resilvered
+        spares
+          da14         AVAIL   
+
+errors: No known data errors</code></pre>
+
+<p>da14 failed. we had da0, not in the array yet, so we just did:</p>
+
+<pre><code>zpool replace tank da14 da0</code></pre>
+
+<p>But now it is stuck.</p>
+
+<p>It never makes progress on the Resliver.</p>
+
+<p>It sure sounds like this bug: <a href='http://bugs.opensolaris.org/view_bug.do?bug_id=6655927'>http://bugs.opensolaris.org/view_bug.do?bug_id=6655927</a></p>
+
+<p>But this is FreeBSD 7-STABLE from earlier this month, and it really shouldn&#8217;t be affected by that bug.</p>
+
+<p><em>Sigh.</em></p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2009/08/12/comcast-sucks/" title="the comcast local monopoly sucks">&larr; the comcast local monopoly sucks</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2009/08/23/email-is-awesome/" title="email is awesome">email is awesome &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>20 August 2009</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

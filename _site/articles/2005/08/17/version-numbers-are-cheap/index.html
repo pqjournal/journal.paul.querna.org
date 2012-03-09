@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Version Numbers are Cheap</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Version Numbers are Cheap</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>WordPress recently <a href='http://wordpress.org/development/2005/08/one-five-two/'>released 1.5.2</a>. The problem is that <a href='http://blog.php-security.org/archives/7-guid.html#extended'>they modified the release tarballs</a>, after putting the announcement on their site.</p>
+
+<p>Don&#8217;t do that. Once you make a version public NEVER change the release tarballs. It doesn&#8217;t help that they didn&#8217;t sign their releases or even provide basic hashes, but the fact that now some users who installed 1.5 2 are still vulnerable, while some others are not is the problem. This defeats the one major purpose of versioning &#8211; to help the users and admins who install your product. So they can know if they are vulnerable to an issue.</p>
+
+<p>I am glad that I don&#8217;t use WordPress, this kind of behavior is not excusable for an Open Source Project. Its about providing trust to your users. I can&#8217;t trust that a WordPress 1.5.2 install is secure, since this one version has two different contents.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/08/13/dear-brad/" title="Dear Brad">&larr; Dear Brad</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/08/19/at-barcamp/" title="At BarCamp">At BarCamp &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>17 August 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

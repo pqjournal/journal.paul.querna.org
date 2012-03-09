@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Overclocking mod_ssl</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Overclocking mod_ssl</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>At Velocity, I saw Adam Langley give a great presentation entitled <a href='http://en.oreilly.com/velocity2010/public/schedule/detail/14217'>Overclocking SSL</a>. Last week Adam posted a distilled version of the <a href='http://www.imperialviolet.org/2010/06/25/overclocking-ssl.html'>Overclocking SSL presentation on his blog</a>.</p>
+
+<p>He covers many topics for improving SSL performance. Unfortunately, his recommendations are decidedly focused on how Google runs their servers, and not a practical guide to how to improve your performance with a more standard Apache 2 and mod_ssl setup. Since I don&#8217;t work at Google, but I like my web servers to be fast, I decided to try as many of his recommendations as possible with mod_ssl.</p>
+
+<p><em>Disclaimer</em> I am not a cryptanalyst. Be paranoid when you are messing with SSL, small mistakes can invalidate your entire security framework. Ask your local cryptanalyst about these changes!</p>
+
+<h2 id='basic_configuration_certificate_key_size'>Basic Configuration: Certificate Key Size</h2>
+
+<p>Google uses a 1024bit RSA key for their encrypted websites. However, Certificate Authorities are no longer issuing new 1024 bit keys, because the <a href='http://www.entrust.net/knowledge-base/technote.cfm?tn=7710'>CAB Forum has required them to be phased out at all levels</a>. It is believed these small keys are insecure, so for pratical purposes this means you will want a 2048bit key. Make sure you do not use a 4096 bit key, the key operations are about 5 times slower &#8211; make sure you have a 2048bit key, it strikes the balance of speed and security.</p>
+
+<p>The Certificate key sizes doesn&#8217;t just affect how many CPU cycles that are used for the calculations, the public versions of the keys are sent to the client when it connects. I go into more detail about TCP round trips bellow, but if your certificate is a 4096 bit key, it means your clients need to download double the data to even get started.</p>
+
+<h2 id='basic_configuration_picking_ciphers'>Basic Configuration: Picking Ciphers</h2>
+
+<p>The <a href='http://httpd.apache.org/docs/2.2/mod/mod_ssl.html#sslciphersuite'>SSLCipherSuite directive</a> controls the ciphers that mod_ssl will negotiate with clients. The string parameter is complicated &#8211; it is a combination of aliases of &#8216;HIGH&#8217;, &#8220;LOW&#8221;, old names, specific names, etc. To see what OpenSSL actually enables, you&#8217;ll want to use the <code>openssl ciphers</code> command.</p>
+
+<p>This is what you get for the default configuration of mod_ssl:</p>
+
+<pre><code>$ openssl ciphers &#39;ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP&#39;
+
+DHE-RSA-AES256-SHA:DHE-DSS-AES256-SHA:AES256-SHA:DHE-RSA-AES128-SHA:
+DHE-DSS-AES128-SHA:AES128-SHA:EDH-RSA-DES-CBC3-SHA:EDH-DSS-DES-CBC3-SHA:
+DES-CBC3-SHA:DHE-RSA-SEED-SHA:DHE-DSS-SEED-SHA:SEED-SHA:RC4-SHA:RC4-MD5:
+EDH-RSA-DES-CBC-SHA:EDH-DSS-DES-CBC-SHA:DES-CBC-SHA:DES-CBC3-MD5:
+RC2-CBC-MD5:RC4-MD5:DES-CBC-MD5:EXP-EDH-RSA-DES-CBC-SHA:
+EXP-EDH-DSS-DES-CBC-SHA:EXP-DES-CBC-SHA:EXP-RC2-CBC-MD5:EXP-RC4-MD5:
+EXP-RC2-CBC-MD5:EXP-RC4-MD5</code></pre>
+
+<p>The exact list will depend upon your version of OpenSSL, but on most modern operating systems, the first cipher that will be attempted to be used is AES-256. AES-256 is without a doubt a more secure selection, but it isn&#8217;t what Google is using. They are using the older <a href='http://en.wikipedia.org/wiki/RC4'>RC4 (aka ARC4)</a> cipher, with SHA1 hashing. There have been many different attacks on RC4, many due to bad implementations, but as long as it is used correctly, it is still <em>secure enough</em>. The selection of a cipher is still a judgement call for your product, but RC4 is approximately 3x faster than AES-256 on most machines right now.</p>
+
+<p>In Apache, lets configure it to try to use RC4 w/ SHA1 hashing:</p>
+
+<pre><code>SSLCipherSuite RC4-SHA:AES128-SHA:ALL:!ADH:!EXP:!LOW:!MD5:!SSLV2:!NULL
+SSLHonorCipherOrder on</code></pre>
+
+<p>The <a href='http://httpd.apache.org/docs/2.2/mod/mod_ssl.html#sslhonorcipherorder'>SSLHonorCipherOrder directive</a> is used to force the server&#8217;s cipher choice on to the client.</p>
+
+<p>And lets run the Cipher Suite string through <code>openssl ciphers</code> you can see the exact configurations that are being allowed:</p>
+
+<pre><code>$ openssl ciphers &#39;RC4-SHA:AES128-SHA:ALL:!ADH:!EXP:!LOW:!MD5:!SSLV2:!NULL&#39;
+
+RC4-SHA:AES128-SHA:DHE-RSA-SEED-SHA:DHE-DSS-SEED-SHA:SEED-SHA:
+DHE-RSA-AES256-SHA:DHE-DSS-AES256-SHA:AES256-SHA:DHE-RSA-AES128-SHA:
+DHE-DSS-AES128-SHA:EDH-RSA-DES-CBC3-SHA:EDH-DSS-DES-CBC3-SHA:DES-CBC3-SHA</code></pre>
+
+<p>This will use RC4, and fall back to AES-128, before going to other stronger ciphers, but over the defaults, it is significantly faster.</p>
+
+<h2 id='ssl_session_cache_and_resumption'>SSL Session Cache and Resumption</h2>
+
+<p>mod_ssl&#8217;s supports a plugable backend for storing client sessions with the <a href='http://httpd.apache.org/docs/2.2/mod/mod_ssl.html#sslsessioncache'>SSLSessionCache directive</a>. The two most commonly used are the <em>shm</em> and <em>dbm</em> on a single machine. The shm backend is faster than dbm, and should be used in almost all cases.</p>
+
+<p>However, as Adam noted, most people have more than one machine doing SSL Termination. This means a distributed SSL session cache is needed. I wrote the patch for mod_ssl to support a <a href='http://svn.apache.org/viewvc?revision=545379&amp;view=revision'>memcached SSL Session cache 3 years ago</a>. This patch wasn&#8217;t backported, so you&#8217;ll need to use <a href='http://httpd.apache.org/download.cgi#apache23'>Apache 2.3.x, which is currently in Alpha</a>. To configure it, just pass a list of memcached nodes:</p>
+
+<pre><code>SSLSessionCache memcache:10.0.0.1,10.0.0.2,10.0.0.3</code></pre>
+
+<h2 id='reducing_round_trips'>Reducing Round Trips</h2>
+
+<p>The best tool to measure this is <a href='http://www.wireshark.org/'>Wireshark</a>, so you can see both the volume of data, and the round trips. The easy way to test with this is using the <code>openssl s_client</code> command. This command lets you easily create SSL connections, and tune various things on both the client and server.</p>
+
+<p>Here is a truncated example of using s_client against encrypted.google.com:</p>
+
+<pre><code>$ openssl s_client -debug -tls1 -host encrypted.google.com -port 443
+..... data dumps .....
+---
+SSL handshake has read 1893 bytes and written 285 bytes
+---
+New, TLSv1/SSLv3, Cipher is RC4-SHA
+Server public key is 1024 bit
+Compression: NONE
+Expansion: NONE
+SSL-Session:
+    Protocol  : TLSv1
+    Cipher    : RC4-SHA
+....</code></pre>
+
+<p>The interesting parts you can see here are both the negotiated ciphers, and the total bytes written by each side to establish the connection. The majority of the data sent by the server is from the size of the server certificate.</p>
+
+<p>As Adam discussed in depth, because <a href='http://en.wikipedia.org/wiki/Certification_path_validation_algorithm'>many certificates have a chain</a>, and most are at least 2048 bits long, it is very easy for a new TCP connection to overflow your <a href='http://en.wikipedia.org/wiki/Slow-start'>initial TCP window</a>. Your goal is to make sure you are sending the correct chain, but not sending too much or irrelevant certificates. Here is a example of www.cloudkick.com, which uses the GoDaddy CA, and an intermediate certificate:</p>
+
+<pre><code>$ openssl s_client -tls1 -host www.cloudkick.com -port 443 -debug
+
+---
+Certificate chain
+ 0 s:/O=*.cloudkick.com
+      /OU=Domain Control Validated
+      /CN=*.cloudkick.com
+   i:/C=US
+     /ST=Arizona
+     /L=Scottsdale
+     /O=GoDaddy.com, Inc.
+     /OU=http://certificates.godaddy.com/repository
+     /CN=Go Daddy Secure Certification Authority
+     /serialNumber=07969287
+ 1 s:/C=US
+       /ST=Arizona
+       /L=Scottsdale
+       /O=GoDaddy.com, Inc.
+       /OU=http://certificates.godaddy.com/repository
+       /CN=Go Daddy Secure Certification Authority
+       /serialNumber=07969287
+   i:/C=US
+     /O=The Go Daddy Group, Inc.
+     /OU=Go Daddy Class 2 Certification Authority
+---
+...............
+---
+SSL handshake has read 2974 bytes and written 422 bytes
+---
+...............</code></pre>
+
+<p>In this case, the server sent the both the certificate for <code>*.cloudkick.com</code>, and the <a href='https://certs.godaddy.com/anonymous/repository.seam'>Go Daddy intermediate certificate</a>. Try as we might, the server in this case had to send 2974 bytes to get started, over 1000 bytes more than what encrypted.google.com needed. This is just a reality of using a chain certificate, and using 2048 bit keys. Just make sure you aren&#8217;t sending extra certificates, and to keep your data bellow 4kb to prevent an ACK being needed in the small windows as TCP connections are being started.</p>
+
+<h2 id='ocsp_stapling'>OCSP Stapling</h2>
+
+<p>One of the biggest problems with the existing SSL infrastructure is that validating the status of a certificate is hard and slow. <a href='http://en.wikipedia.org/wiki/OCSP_Stapling'>OCSP Stapling</a> doesn&#8217;t make it easier to understand, but it does at least make it faster. OCSP stapling support was <a href='http://www.mozilla.org/grants/open-source-software-institute.html'>originally funded from a grant by Mozilla</a>. It has been added to Apache httpd 2.3, so you&#8217;ll need to <a href='http://httpd.apache.org/download.cgi#apache23'>download that alpha release</a> in order to use it.</p>
+
+<p>OCSP Stapling takes the Certificate&#8217;s Authorities OCSP response and bundles it in the initial response to the client. This OCSP response is a cryptographic signature verifying your certificate is still valid for X days. This means the client doesn&#8217;t need to resolve another DNS name, and hit another service just to validate your certificate.</p>
+
+<p>In Apache 2.3 and above, the configuration to enable OCSP Stapling is quite simple; Just put these directives in your global scope:</p>
+
+<pre><code>SSLUseStapling on
+SSLStaplingCache &quot;shmcb:logs/stapling_cache(128000)&quot;</code></pre>
+
+<p>You can test OCSP stapling using the <code>openssl s_client</code> command again and the -status parameter:</p>
+
+<pre><code>$ openssl s_client -host encrypted.google.com -port 443 -tls1  -tlsextdebug  -status
+....
+OCSP response: no response sent
+....</code></pre>
+
+<p>Even Google hasn&#8217;t enabled OCSP stapling yet!</p>
+
+<p>If OCSP stapling was enabled, you would see something like this as the output:</p>
+
+<pre><code>OCSP response: 
+======================================
+OCSP Response Data:
+    OCSP Response Status: successful (0x0)
+    Response Type: Basic OCSP Response
+    Version: 1 (0x0)
+    Responder Id: C = US, ST = Arizona, L = Scottsdale, O = &quot;GoDaddy.com, Inc.&quot;, 
+                           OU = http://certs.godaddy.com/repository/, 
+                           CN = Go Daddy Validation Authority
+    Produced At: Jul 10 17:18:44 2010 GMT
+    Responses:
+    Certificate ID:
+      Hash Algorithm: sha1
+      Issuer Name Hash: 70292276537F1ABC8FD53C9484E914CB762A052A
+      Issuer Key Hash: FDAC6132936C45D6E2EE855F9ABAE7769968CCE7
+      Serial Number: 047C0A27B3C295
+    Cert Status: good
+    This Update: Jul 10 14:15:00 2010 GMT
+    Next Update: Jul 10 23:18:44 2010 GMT</code></pre>
+
+<p>Here my server provided a signature from Go Daddy, saying that my certificate was valid for at least another 5 hours.</p>
+
+<h2 id='false_start_snap_start_and_next_protocol_extensions'>False Start, Snap Start and Next Protocol Extensions</h2>
+
+<p>Google has proposed a series of extensions and modifications to the TLS protocol in order to reduce round trips, both at the initial negotiation, and when to start sending client data.</p>
+
+<p><a href='https://tools.ietf.org/html/draft-bmoeller-tls-falsestart-00'>TLS False Start</a> is mostly a client change, but even if you wanted to implement the proposed server false start, it really depends upon OpenSSL updates to support it. The only recommendation here is to not use ancient versions of OpenSSL &#8211; which is important anyways because of the <a href='http://it.slashdot.org/story/09/11/16/2327230/slashdot.sourceforge.net'>SSL Renegotiation attacks discovered last year</a>.</p>
+
+<p>The <a href='http://tools.ietf.org/html/draft-agl-tls-snapstart-00'>Snap Start</a> proposal will need server support, but currently no released version of OpenSSL supports it yet.</p>
+
+<p><a href='http://tools.ietf.org/html/draft-agl-tls-nextprotoneg-00'>Next Protocol Negotiation Extension</a> lets the client tell the server that it is gong to change protocols once the SSL negotiation finishes. Conceptually to me this is similar to <a href='http://en.wikipedia.org/wiki/Server_Name_Indication'>Server Name Indication</a>, where the client is leaking application logic to the SSL layer. This will make upgrades to the <a href='http://www.chromium.org/spdy/spdy-protocol'>SPDY protocol</a>faster, but again there is not a released version of OpenSSL with support yet.</p>
+
+<h2 id='the_missing_patches'>The missing patches</h2>
+
+<ul>
+<li>Adam mentions a patch reducing OpenSSL&#8217;s default buffer allocations from 50kb to 5kb, and suggests the Tor project has a similar patch. I have been unable to find it.</li>
+
+<li>I was unable to find any patches for the Next Protocol Negotiation Extension.</li>
+</ul>
+
+<h2 id='closing'>Closing</h2>
+
+<p>Hopefully your <code>mod_ssl</code> site is faster after all of this, but if you have any recommendations or ideas to improve it further, please let me know!</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/07/09/the-illusion-of-stability/" title="The Illusion of Stability">&larr; The Illusion of Stability</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/08/11/async-tls/" title="Async TLS">Async TLS &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>10 July 2010</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

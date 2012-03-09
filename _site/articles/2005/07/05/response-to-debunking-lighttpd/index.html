@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Response to Debunking lighttpd.</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Response to Debunking lighttpd.</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>The <a href='http://corelands.com/blog/?postid=82'>Debunking lighttpd</a> post has gotten a few harsh comments. Here are some of my replies.</p>
+
+<p>Quote from Anonymous:</p>
+
+<p>You neglect two things in your discussion: What happens when resources become constrained. For instance what if 10000 slow clients connect to both servers. Which is easier to configure for the task at hand. There are a lot of advantages to using single threaded or tread / core servers. In my opinion this model maps much more closely to the underlying hardware, and many of the problems of multi-threaded systems just don&#8217;t exist. The market is certainly big enough for multiple players</p>
+
+<p>First point, I don&#8217;t have a setup to properly test 10,000 slow clients. If you want to model realistic client connections, then a completely different benchmarking methodology is needed. ApacheBench is very good at slinging requests in relatively high volume from a single client, but realistic is something that it does not try to be at all. Someone could write a PHD thesis on realistic modeling of HTTP Clients and Benchmarking. I don&#8217;t have the time, the hardware, or willingness to do that right now.</p>
+
+<p>Second point, easier to configure is highly variable based on the administrator experiences. For me, httpd is easier to configure. YMMV.</p>
+
+<p>Quote from Anonymous:</p>
+
+<p>you make the claim that apache bench sucks, but provide no reasons as to why. You also provide little information about the test itself, results (other than a nice graph), or much information to duplicate the test. I would also be interested in system load at various times during the test too. I would like to say..wow..that is one of the simplest and cleanest apache conf files I have ever seen! :D</p>
+
+<p>ApacheBench Sucks. Why? It can&#8217;t scale. It uses some blocking IO, but tries to use a single/threaded event paradigm. It has no concept of timing. Its understanding of HTTP/1.1 is limited to KeepAlives. <a href='http://weblog.erenkrantz.com/weblog/2005/06/05#anandtech-benchmarks'>Justin calls ApacheBench &#8216;dreadful&#8217;</a>. <a href='http://httpd.apache.org/test/flood/'>Flood</a> is a better tool.</p>
+
+<p>To duplicate this test, use the supplied configuration files for both httpd and lighttpd. Run ApacheBench like so: <code>ab -n 10000 -c X -H &#39;Accept-Encoding: gzip,deflate&#39; -k [http://1.2.3.4/](http://1.2.3.4/)</code></p>
+
+<p>I didn&#8217;t record CPU load during the test. If you want to spend your time doing it, feel free, I would be happy to point to someone elses more complete benchmarks.</p>
+
+<p>Quote from Anonymous :</p>
+
+<p>Max of 75 concurrency? Since gzip is enabled, you&#8217;re testing ~13k files with low concurrency, of course Apache does fine. Your test is flawed and your conclusion is misleading.</p>
+
+<p>I only did 75, since both servers were easily maxing out my 100mbit LAN. If you want realistic testing, you need a very different methodology. To go to higher, I need better hardware, both for the client machine(s) and for my network. Donations Welcome.</p>
+
+<p>Is my test flawed? On so many levels, yes. <strong>My argument is that my benchmark is no more flawed than the benchmarks that lighttpd <a href='http://www.lighttpd.net/benchmark/'>publishes on their website</a>.</strong> I actually believe the dataset that I picked was fairly realistic. (enabling gzip+HTML). I don&#8217;t think my conclusion is misleading. Most people are looking for a magical performance pill. I wager most people can get better performance by improving their PHP/scripting code first.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/07/02/blog-software-http-caching/" title="Blog Software and HTTP Caching">&larr; Blog Software and HTTP Caching</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/07/05/moved-urls-and-software/" title="Moved URLs and Software">Moved URLs and Software &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>05 July 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

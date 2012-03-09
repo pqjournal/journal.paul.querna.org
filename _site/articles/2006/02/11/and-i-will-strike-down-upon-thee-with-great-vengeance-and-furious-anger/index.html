@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>And I will strike down upon thee with great vengeance and furious anger...</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>And I will strike down upon thee with great vengeance and furious anger...</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>I have plenty of hate in my heart, but I reserve a special place for websites that create freaking <strong>UGLY</strong> urls.</p>
+
+<p>Today, the <a href='http://blog.ask.com/'>Ask Jeeves Blog</a> did a post on <a href='http://blog.ask.com/2006/02/learning_tower_.html'>our new Pisa Office</a>.</p>
+
+<p>They posted some <a href='http://myjeeves.ask.com/share/showImage?t=fullImage&amp;iurl=http%3A%2F%2Fmyjeeves.ask.com%2Fservlet%2Fsnipit_image_proxy%3Fuid%3D34211032109ec5eae5e1f25ca6e48526%26img_guid%3D499b8b4e5c28d2de7d7c47bf62e56272%26locale%3Den_US&amp;user=sgrieder&amp;path=images+for+sharing&amp;imgid=499b8b4e5c28d2de7d7c47bf62e56272&amp;returl=%2Fpublic%2Fsgrieder%2Ffolders%2Fimages%2Bfor%2Bsharing'>photos of things going down</a>, and hosted them on <a href='http://myjeeves.ask.com'>MyJeeves</a>. i could do a whole post on MyJeeves, but lets just focus on the URLs that it generates. Here is the URL it uses to display a single image:</p>
+
+<p>http://myjeeves.ask.com/share/showIm age?t=fullImage&amp;iurl=http%3A%2F %2Fmyjeeves.ask.com%2Fservlet%2Fsni pit_image_proxy%3Fuid%3D34211032109 ec5eae5e1f25ca6e48526%26img_guid%3D 499b8b4e5c28d2de7d7c47bf62e56272%26 locale%3Den_US&amp;user=sgrieder&amp;#3 8;path=images+for+sharing&amp;imgid =499b8b4e5c28d2de7d7c47bf62e56272&amp;# 38;returl=%2Fpublic%2Fsgrieder%2Ffo lders%2Fimages%2Bfor%2Bsharing</p>
+
+<p>The URL is 361 characters long. There are at least there parameters that look like <a href='http://en.wikipedia.org/wiki/UUID'>some kind of UUID</a>. Why do you need uid, img_guid, and imgid? I don&#8217;t care what the technical answer that they might have, its wrong. There are better ways to represent unique resources, and they don&#8217;t involve multiple unique hashes.</p>
+
+<p>I have only been working at Ask for 6 months now. I want groups inside Ask to choose better URL designs. If you are working on a project, spend a few minutes to think about what the URLs look like. Its really not that hard.</p>
+
+<p>Now, having a URL with 361 characters is pretty bad, but there is one thing <strong>far worse</strong>. That <em>thing</em>is MSN Spaces. Not only do they use <a href='http://spaces.msn.com/chiefskipper/Blog/cns!A59D550BCED8263B!781.entry'>UUIDs all over</a>, they <strong>CHANGE THE URLs OF IMAGES OVER TIME</strong>. I have heard vaguely that it has something to do with their clustered/distributed filesystem. Its not really a good excuse to me. Sigh.</p>
+
+<p>The most distributing thing is that these aren&#8217;t little podunk websites. These are major corporations, doing major projects, and making some of the worst URL designs ever.</p>
+
+<p>You want to do the right thing? Go Read <a href='http://www.w3.org/Provider/Style/URI'>Cool URIs don&#8217;t change</a>. Then read <a href='http://www.adaptivepath.com/publications/essays/archives/000058.php'>User-Centered URL Design</a>. Good. Now don&#8217;t write code that creates those ugly URLs ever again.</p>
+
+<p>Remember: <em>People</em> don&#8217;t make ugly URLs, bad programers do.</p>
+
+<p><strong>EDIT</strong>: Try to wrap the 361 character URL so it doesn&#8217;t scroll the entire page&#8230;. Arrrg.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2006/02/08/public-information/" title="public information.">&larr; public information.</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2006/02/14/scary/" title="scary">scary &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>11 February 2006</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

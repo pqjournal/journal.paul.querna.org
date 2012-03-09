@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>On Blog Pinging (again)</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>On Blog Pinging (again)</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Dear Internet,</p>
+
+<p>When a <a href='http://newestindustry.wordpress.com/2006/01/29/ping-o-matic-meet-ping-o-death/'>major ping service has problems</a>, I will remind you that <a href='http://paul.querna.org/journal/articles/2005/09/28/blog-pings-are-stupid'>Blog Pings are stupid</a>. Some companies <a href='http://www.technorati.com/weblog/2006/01/75.html'>rely upon blog pings for their crawling system</a>. What happens when a ping service is down? Your posts don&#8217;t get indexed. Oh Snap.</p>
+
+<p><a href='http://blogfresh.blogspot.com/2006/01/pinging-for-mutual-benefit.html'>People have noticed</a> that if you want to get higher rankings in some search engines, you should find everyone who has linked to you, and <a href='http://www.technologyevangelist.com/2006/01/technorati_link_opti.html'>send Pings for them</a>. Ping-spoofing. It really feels like email-spoofing to me. Maybe SPF could be extended to prevent this&#8230;&#8230;</p>
+
+<p>Anyways, At <a href='http://www.bloglines.com/'>$work</a> we do not currently accept pings from anyone. Instead we crawl every site in our system, every 30 minutes. Its not that hard, honestly, thanks to <a href='http://www.danga.com/memcached/'>memcached</a> and <a href='http://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers'>conditional http requests</a>. (Oh, and lots of bandwidth).</p>
+
+<p>Blog Pings have fundamental problems. Until they are both <strong>reliable</strong> and <strong>secure</strong>, I hope they will die. (By secure I mean knowing that the person who sent the ping is the person who owns the feed&#8230;.). <a href='http://www.feedtree.net/'>FeedTree</a> tries to go down this path. It has many problems, the foremost is using Java. If you want everyone in the world to support your protocol, you need support for everyone still using c, perl, python, php, and ruby. The other problem with FeedTree, is that it makes crypto signing of pings optional. Rule number one of making a spec: Nothing is optional, because anything that is, won&#8217;t be implemented by half the software out there.</p>
+
+<p>Have a happy Monday.</p>
+
+<p>-Paul</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2006/01/15/distractions/" title="Distractions.">&larr; Distractions.</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2006/02/08/public-information/" title="public information.">public information. &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>30 January 2006</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

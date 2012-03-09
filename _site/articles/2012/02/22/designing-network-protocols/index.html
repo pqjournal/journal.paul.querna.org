@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Designing Network Protocols</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Designing Network Protocols</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Hacker News user <a href='http://news.ycombinator.com/user?id=peterwwillis'>peterwwillis</a> started <a href='http://news.ycombinator.com/item?id=3617247'>a discussion about a new network protocol</a> introduced by the <a href='http://httpd.apache.org/docs/2.4/mod/mod_heartbeat.html'>mod_heartbeat</a> module in Apache 2.4:</p>
+
+<blockquote>
+<p>It frustrates me when people use ASCII instead of packed bitmaps for things like this (packet transmitted once a second from potentially hundreds or thousands of nodes, that each frontend proxy has to parse into a binary form anyway before using it). Maybe it&#8217;s a really small amount of CPU but it&#8217;s just one of many things which could easily be more efficient.</p>
+</blockquote>
+
+<p>This thread on HN continued with dozens of other posts from many authors, with <code>peterwwillis</code> holding his ground on his original point.</p>
+
+<p>I disagree with the belief that a binary format should have been used and will attempt to show why the chosen network protocol for <code>mod_heartbeat</code> was both reasonable and correct.</p>
+
+<h2 id='background'>Background</h2>
+
+<p><a href='http://mail-archives.apache.org/mod_mbox/httpd-announce/201202.mbox/%3C2922160F-CBF2-4633-8B1E-C5045CC35918%40apache.org%3E'>Apache 2.4 was released this week</a>, 6 years <a href='http://journal.paul.querna.org/articles/2005/12/02/httpd-2-2-0-released/'>after 2.2 was released</a>. Compared to the 2.2 development cycle, where I was the Release Manager, I have not been as active in 2.4. However, one of the few features I did write for 2.4 was the <code>mod_heartbeat</code> module. <a href='http://httpd.apache.org/docs/2.4/mod/mod_heartbeat.html'>mod_heartbeat</a> is a method for distributing server load information via multicast. While I wrote <a href='http://svn.apache.org/viewvc?view=revision&amp;revision=721952'>mod_heartbeat 3 years ago</a>, many other Apache HTTP Server developers have added features and bug fixes since then.</p>
+
+<p>The primary use case is for use by the <a href='http://httpd.apache.org/docs/2.4/mod/mod_lbmethod_heartbeat.html'>mod_lbmethod_heartbeat module</a>, to direct traffic to the least loaded server in a reverse proxy pool.</p>
+
+<p>The <code>mod_heartbeat</code> code and design was derived from a project at <a href='http://en.wikipedia.org/wiki/Joost'>Joost</a>. After stopping development of our thick client and peer to peer systems, we were moving to a HTTP based distribution of video content. We had a pool of super cheap storage nodes, which liked to die far too often. We built a system to have the storage nodes heartbeat with what content they had available, and a reverse proxy that would send clients to the correct storage server.</p>
+
+<p>This enabled a low operational overhead around configuration of both our storage nodes and of the reverse proxy. Operations would just bring on a new storage node, put content on it, and it would automatically begin serving traffic. If the storage node died, traffic would be directed to other nodes still online.</p>
+
+<h2 id='understand_your_goals'>Understand your goals</h2>
+
+<p><code>mod_heartbeat</code>&#8217;s primary goal is: <strong>Enable flexible load balancing for reverse proxy servers</strong>.</p>
+
+<p>For Joost we had good switches since we were previously setup for high packet rate peer to peer traffic. We also had previously used multicast for other projects. We choose to use a simple UDP multicast heartbeat as our server communication medium.</p>
+
+<p>When designing the content of this heartbeat packet, I was thinking about the following issues:</p>
+
+<p>* <strong>10 to 200 servers</strong>: If you only have 10 nodes, you can do everything by hand. If you have hundreds of nodes, you are most likely building a hierarchical distribution of load. In my experience it is not a common configuration to have 10,000 application servers behind a single load balancer. I believe the sweet spot for this automatic configuration via multicast is pools between 10 and 200 servers.</p>
+
+<p>* <strong>Multiple Implementers</strong>: The Apache HTTP server is all about being the flexible centerpiece of internet architectures, with many diverse producers, consumers, and interfaces. We must have a network protocol that is easily implemented in any programing language or enviroment, without adding additional dependencies.</p>
+
+<p>* <strong>Extensibility</strong>: At Joost we embedded the available video content catalogs into the heartbeat advertisements. We needed a protocol that would be open to proprietary extensions without causing pain.</p>
+
+<p>* <strong>Limited Network Impact</strong>: In a clustered systems you do not want the overhead of the cluster communication to negatively affect your application. It is important here to understand that many systems will actually hit <a href='http://www.cisco.com/web/about/security/intelligence/network_performance_metrics.html'>packet-per-second limits before raw bandwidth limits</a>. We also assumed at this point in time all systems have gigabit internal networking. In my experience the difference between a 20 byte packet and an 8 byte packet that is being multicasted once a second is not a relevant issue on modern LANs. Even with 1000 servers emitting packets, this is 19.53 KB/s of bandwidth. How efficient this network flow is will depend on your exact multicast configuration and your specific switches, but in most configurations it is a non-issue.</p>
+
+<p>* <strong>Operability / Debug-ability</strong>: <a href='http://www.wireshark.org/'>Wireshark</a> and packet dumps are the best friend of a Network Admin. When people are doing packet dumps, they are looking for problems. A simple ASCII encoding of data will be easy for these people to see when they are in times of stress. Decoding a more complex binary encoding might get added as a feature to Wireshark someday, but it is yet another barrier</p>
+
+<p>* <strong>Design for the long term</strong>: Design all public network protocols to be around for 10 years or longer. Include a versioning scheme. Don&#8217;t assume that 10 years from now your encoding system will still be around. I love <a href='http://msgpack.org/'>msgpack</a> for internal applications, but on these time scales for a public protocol, nothing beats straight up ASCII bytes.</p>
+
+<h2 id='what_i_did_in_2007'>What I did in 2007</h2>
+
+<p>Given the above considerations in 2007 at Joost, I started sketching out the possible formats for the multicast packet.</p>
+
+<p>I considered using a binary format, but the immediate problem was having extendable fields. This meant we would need more than a few simple bytes. To create an extensible binary format, I started looking at serialization frameworks like <a href='http://thrift.apache.org/'>Apache Thrift</a>. At this time in 2007 <a href='http://blog.facebook.com/blog.php?post=2261927130'>Thrift had only been open sourced a few months</a>, and it really wasn&#8217;t a stable project. It also didn&#8217;t have a pure C implementation, and instead would have added a C++ dependency to Apache HTTP server, which is unacceptable. Since 2007 the number of binary object formats like <a href='http://bsonspec.org/'>BSON</a>, <a href='http://code.google.com/apis/protocolbuffers/'>Google Protocol Buffers</a>, <a href='http://avro.apache.org/'>Apache Avro</a>, and <a href='http://msgpack.org/'>Msgpack</a> have exploded, but just 4 years ago there really weren&#8217;t any good standardized choices or formats for a pure-C project. The only existing choice would be to use <a href='http://en.wikipedia.org/wiki/ASN.1'>ASN.1 DER</a>, which would of implied a large external dependency, in addition to <a href='http://luca.ntop.org/Teaching/Appunti/asn1.html'>just being too complex</a>. I decided that because of this and the other goals around debug-ability to peruse an ASCII based encoding of the content.</p>
+
+<p>The choices for non-binary formats were:</p>
+
+<ul>
+<li><strong>XML</strong>: While XML is everywhere, and almost all languages have good bindings, it would be the most verbose choice. I also felt that it is <em>too</em> extendable. Someone later would add namespaces and other features that would make implementing a consumer much more difficult.</li>
+
+<li><strong>JSON</strong>: Easier to consume, and <em>today</em> there are libraries for all languages. A major problem was that in 2007, there were no good JSON parsers in pure C. I know this because at the same time I was working on <a href='http://code.google.com/p/libjsox/'>libjsox</a>, a pure C JSON parser with Rici Lake, and it was incomplete. (As an aside, <a href='http://lloyd.github.com/yajl/'>YAJL is an excellent JSON parsing library</a> for C that you should use now days). Like XML, JSON would also mean consumers would potentially have to handle more complex objects, rather than a simple key value pair.</li>
+
+<li><strong>Query parameters</strong>: <a href='http://tools.ietf.org/html/rfc3986
+'>RFC 3986</a> defined URLs, including the structure of <a href='http://en.wikipedia.org/wiki/Query_string'>query parameters</a>. This format is understood by every component in a web server stack, and Apache already included examples of parsing this type of format. The format is also easy to build without external libraries, meaning reimplementation in any language is very easy. The use of a key and value system also means implementers can use simple data structures like a linked list or hash for interacting with their representation.</li>
+</ul>
+
+<p>I made the decision to use query string style parameters as the best compromise for the content of the multicast packet&#8217;s content.</p>
+
+<p>In the open source version of <code>mod_heartbeat</code>, there are two fields that are exposed today:</p>
+
+<ul>
+<li><strong>ready</strong>: The number of worker processes that are ready to accept new connections.</li>
+
+<li><strong>busy</strong>: The number of worker processes that currently servicing requests.</li>
+</ul>
+
+<p>Adding the version string <code>v=1</code>, and then encoding the fields above we get something like this:</p>
+
+<pre><code>v=1&amp;ready;=75&amp;busy;=0</code></pre>
+
+<h2 id='what_would_i_change_today'>What would I change today?</h2>
+
+<p>If I were to need to implement the same system today, there are a few things I might change, but I don&#8217;t think any of them are critical mistakes given the original design constraints:</p>
+
+<ul>
+<li><strong>Consider using Gossip:</strong> <a href='http://en.wikipedia.org/wiki/Gossip_protocol'>Gossip based systems are more complex</a>, but with more and more systems moving to Cloud based infrastructure, multicast communication is not a viable choice. Additionally, in some infrastructures, multicast can be problematic if not well configured, or if you have too many hosts joining and leaving the multicast group.</li>
+
+<li><strong>Consider using JSON</strong>: JSON is a more verbose format, but the availability of parsers in all languages, including C, has significantly improved. I still do not think Thrift or Protocol Buffers are ubiquitous enough to anoint one of them as the only way Apache HTTP Server transports data.</li>
+</ul>
+
+<h2 id='conclusion'>Conclusion</h2>
+
+<p>Binary encodings of information can be both smaller and faster, but sometimes a simple ASCII encoding is sufficient, and should not be overlooked. The decision should consider the real world impact of the choice. In the last few years we have seen the emergence of Thrift or Protocol Buffers which are great for internal systems communication, but are still questionable when considering protocols implemented by many producers and consumers. For products like the Apache HTTP server, we also do not want to be encumbered by large dependencies, which rules out many of these projects. I believe that the choice of ASCII strings, using query string encoded keys and values is an excellent balance for <code>mod_heartbeat</code>&#8217;s needs, and will stand the test of time.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2012/01/05/dreadnot-continuous-deployment/" title="Rackspace Open Sources Dreadnot, a Continuous Deployment tool">&larr; Rackspace Open Sources Dreadnot, a Continuous Deployment tool</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2012/03/01/march-2012/" title="March 2012">March 2012 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>22 February 2012</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

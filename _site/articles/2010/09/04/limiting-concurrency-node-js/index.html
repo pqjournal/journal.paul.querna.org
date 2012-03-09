@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Limiting Concurrency in Node.js</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Limiting Concurrency in Node.js</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Lets say you are writing your new awesome web application in Node.js, because you know, Node.js is the new hotness and awesome.</p>
+
+<p>Lets also say, your new Node.js web application does non-trivial things, and hits a limited backend resource. You can&#8217;t rewrite this backend system in the new hotness of async Node.js yet, so it can only handle 10 concurrent clients. This should be a very common situation unless you happen to be at a new startup and are green fielding your entire application stack. If thats your case, Lucky you! But for everyone else, you need to control the amount of concurrency that Node.js applies to your backend.</p>
+
+<p>I am going to examine the simplest case of an HTTP server, which hits a backend resource, transforms it, and returns it to the client. Oh yeah, I mean a Reverse Proxy server; A Proxy server isn&#8217;t all that different from most application servers, taking client input and hitting different backends.  A proxy server just happens to hit HTTP most of the time, while an application server hits a database or another resource, but lets not get too deep into that. Node.js just happens to make writing proxy servers very easy, and relatively short, so I like using it as an example.</p>
+
+<p>All of the source code for the examples can be found inside <a href='http://github.com/pquerna/node-examples/tree/master/limiting_concurrency'>my node-examples repository on github</a>.</p>
+
+<h2 id='basic_reverse_proxy'>Basic Reverse Proxy</h2>
+
+<p>Here is our simple application server in Node.js, it takes in a client request, and proxies it to http://nodejs.org/, <a href='http://github.com/pquerna/node-examples/blob/master/limiting_concurrency/server_nolimit.js'>server_nolimit.js</a>:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>http</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;http&#39;</span><span class='p'>);</span>
+<span class='kd'>var</span> <span class='nx'>sys</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;sys&#39;</span><span class='p'>);</span>
+<span class='kd'>var</span> <span class='nx'>destination</span> <span class='o'>=</span> <span class='s2'>&quot;nodejs.org&quot;</span><span class='p'>;</span>
+
+<span class='nx'>http</span><span class='p'>.</span><span class='nx'>createServer</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>,</span> <span class='nx'>res</span><span class='p'>)</span> <span class='p'>{</span>
+  <span class='kd'>var</span> <span class='nx'>proxy</span> <span class='o'>=</span> <span class='nx'>http</span><span class='p'>.</span><span class='nx'>createClient</span><span class='p'>(</span><span class='mi'>80</span><span class='p'>,</span> <span class='nx'>destination</span><span class='p'>);</span>
+  <span class='kd'>var</span> <span class='nx'>preq</span> <span class='o'>=</span> <span class='nx'>proxy</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>.</span><span class='nx'>method</span><span class='p'>,</span> <span class='nx'>req</span><span class='p'>.</span><span class='nx'>url</span><span class='p'>,</span> <span class='nx'>req</span><span class='p'>.</span><span class='nx'>headers</span><span class='p'>);</span>
+
+  <span class='nx'>console</span><span class='p'>.</span><span class='nx'>log</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>.</span><span class='nx'>connection</span><span class='p'>.</span><span class='nx'>remoteAddress</span> <span class='o'>+</span><span class='s2'>&quot; &quot;</span><span class='o'>+</span> <span class='nx'>req</span><span class='p'>.</span><span class='nx'>method</span> <span class='o'>+</span><span class='s2'>&quot; &quot;</span><span class='o'>+</span><span class='nx'>req</span><span class='p'>.</span><span class='nx'>url</span><span class='p'>);</span>
+  <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;response&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>pres</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='nx'>res</span><span class='p'>.</span><span class='nx'>writeHead</span><span class='p'>(</span><span class='nx'>pres</span><span class='p'>.</span><span class='nx'>statusCode</span><span class='p'>,</span> <span class='nx'>pres</span><span class='p'>.</span><span class='nx'>headers</span><span class='p'>);</span>
+    <span class='nx'>sys</span><span class='p'>.</span><span class='nx'>pump</span><span class='p'>(</span><span class='nx'>pres</span><span class='p'>,</span> <span class='nx'>res</span><span class='p'>);</span>
+    <span class='nx'>pres</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;end&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+      <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
+      <span class='nx'>res</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
+    <span class='p'>});</span>
+  <span class='p'>});</span>
+  <span class='nx'>req</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;data&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>chunk</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>write</span><span class='p'>(</span><span class='nx'>chunk</span><span class='p'>,</span> <span class='s1'>&#39;binary&#39;</span><span class='p'>);</span>
+  <span class='p'>});</span>
+  <span class='nx'>req</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;end&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
+  <span class='p'>});</span>
+<span class='p'>}).</span><span class='nx'>listen</span><span class='p'>(</span><span class='mi'>8080</span><span class='p'>);</span><span class='o'>&lt;</span><span class='err'>/code&gt;</span>
+</code></pre>
+</div>
+<p>Note, this is in no way a valid HTTP 1.1 Proxy server, it breaks all kinds of things in the RFC, but its just bad enough for demos to work. It takes a client request in, creates an outgoing HTTP client request, and uses <code>sys.pump</code> to transfer the data.</p>
+
+<p>It is functional, and if you threw 1000 concurrent clients at it, it would want to open 1000 connections to nodejs.org. Poor nodejs.org!</p>
+
+<h2 id='limiting_outgoing_connections'>Limiting Outgoing Connections</h2>
+
+<p>This might appear to be the simplest approach, keep a count of the active clients, and if we are over the limit, start queuing any new clients.</p>
+
+<p>The problem comes in with how Node.js behaves; You will also need to buffer any incoming data while the request is queuing. You could try to call <code>pause()</code> on the stream, but this is only advisory, so streams can still trickle some data you need to buffer. This means our simple code of adding a counter, becomes complicated by extra buffering and work arounds for how Node&#8217;s HTTP streams work.</p>
+
+<p><a href='http://github.com/pquerna/node-examples/blob/master/limiting_concurrency/server_limit_client.js'>server_limit_clients.js implements this</a>, it accepts the client request, and keeps a currentClients variable up to date with the number of active outgoing requests. When one request finishes, it starts processing the next one:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>http</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;http&#39;</span><span class='p'>);</span>
+<span class='kd'>var</span> <span class='nx'>sys</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;sys&#39;</span><span class='p'>);</span>
+<span class='kd'>var</span> <span class='nx'>destination</span> <span class='o'>=</span> <span class='s2'>&quot;nodejs.org&quot;</span><span class='p'>;</span>
+
+<span class='kd'>var</span> <span class='nx'>maxClients</span> <span class='o'>=</span> <span class='mi'>1</span><span class='p'>;</span>
+<span class='kd'>var</span> <span class='nx'>currentClients</span> <span class='o'>=</span> <span class='mi'>0</span><span class='p'>;</span>
+<span class='kd'>var</span> <span class='nx'>_pending</span> <span class='o'>=</span> <span class='p'>[];</span>
+
+<span class='kd'>function</span> <span class='nx'>process_pending</span><span class='p'>()</span>
+<span class='p'>{</span>
+  <span class='k'>if</span> <span class='p'>(</span><span class='nx'>_pending</span><span class='p'>.</span><span class='nx'>length</span> <span class='o'>&gt;</span> <span class='mi'>0</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='kd'>var</span> <span class='nx'>cb</span> <span class='o'>=</span> <span class='nx'>_pending</span><span class='p'>.</span><span class='nx'>shift</span><span class='p'>();</span>
+    <span class='nx'>currentClients</span><span class='o'>++</span><span class='p'>;</span>
+    <span class='nx'>cb</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+      <span class='nx'>currentClients</span><span class='o'>--</span><span class='p'>;</span>
+      <span class='nx'>process</span><span class='p'>.</span><span class='nx'>nextTick</span><span class='p'>(</span><span class='nx'>process_pending</span><span class='p'>);</span>
+    <span class='p'>});</span>
+  <span class='p'>}</span>
+<span class='p'>}</span>
+
+<span class='kd'>function</span> <span class='nx'>client_limit</span><span class='p'>(</span><span class='nx'>cb</span><span class='p'>,</span> <span class='nx'>req</span><span class='p'>,</span> <span class='nx'>res</span><span class='p'>)</span> 
+<span class='p'>{</span>
+  <span class='k'>if</span> <span class='p'>(</span><span class='nx'>currentClients</span> <span class='o'>&lt;</span> <span class='nx'>maxClients</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='nx'>currentClients</span><span class='o'>++</span><span class='p'>;</span>
+    <span class='nx'>cb</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+      <span class='nx'>currentClients</span><span class='o'>--</span><span class='p'>;</span>
+      <span class='nx'>process</span><span class='p'>.</span><span class='nx'>nextTick</span><span class='p'>(</span><span class='nx'>process_pending</span><span class='p'>);</span>
+    <span class='p'>},</span> <span class='nx'>req</span><span class='p'>,</span> <span class='nx'>res</span><span class='p'>);</span>
+  <span class='p'>}</span>
+  <span class='k'>else</span> <span class='p'>{</span>
+    <span class='nx'>console</span><span class='p'>.</span><span class='nx'>log</span><span class='p'>(</span><span class='s1'>&#39;Overloaded, queuing clients...&#39;</span><span class='p'>);</span>
+    <span class='nx'>_pending</span><span class='p'>.</span><span class='nx'>push</span><span class='p'>(</span><span class='nx'>cb</span><span class='p'>);</span>
+  <span class='p'>}</span>
+<span class='p'>}</span>
+
+<span class='nx'>http</span><span class='p'>.</span><span class='nx'>createServer</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>,</span> <span class='nx'>res</span><span class='p'>)</span> <span class='p'>{</span>
+  <span class='kd'>var</span> <span class='nx'>bufs</span> <span class='o'>=</span> <span class='p'>[];</span>
+  <span class='kd'>var</span> <span class='nx'>done_buffering</span> <span class='o'>=</span> <span class='kc'>false</span><span class='p'>;</span>
+
+  <span class='nx'>client_limit</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>(</span><span class='nx'>done</span><span class='p'>){</span>
+    <span class='kd'>var</span> <span class='nx'>proxy</span> <span class='o'>=</span> <span class='nx'>http</span><span class='p'>.</span><span class='nx'>createClient</span><span class='p'>(</span><span class='mi'>80</span><span class='p'>,</span> <span class='nx'>destination</span><span class='p'>);</span>
+    <span class='kd'>var</span> <span class='nx'>preq</span> <span class='o'>=</span> <span class='nx'>proxy</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>.</span><span class='nx'>method</span><span class='p'>,</span> <span class='nx'>req</span><span class='p'>.</span><span class='nx'>url</span><span class='p'>,</span> <span class='nx'>req</span><span class='p'>.</span><span class='nx'>headers</span><span class='p'>);</span>
+
+    <span class='nx'>console</span><span class='p'>.</span><span class='nx'>log</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>.</span><span class='nx'>connection</span><span class='p'>.</span><span class='nx'>remoteAddress</span> <span class='o'>+</span><span class='s2'>&quot; &quot;</span><span class='o'>+</span> <span class='nx'>req</span><span class='p'>.</span><span class='nx'>method</span> <span class='o'>+</span><span class='s2'>&quot; &quot;</span><span class='o'>+</span><span class='nx'>req</span><span class='p'>.</span><span class='nx'>url</span><span class='p'>);</span>
+    <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;response&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>pres</span><span class='p'>)</span> <span class='p'>{</span>
+      <span class='nx'>res</span><span class='p'>.</span><span class='nx'>writeHead</span><span class='p'>(</span><span class='nx'>pres</span><span class='p'>.</span><span class='nx'>statusCode</span><span class='p'>,</span> <span class='nx'>pres</span><span class='p'>.</span><span class='nx'>headers</span><span class='p'>);</span>
+      <span class='nx'>sys</span><span class='p'>.</span><span class='nx'>pump</span><span class='p'>(</span><span class='nx'>pres</span><span class='p'>,</span> <span class='nx'>res</span><span class='p'>);</span>
+      <span class='nx'>pres</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;end&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+        <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
+        <span class='nx'>res</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
+        <span class='nx'>done</span><span class='p'>();</span>
+      <span class='p'>});</span>
+    <span class='p'>});</span>
+
+    <span class='kd'>function</span> <span class='nx'>finishreq</span><span class='p'>()</span> <span class='p'>{</span>
+      <span class='nx'>bufs</span><span class='p'>.</span><span class='nx'>forEach</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>(</span><span class='nx'>buf</span><span class='p'>){</span>
+        <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>write</span><span class='p'>(</span><span class='nx'>buf</span><span class='p'>);</span>
+      <span class='p'>});</span>
+      <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
+    <span class='p'>}</span>
+
+    <span class='k'>if</span> <span class='p'>(</span><span class='nx'>done_buffering</span><span class='p'>)</span> <span class='p'>{</span>
+      <span class='nx'>finishreq</span><span class='p'>();</span>
+    <span class='p'>}</span>
+    <span class='k'>else</span> <span class='p'>{</span>
+      <span class='nx'>req</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;end&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+        <span class='nx'>finishreq</span><span class='p'>();</span>
+      <span class='p'>});</span>
+    <span class='p'>}</span>
+  <span class='p'>});</span>
+
+  <span class='nx'>req</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;data&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>chunk</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='kd'>var</span> <span class='nx'>tbuf</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>Buffer</span><span class='p'>(</span><span class='nx'>chunk</span><span class='p'>.</span><span class='nx'>length</span><span class='p'>);</span>
+    <span class='nx'>chunk</span><span class='p'>.</span><span class='nx'>copy</span><span class='p'>(</span><span class='nx'>tbuf</span><span class='p'>,</span> <span class='mi'>0</span><span class='p'>,</span> <span class='mi'>0</span><span class='p'>);</span>
+    <span class='nx'>bufs</span><span class='p'>.</span><span class='nx'>push</span><span class='p'>(</span><span class='nx'>tbuf</span><span class='p'>);</span>
+  <span class='p'>});</span>
+
+  <span class='nx'>req</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;end&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='nx'>done_buffering</span> <span class='o'>=</span> <span class='kc'>true</span><span class='p'>;</span>
+  <span class='p'>});</span>
+
+<span class='p'>}).</span><span class='nx'>listen</span><span class='p'>(</span><span class='mi'>8080</span><span class='p'>);</span><span class='o'>&lt;</span><span class='err'>/code&gt;</span>
+</code></pre>
+</div>
+<p><strong>I have to say, ew!</strong> It just got too complicated. This buffering yourself stuff sucks. In addition, if you had 1000 clients connect, most clients would just see a wonderful spinning spinner on their browser, waiting for their turn to get an outgoing client.</p>
+
+<h2 id='limiting_by_accepting_less'>Limiting by accepting less</h2>
+
+<p>If your Node.js application is deployed behind a load balancer of some kind, it might be a better idea to provide it with back pressure to your load balancer, so it sends your application less traffic. A simple way to achieve this is to stop listening for connections.</p>
+
+<p>When a socket in TCP is set to <a href='http://www.freebsd.org/cgi/man.cgi?query=listen'>listen for incoming connections</a>, the kernel keeps a backlog of pending connections, so while this method isn&#8217;t perfect, under high load it will quickly push back to your load balancer to stop sending your application traffic. One problem is that currently Node.js hard codes 128 connections in the TCP listener backlog, so if your desired concurrency level is very low, this method will not be very effective in applying back pressure.</p>
+
+<p>In addition because of how Node.js&#8217; <code>IOWatchers</code> work, even if you tell it to stop listening, it will continue processing any sockets it has already called accept on, meaning that this method is very crude, and relatively inaccurate on having exactly X clients making backend requests.</p>
+
+<p><a href='http://github.com/pquerna/node-examples/blob/master/limiting_concurrency/server_limit_incoming.js'>server_limit_incoming.js implements this</a>, it reads new client requests until there are too many inflight, then it calls an internal function on the server instance&#8217;s watcher object, <code>stop()</code>. This stops libev from listening for new clients on that socket, it removes it from the event loop. Once we are back below the maximum clients, it calls start on the IOWatcher, which adds the listening socket back to the event loop:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>http</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;http&#39;</span><span class='p'>);</span>
+<span class='kd'>var</span> <span class='nx'>sys</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;sys&#39;</span><span class='p'>);</span>
+<span class='kd'>var</span> <span class='nx'>destination</span> <span class='o'>=</span> <span class='s2'>&quot;nodejs.org&quot;</span><span class='p'>;</span>
+<span class='kd'>var</span> <span class='nx'>port</span> <span class='o'>=</span> <span class='mi'>8080</span><span class='p'>;</span>
+<span class='kd'>var</span> <span class='nx'>maxClients</span> <span class='o'>=</span> <span class='mi'>2</span><span class='p'>;</span>
+<span class='kd'>var</span> <span class='nx'>currentClients</span> <span class='o'>=</span> <span class='mi'>0</span><span class='p'>;</span>
+<span class='kd'>var</span> <span class='nx'>active</span> <span class='o'>=</span> <span class='kc'>true</span><span class='p'>;</span>
+
+<span class='kd'>var</span> <span class='nx'>hs</span> <span class='o'>=</span> <span class='kc'>null</span><span class='p'>;</span>
+
+<span class='kd'>function</span> <span class='nx'>activate</span><span class='p'>()</span> <span class='p'>{</span>
+  <span class='k'>if</span> <span class='p'>(</span><span class='o'>!</span><span class='nx'>active</span> <span class='o'>&amp;&amp;</span> <span class='nx'>currentClients</span> <span class='o'>&lt;</span> <span class='nx'>maxClients</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='nx'>hs</span><span class='p'>.</span><span class='nx'>watcher</span><span class='p'>.</span><span class='nx'>start</span><span class='p'>();</span>
+    <span class='nx'>active</span> <span class='o'>=</span> <span class='kc'>true</span><span class='p'>;</span>
+  <span class='p'>}</span>
+<span class='p'>}</span>
+
+<span class='nx'>hs</span> <span class='o'>=</span> <span class='nx'>http</span><span class='p'>.</span><span class='nx'>createServer</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>,</span> <span class='nx'>res</span><span class='p'>)</span> <span class='p'>{</span>
+  <span class='kd'>var</span> <span class='nx'>proxy</span> <span class='o'>=</span> <span class='nx'>http</span><span class='p'>.</span><span class='nx'>createClient</span><span class='p'>(</span><span class='mi'>80</span><span class='p'>,</span> <span class='nx'>destination</span><span class='p'>);</span>
+  <span class='kd'>var</span> <span class='nx'>preq</span> <span class='o'>=</span> <span class='nx'>proxy</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>.</span><span class='nx'>method</span><span class='p'>,</span> <span class='nx'>req</span><span class='p'>.</span><span class='nx'>url</span><span class='p'>,</span> <span class='nx'>req</span><span class='p'>.</span><span class='nx'>headers</span><span class='p'>);</span>
+
+  <span class='nx'>console</span><span class='p'>.</span><span class='nx'>log</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>.</span><span class='nx'>connection</span><span class='p'>.</span><span class='nx'>remoteAddress</span> <span class='o'>+</span><span class='s2'>&quot; &quot;</span><span class='o'>+</span> <span class='nx'>req</span><span class='p'>.</span><span class='nx'>method</span> <span class='o'>+</span><span class='s2'>&quot; &quot;</span><span class='o'>+</span><span class='nx'>req</span><span class='p'>.</span><span class='nx'>url</span><span class='p'>);</span>
+  <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;response&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>pres</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='nx'>res</span><span class='p'>.</span><span class='nx'>writeHead</span><span class='p'>(</span><span class='nx'>pres</span><span class='p'>.</span><span class='nx'>statusCode</span><span class='p'>,</span> <span class='nx'>pres</span><span class='p'>.</span><span class='nx'>headers</span><span class='p'>);</span>
+    <span class='nx'>sys</span><span class='p'>.</span><span class='nx'>pump</span><span class='p'>(</span><span class='nx'>pres</span><span class='p'>,</span> <span class='nx'>res</span><span class='p'>);</span>
+    <span class='nx'>pres</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;end&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+      <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
+      <span class='nx'>res</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
+      <span class='nx'>currentClients</span><span class='o'>--</span><span class='p'>;</span>
+      <span class='nx'>activate</span><span class='p'>();</span>
+    <span class='p'>});</span>
+  <span class='p'>});</span>
+  <span class='nx'>req</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;data&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>chunk</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>write</span><span class='p'>(</span><span class='nx'>chunk</span><span class='p'>,</span> <span class='s1'>&#39;binary&#39;</span><span class='p'>);</span>
+  <span class='p'>});</span>
+  <span class='nx'>req</span><span class='p'>.</span><span class='nx'>on</span><span class='p'>(</span><span class='s1'>&#39;end&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='nx'>preq</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
+  <span class='p'>});</span>
+
+  <span class='nx'>currentClients</span><span class='o'>++</span><span class='p'>;</span>
+  <span class='k'>if</span> <span class='p'>(</span><span class='nx'>currentClients</span> <span class='o'>&gt;=</span> <span class='nx'>maxClients</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='nx'>hs</span><span class='p'>.</span><span class='nx'>watcher</span><span class='p'>.</span><span class='nx'>stop</span><span class='p'>();</span>
+    <span class='nx'>active</span> <span class='o'>=</span> <span class='kc'>false</span><span class='p'>;</span>
+  <span class='p'>}</span>
+<span class='p'>});</span>
+
+<span class='nx'>hs</span><span class='p'>.</span><span class='nx'>listen</span><span class='p'>(</span><span class='nx'>port</span><span class='p'>);</span>
+</code></pre>
+</div>
+<p>Overall this approach of stop accepting new clients is far less code than the earlier limiting method, and it lets your load balancers do smarter things under high load, hopefully meaning you have extra capacity on another machine, rather than just accepting more clients on an already overloaded server. It does use some &#8216;hacky&#8217; knowledge internals of how HTTP streams and IO Watchers work inside Node.js, and it is far less accurate in its counting. However, I believe that this method is probably one of the better ways to limit your concurrency inside Node.js.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/09/02/nodul-es-cpan-for-node-js/" title="Announcing Nodul.es: CPAN for Node.js">&larr; Announcing Nodul.es: CPAN for Node.js</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/09/24/from-the-trenches/" title="Random thoughts from the trenches">Random thoughts from the trenches &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>04 September 2010</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="#node.js-ref">node.js <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

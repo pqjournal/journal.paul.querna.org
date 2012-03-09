@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Event MPM Updates and mod_dialup</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Event MPM Updates and mod_dialup</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>I know, I know, I haven&#8217;t written a blog post in months.</p>
+
+<p>Forgive me :-)</p>
+
+<p>Anyways, figured some people might be interested in what I commited last night for the Apache HTTP Server&#8230;.</p>
+
+<p>First is the ability to &#8216;suspend&#8217; an HTTP Request from a Module.</p>
+
+<p>Normally in Apache, there is a one to one relationship between the running thread, and a client connection that it is servicing.  In the <a href='http://httpd.apache.org/docs/2.1/mod/event.html'>Event MPM previously</a>, we had broken it out so between different HTTP requests in the same TCP connection, aka Keep Alives, could be serviced by different threads.</p>
+
+<p>Now with <a href='https://svn.apache.org/viewvc?view=rev&amp;revision=697357'>r697357 in httpd trunk</a>, you can return SUSPENDED from a content handler.  The core  will assume you have taken over handling of the request, and get out of your way.</p>
+
+<p>This is insanely important, because in the long run it lets you write very cool modules, like a full async HTTP Proxy, aka <a href='http://varnish.projects.linpro.no/'>something like Varnish</a>, where you could easily handle tens of thousands of client connections, using only a hundred odd threads, where today you would need a huge amount of RAM, and a single thread or process for every client to do this with Apache.</p>
+
+<p>Secondly, as a demonstration that it works, I wrote <a href='https://svn.apache.org/repos/asf/httpd/httpd/trunk/modules/test/mod_dialup.c'>mod_dialup</a>. It is a module that sends static content at a bandwidth rate limit, defined by the various old modem standards. So, you can browse your site with a 56k V.92 modem, by adding something like this:</p>
+
+<pre><code>&lt;Location /mysite&gt;
+    ModemStandard V.92
+&lt;/Location&gt;</code></pre>
+
+<p>Previously to do <a href='http://www.topology.org/src/bwshare/README.html'>bandwidth rate limiting modules</a> would have to block an entire thread, for each client, and insert sleeps to slow the bandwidth down.  Using the new suspend feature, a handler can get callback N milliseconds in the future, and it will be invoked by the Event MPM on a different thread, once the timer hits.  From there the handler can continue to send data to the client.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2008/05/18/in-spokane/" title="in spokane">&larr; in spokane</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2008/09/24/the-economy/" title="the economy.">the economy. &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>20 September 2008</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

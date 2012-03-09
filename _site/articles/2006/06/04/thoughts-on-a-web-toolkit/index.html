@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Thoughts on a Web ToolKit</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Thoughts on a Web ToolKit</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>I have been doing lots of &#8216;Web Development&#8217; in C/C++ in the last year.</p>
+
+<p>The current workflow currently isn&#8217;t that bad, mostly because we use <a href='http://www.clearsilver.net/'>ClearSilver</a> to do many of the hard parts.</p>
+
+<p>Now, ClearSilver is an okay <a href='http://www.clearsilver.net/docs/man_templates.hdf'>template language</a>, nothing amazing, but its pretty damn fast, and it works. However, ClearSilver also includes a &#8221;<a href='http://www.clearsilver.net/docs/man_cgi.hdf'>CGIKit</a>&#8221; API, which tries to handle many of the hard parts of running a writing a CGI in C. I would rate the CGIKit as only mediocre, and I have had to dig through it a couple times to extend things or even figure out what the heck it is doing.</p>
+
+<p>I have been thinking about writing a replacement for the CGIKit portion of the API, and using the <a href='http://etl.i-want-a-pony.com/'>Electric Template Language</a> from <a href='http://asdf.blogs.com/'>Garrett</a>.</p>
+
+<p>For the API, I am trying to decide between a Monolithic approach, or a more modular one. A simple question: should the API create the concept of Handlers based on URI prefixes, or should you do that yourself?</p>
+
+<p>For example, if the Toolkit was more Monolithic, you would have an API like this:</p>
+
+<blockquote />
+
+<p>pwt_register_handler(&#8220;/one&#8221;, one_handler_func);</p>
+
+<p>pwt_register_handler(&#8220;/two&#8221; two_handler_func);</p>
+
+<p>pwt_run_handler();</p>
+
+<p>Which would then call the appropriate function handler if the prefix was matched.</p>
+
+<p>On the other hand, a more modular approach would look like this:</p>
+
+<blockquote />
+
+<p>if (pwt_prefix_match(pwt, &#8220;/one&#8221;)) {</p>
+
+<blockquote />
+
+<p>one_handler_func(pwt);</p>
+
+<blockquote />
+
+<p>}</p>
+
+<p>else if (pwt_prefix_match(pwt, &#8220;/two&#8221;)) {</p>
+
+<p>two_handler_func(pwt);</p>
+
+<p>}</p>
+
+<p>Now, the second example is more flexible, allowing you to put hacks in as needed, but it means more code is written.</p>
+
+<p>Of course, now you say, if you design the API correctly, you can do both, and easily degrade into the more modular method when you need that control, which isn&#8217;t the common case. Right, I have no doubts about that, it just means iterating on the API more before much is finalized, to find those points that need to be able to &#8216;degrade&#8217;.</p>
+
+<p>The other challenge in the API design is that I want it to support a CGI mode, FastCGI Mode, and possibly a native Apache Module Handler Mode. I am pretty sure with some macro-magic that can be done &#8211; and hopefully without hurting either method significantly.</p>
+
+<p>Lastly, I am having an internal debate on if it should be pure-C, or use C++. I think several parts could be made easier with C++ &#8211; for example you could make you own Classes based off a base PWTHandler and subclass them as needed to your own situation. I believe many C++ &#8216;libraries&#8217; do correctly have a stigma to them &#8211; it is too easy to say, well, i need XYZ, and then just #include boot/foobar.hpp. And now you depend on <a href='http://www.boost.org/'>Boost</a>. C Libraries have a consistent history in open source of working well. While C++ is exactly the opposite for the most part. To people who read my blog, do you care which language it is in? Does either one matter to you?</p>
+
+<p>I have little doubt that all of my goals can be accomplished in straight C, but I think it will end up abusing Macros in ways that I hate to get the lines of code per new handler down to the same number as in C++.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2006/05/31/bloglines-blog-search/" title="Bloglines Blog Search">&larr; Bloglines Blog Search</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2006/06/11/myspace-generation/" title="myspace generation">myspace generation &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>04 June 2006</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

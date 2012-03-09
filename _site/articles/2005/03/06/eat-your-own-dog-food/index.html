@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Eat Your Own Dog Food</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Eat Your Own Dog Food</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>This site is now running off the <a href='http://httpd.apache.org/docs-2.1/mod/event.html'>Event MPM</a>, that I helped write.</p>
+
+<p>I still have several sites that require PHP, so I am using <a href='http://fastcgi.coremail.cn/'>mod_fcgid</a> to run all of the remaining PHP Scripts via FastCGI.</p>
+
+<p>Only the <a href='http://con.plasma.corelands.com/'>Until Uru Signup page</a> had issues after the upgrade. This page was using the <code>apache_add_output_filter</code> function added by <a href='http://www.in.force-elite.com/~chip/patches/php-src/apache2-filters/'>my apache2-filters patch for PHP</a>. Since the PHP was no longer running inside apache, this function did not exist. The Until Uru templates are all built in XSLT, and the PHP was adding a <a href='http://www.outoforder.cc/projects/apache/mod_transform/'>XSLT Output Filter</a> to process the XML it generates. To fix this, I modified the script send an extra header:</p>
+
+<p>Quote from header.php:</p>
+
+<pre><code>header(&quot;Content-Type: application/needs-xslt&quot;);</code></pre>
+
+<p>I then told <code>mod_transform</code> to act on this:</p>
+
+<p>Quote from httpd.conf:</p>
+
+<pre><code>AddOutputFilterByType XSLT application/needs-xslt</code></pre>
+
+<p>It seems everything else is working great. If anything is broken, please let me know.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/03/02/deceptive/" title="Deceptive">&larr; Deceptive</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/03/06/suphp/" title="suphp?">suphp? &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>06 March 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

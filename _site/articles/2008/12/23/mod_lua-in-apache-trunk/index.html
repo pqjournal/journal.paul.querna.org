@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>mod_lua in apache trunk</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>mod_lua in apache trunk</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>The module formally known as <a href='http://www.google.com/search?q=mod_wombat'>mod_wombat</a> was renamed <a href='https://svn.apache.org/repos/asf/httpd/httpd/trunk/modules/lua/'>mod_lua</a>, and has pulled into the Apache HTTP Server trunk, and will be part of the future 2.4 stable release.</p>
+
+<p>For an example of why it is cool, lets look at replacing a common task with mod_rewrite: Blocking Image Theft.</p>
+
+<p>The HTTPD wiki even <a href='http://wiki.apache.org/httpd/RewriteImageTheft'>has an example of how to do</a> this for us:</p>
+
+<pre><code>RewriteEngine on
+RewriteCond %{HTTP_REFERER} !=&quot;&quot;
+RewriteCond %{HTTP_REFERER} !example\.com [NC]
+RewriteRule \.(jpe?g|gif|png)$ - [F,NC]`</code></pre>
+
+<p>With the new mod_lua, you can do this using real if statements and functions.</p>
+
+<p>For example:</p>
+
+<pre><code>&lt;LuaHookTranslateName imagetheft&gt;
+function is_image(path)
+   -- You could put complicated regular expressions here.
+   if path:match(&quot;%a+.png&quot;) then
+       return true
+   end
+   return false
+end
+
+function imagetheft(r)
+   if not is_image(r.uri) then
+       return apache2.DECLINED
+   end
+
+   referer = r:headers_in(&quot;Referer&quot;)
+   if referer then
+       if referer:find(&#39;example.com&#39;) then
+           return apache2.DECLINED
+       else
+           r:err(&quot;Forbidden for Image Theft! uri=&quot;.. r.uri)
+           return 403
+       end
+   end
+   return apache2.DECLINED
+end
+&lt;/LuaHookTranslateName&gt;</code></pre>
+
+<p>While this example comes out signifigantly longer, I do believe in the long run it will let people write more maintainable configurations, espcially for things like complicated RewriteRules &#8211; since basic things that have long be obsecured into <a href='http://httpd.apache.org/docs/trunk/mod/mod_rewrite.html#rewritecond'>RewriteCond</a> can now be easily accessed and evaluated with an If statement in <a href='http://www.lua.org/'>Lua</a>.</p>
+
+<p>Much of the API is still in flux, but hopefully we will come up with some shortcut builtins that make many common taskes easier and shorter.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2008/12/23/mod_v8/" title="mod_v8">&larr; mod_v8</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2008/12/25/my-gnome/" title="My gnome">My gnome &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>23 December 2008</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

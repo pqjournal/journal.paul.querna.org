@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>httpd: mod_cache only caching your homepage</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>httpd: mod_cache only caching your homepage</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>mod_cache has a pretty inflexible configuration setup.  <a href='http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cacheenable'>CacheEnable</a> can only take a prefix of a path to be cached, and to disable a sub-path with <a href='http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachedisable'>CacheDisable</a>, you need to list all of the possible prefixes (ie, no regular expressions).</p>
+
+<p>Lets say you want to cache just your root page, aka &#8217;/&#8217;, for your website, just in case you get hit by a Slashdot Effect.</p>
+
+<p>For Apache httpd 2.2.12 or newer, you can do this by first enabling Caching on All pages, then setting the <a href='http://httpd.apache.org/docs/2.2/env.html#no-cache'>no-cache enviroment variable</a> globally, and then unsetting it for a specific path:</p>
+
+<pre><code>CacheDirLevels 2
+CacheDirLength 1
+CacheEnable disk /
+CacheRoot /var/cache/apache2/mod_disk_cache
+CacheIgnoreHeaders Set-Cookie
+CacheIgnoreNoLastMod On
+CacheMaxExpire 600
+SetEnv no-cache
+&lt;LocationMatch &quot;^/$&quot;&gt;
+UnsetEnv no-cache
+&lt;/LocationMatch&gt;</code></pre>
+
+<p>For Apache httpd before 2.2.12, you need a different method of disabling caching globally, and then re-enabling it.  The easiest way is using <a href='http://httpd.apache.org/docs/2.2/mod/mod_headers.html'>mod_headers</a>, to muck with Vary header</p>
+
+<pre><code>Header set Vary *
+&lt;LocationMatch &quot;^/$&quot;&gt;
+Header unset Vary
+&lt;/LocationMatch&gt;</code></pre>
+
+<p>Strictly speaking, doing this to the Vary header is an RFC violation, and you best bet is to upgrade to a newer httpd version.  :-)</p>
+
+<p>This works because mod_cache will refuse to cache any HTTP resource with a Vary value of &#8221;<code>*</code>&#8221;, because this is saying that every response form the origin will be different.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/01/25/httpd-disabling-keep-alive-for-hot-linked-images/" title="httpd: disabling keep alive for hot linked images">&larr; httpd: disabling keep alive for hot linked images</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/01/25/cloudkick-agent-and-more/" title="Released Cloudkick's for-pay products">Released Cloudkick's for-pay products &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>25 January 2010</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>reinventing the wheel</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>reinventing the wheel</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>So, Imagine you are building a super AJAXy Web 2.0 Application. And you want to build pretty <a href='http://en.wikipedia.org/wiki/REST'>REST APIs</a>, that return <a href='http://www.json.org/'>JSON</a>. Just like all the cool kids are doing.</p>
+
+<p>Lets imagine, to display a view, you need to make 5 different API Calls to load all of the required data. The standard method is to fire off 5 XMLHTTPRequests (But you are <a href='http://dojotoolkit.org/intro_to_dojo_io.html'>using dojo.io</a>, right?). This doesn&#8217;t sound that bad, until you consider what the client user agents will do.</p>
+
+<p>The first two requests, A and B, will be sent off in parallel HTTP connections. but the last 3 will wait. The standard limit for concurent KeepAlive enabled connections per server is 2. They wait until the entire reply of one of the first two is downloaded:</p>
+
+<blockquote />
+
+<p>A -&gt; sent to server</p>
+
+<p>B -&gt; sent to server</p>
+
+<p>&#8230; C, D, E waiting</p>
+
+<p>A &lt;- finishes</p>
+
+<p>C -&gt; sent to server</p>
+
+<p>&#8230; D, E waiting</p>
+
+<blockquote />
+
+<p>B &lt;- finishes</p>
+
+<p>D -&gt; sent to server</p>
+
+<p>&#8230; E waiting</p>
+
+<blockquote />
+
+<p>C &lt;- finishes</p>
+
+<p>E -&gt; sent to server</p>
+
+<p>E &lt;- finishes</p>
+
+<p>This means for 5 requests, we are doing a minimum of 3 round trips waiting for the server.</p>
+
+<p>Of course, there is already a way to solve this problem. It is called <a href='http://en.wikipedia.org/wiki/HTTP_pipelining'>HTTP Pipelining</a>:</p>
+
+<p><img src='http://journal.paul.querna.org/files/200703200108.jpg' alt='200703200108' /></p>
+
+<p>The problem isn&#8217;t with the specification, which Apache HTTPD supports, it is that most popular user agents disable HTTP Pipelining. Even thought Firefox 2.0 supports pipelining, it is <a href='http://www.mozilla.org/support/firefox/tips#oth_pipelining'>disabled by default</a>.</p>
+
+<p>This morning over IRC, <a href='http://blowery.org/blog/'>Ben</a> and I came up with an evil alternative.</p>
+
+<p>Rather than complicating our APIs, by building &#8216;combined&#8217; object fetches via new APIs, we came up with the idea of multiplexing them generically, allowing any existing API to be used with any others and multiplex them together.</p>
+
+<p>This resulted in <a href='http://svn.i-want-a-pony.com/repos/mod_multiget/trunk/mod_mutliget.c'>mod_multiget</a>.</p>
+
+<p>To use it, you just create a request with a POST body of the URLs you want to fetch. For example if you wanted to fetch data from:</p>
+
+<p>* /foo/obj/10</p>
+
+<p>* /foo/obj/15</p>
+
+<p>* /bar/100</p>
+
+<p>You would create a POST body with:</p>
+
+<p>* uri_1=/foo/obj/10</p>
+
+<p>* uri_2=/foo/obj/15</p>
+
+<p>* uri_3=/bar/100</p>
+
+<p>When you run this against mod_multiget, in a single request, you would receive the content of 3. It is returned as a JSON object with the following format:</p>
+
+<pre><code>{
+&quot;requests&quot;: [
+  {
+  &quot;uri&quot;: &quot;/foo/obj/10&quot;,
+  &quot;status&quot;: 200,
+  &quot;body&quot;:  {&quot;id&quot;: 10, &quot;data&quot;: &quot;foobar&quot;},
+  },
+  {
+  &quot;uri&quot;: &quot;/foo/obj/15&quot;,
+  &quot;status&quot;: 200,
+  &quot;body&quot;:  {&quot;id&quot;: 15, &quot;data&quot;: &quot;bleh&quot;},
+  },
+  {
+  &quot;uri&quot;: &quot;/bar/100&quot;,
+  &quot;status&quot;: 200,
+  &quot;body&quot;:  {&quot;id&quot;: 100, &quot;data&quot;: &quot;badgerbadgerbadger&quot;},
+  }]
+}</code></pre>
+
+<p>The body block contains the raw data of the different URIs that were requested.</p>
+
+<p>To configure <code>mod_multiget</code>, add the following to your httpd.conf:</p>
+
+<pre><code>LoadModule multiget_module modules/mod_mutliget.so
+&lt;Location /multiget&gt;
+  MultiGet on
+&lt;/Location&gt;</code></pre>
+
+<p>You can test it with <a href='http://curl.haxx.se/'>curl</a> like this:</p>
+
+<pre><code>curl -i -d \
+&#39;&amp;uri_1=/foo/obj/10&amp;uri_2=/foo/obj/15&amp;uri_3=/bar/100&#39; \
+&#39;http://localhost/multiget&#39;</code></pre>
+
+<p>A word of warning: This module does <em>some evil evil evil stuff</em> with Apache Internals. Sub-requests (which is how this is implemented), where never meant to really be used this way. This also currently buffers the ENTIRE REPLY in memory. But it does serve the purpose as prototype.</p>
+
+<p>The cool thing is, this module works with <strong>any</strong> content handler in Apache, so if you are using RoR or Django, or any other method to create JSON, you can bulk the requests using the same module, without any modifications.</p>
+
+<p>The point is, paraphrasing an internal email, this preserves encapsulation of the original APIs, maximizing delegation and allowing for re-use of existing code. This enables the back-end developers to not care about how each small request is multiplexed through this module becuase the access API they export is the same wether or not it goes through the module.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2007/02/14/bloglines-image-wall/" title="Bloglines Image Wall">&larr; Bloglines Image Wall</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2007/04/16/monday/" title="monday">monday &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>20 March 2007</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

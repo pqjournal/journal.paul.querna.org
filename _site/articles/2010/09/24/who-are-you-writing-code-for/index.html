@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Who are you writing code for?</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Who are you writing code for?</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Brice started a meandering discussion with his post a few weeks ago, <a href='http://blog.headspin.com/?p=274'>Some random thoughts on programming</a>, which spawned a lengthy <a href='http://www.reddit.com/r/programming/comments/dao05/in_30_years_i_have_only_seen_a_few_examples_where/'>thread on Reddit</a>.</p>
+
+<p>Much of the discussion was focused on &#8220;good&#8221;, &#8220;mediocre&#8221;, &#8220;bad&#8221; and &#8220;terrible&#8221; programmers. The problem I have is that the discusion were the comments got bogged down by terminology. Good and bad are moral judgements, assigning an unchangeable label to a person.</p>
+
+<p>I am sure I&#8217;ve been called a terrible programmer by another programmer. And I freely admit, I&#8217;ve written some terrible code; Though I also think I&#8217;ve also written a decent chunk of &#8216;good&#8217; code too.</p>
+
+<p>The problem with evaluating a code base long after it was written, it is very difficult to understand why the code was written, and <strong>who the code was written for</strong>.</p>
+
+<h1 id='ask_yourself_who_are_you_writing_code_for_today'>Ask yourself, who are you writing code for today?</h1>
+
+<h2 id='the_deadline'>The Deadline.</h2>
+
+<p>Perhaps the most common, writing code for a deadline. Take those short cuts, copy and paste 5 lines rather than refactoring, and just ship it. We have all done it, and we all knew it was naughty.</p>
+
+<h2 id='the_management_metric_of_great_success_extreme_edition'>The management metric of great success, extreme edition.</h2>
+
+<p>What happens when managers don&#8217;t understand code, but they have some metric that determines how &#8216;good&#8217; a programer is? Programers figure it out, because they are problem solvers at heart, and optimize for the <em>game</em>. Measuring lines of code, bugs closed, comment density, depth, etc, are all possible indicators of <em>good</em> coders, but by they are all correlations, not causations. Even more creative metrics like &#8220;lines of code removed&#8221;, will be gamed and your application will be transformed into a <a href='http://sial.org/howto/perl/one-liner/'>perl one liner</a>.</p>
+
+<h2 id='for_the_computer'>For the Computer.</h2>
+
+<p>All programs in some sense must be written for the computer, but perhaps it is the last one you should care about. Computers care about syntax, they don&#8217;t care about comments, they don&#8217;t care about variable names. Most languages don&#8217;t care about spacing or code formatting either. You still must pick the right algorithm, but avoid doing anything to make it faster by micro optimizations. The choice of <code>i++</code> vs <code>++i</code> in a for loop is not important, that is what compilers and JITs are for. Make the code clear and easy to understand before worrying about any micro optimization. Trust the computer and compilers to be fast for usage common patterns.</p>
+
+<h2 id='for_yourself'>For yourself.</h2>
+
+<p>Learning a new programing language is fun, but it isn&#8217;t ideal if you base your entire companies architecture on it because there was a story about it on <a href='http://news.ycombinator.com/'>hacker news</a>, or worse yet, <a href='http://lambda-the-ultimate.org/'>Lambda the Ultimate</a>. When you are writing for yourself, its fine to skip over comments, use bad variable names, write it in 2-space python, and other oddities, but it makes for bizarre code for anyone else to understand. But its fine, we all need a time and place to <em>hack</em> on something.</p>
+
+<h2 id='for_those_who_come_after_you'>For those who come after you.</h2>
+
+<p>Coding is a transference of an abstract idea, into a format that the computer understands. Writing about abstract ideas is hard for even small things, but many software projects spawn hundreds of thousands or even millions of lines of code, a proper tome of code. Communicating these ideas to another human being, via a limited syntax in a computer&#8217;s text file is going to be doomed to failure most of the time.</p>
+
+<p>The best code I&#8217;ve written is where I believe I&#8217;ve spent time to write the comments, outlined the flow of the code, maybe even with some ASCII art diagrams. Focused on transferring and communicating the idea in my head to whatever unlucky programer soul reads this code later. But even then, I think by focusing on this communication, the code becomes inhertitly better, because you think more deeply about the abstractions and layering you are doing, instead of just cowboy coding and moving on to the next component.</p>
+
+<p>The act of writing comments makes the code better. Any time you do something twice, you get better at it the second time. When you are writing code and comments, you are explaining your abstract problem twice to the reader. It forces you to think more. Many times I&#8217;ve written the code, then written a comment about it. Then I go back and rework the code, or even changed simple things like picking better variable names, to better communicate the idea.</p>
+
+<h2 id='making_a_judgement'>Making a Judgement.</h2>
+
+<p>And this is why it is so hard to judge, who is a good and who is a bad programmer. All these motives are mixed. When you are evalutating code, it is impossible to know the mindset of the original programmer. Where they in a rush to leave on Friday for a weekend in Vegas, or was there just an outage in production so they had to put in an emergency hack that stayed there for 5 years? Or are they just a bad programmer?</p>
+
+<h2 id='maybe_programming_really_is_an_art'>Maybe Programming really is an Art?</h2>
+
+<p>I haven&#8217;t figured judgement out, and I don&#8217;t think most companies have either. Look at the interview processes for programers. They are all over the board on the questions asked; There is no standard test for computer science students to certify the skills that matter.</p>
+
+<p>There is just too much art in programing to make it just a test or metric.</p>
+
+<p>You know what other field is about communication of abstract ideas to other humans over a visual medium? Art. Paintings. Today we might say that <a href='http://en.wikipedia.org/wiki/Vincent_van_Gogh'>Van Gogh</a> is important and well known as a good artist, but still some people will never like his paintings. The judgement of good and bad are just too harsh for things that are this abstract, that are really about communication.</p>
+
+<p>The best you can do is remind yourself, and try to code for the right motives. Avoid coding for the compiler or some management metric. Avoid coding for deadlines, do that little utility function, and document why your code is doing everything. <em>You can make the code better, just focus on it, and maybe someone will call you a good programmer in the future, rather than ranting about how terrible your 10,000 line file is!</em></p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/09/24/cassandra-token-selection/" title="Cassandra Token Selection">&larr; Cassandra Token Selection</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/10/06/transforming-streams/" title="Transforming Streams">Transforming Streams &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>24 September 2010</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

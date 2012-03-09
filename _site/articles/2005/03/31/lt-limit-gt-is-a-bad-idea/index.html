@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Limit is a bad idea</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Limit is a bad idea</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Trying to help someone on IRC today.. their existing .htaccess file was very scary. It used the <a href='http://httpd.apache.org/docs-2.1/mod/core.html#limit'>&#60;Limit&#62;</a> directive, in completely the wrong context:</p>
+
+<p>Quote from from a .htaccess file:</p>
+
+<pre><code>&lt;Limit GET POST&gt;
+    require valid-user
+&lt;/limit&gt;</code></pre>
+
+<p>This means that any other HTTP method could access the site without <strong>any</strong> authentication. The kicker is that mod_php will allow <strong>any</strong> HTTP method. It doesn&#8217;t just restrict to GET or POST requests.</p>
+
+<p>Apache by itself only by default allows GET and HEAD requests on static files. Anyways, let this be a warning, when you think you need <a href='http://httpd.apache.org/docs-2.1/mod/core.html#limit'>&#60;Limit&#62;</a>, you probally don&#8217;t. Ever. Really. I am Serious. Do not use &#8216;Limit&#8217;.</p>
+
+<p>Most people really want <a href='http://httpd.apache.org/docs-2.1/mod/core.html#limitexcept'>&#60;LimitExcept&#62;</a>. But, I believe that in most cases, you should avoid optional authentication. I think that authentication should be required for an entire path, and not optional, depending on how the client munges the request. Optional Client Certs are also a bastard to get working too, so the best solution is to just avoid the entire &#8216;optional&#8217; authentication mindset.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/03/30/bucket-brigades-are-beautiful/" title="Bucket Brigades are beautiful">&larr; Bucket Brigades are beautiful</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/04/06/the-long-road-of-development/" title="The long road of development....">The long road of development.... &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>31 March 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

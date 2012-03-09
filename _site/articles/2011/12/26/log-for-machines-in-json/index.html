@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Write Logs for Machines, use JSON</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Write Logs for Machines, use JSON</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <h2 id='logging_for_humans'>Logging for Humans</h2>
+
+<p>A <a href='http://en.wikipedia.org/wiki/Printf_format_string'>printf style format string</a> is the de facto method of logging for almost all software written in the last 20 years. This style of logging crosses almost all programing language boundaries. <a href='http://logging.apache.org/index.html'>Many libraries</a> build upon this, adding log levels and various transports, but they are still centered around a formated string.</p>
+
+<p>I believe the widespread use of format strings in logging is based on two presumptions:</p>
+
+<ol>
+<li>The first level consumer of a log message is a human.</li>
+
+<li>The programer knows what information is needed to debug an issue.</li>
+</ol>
+
+<p>I believe these presumptions are <strong>no longer correct</strong> in server side software.</p>
+
+<h2 id='an_example_of_the_problem'>An example of the problem</h2>
+
+<p>An example is this classic error message inside the <a href='http://httpd.apache.org/'>Apache HTTP Server</a>. The following code is called any time a client hits a URL that doesn&#8217;t exist on the file system:</p>
+<div class='highlight'><pre><code class='c'><span class='n'>ap_log_rerror</span><span class='p'>(</span><span class='n'>APLOG_MARK</span><span class='p'>,</span> <span class='n'>APLOG_INFO</span><span class='p'>,</span> <span class='mi'>0</span><span class='p'>,</span> <span class='n'>r</span><span class='p'>,</span>
+  <span class='s'>&quot;File does not exist: %s&quot;</span><span class='p'>,</span> <span class='n'>r</span><span class='o'>-&gt;</span><span class='n'>filename</span><span class='p'>);</span>
+</code></pre>
+</div>
+<p>This would generate a log message like the following in your <code>error.log</code>:</p>
+
+<pre><code>[Mon Dec 26 09:14:46 2011] [info] [client 50.57.61.4] File does not exist: /var/www/no-such-file</code></pre>
+
+<p>This is fine for human consumption, and for decades people have been writing Perl scripts to munge it into fields for a computer to understand too. However, the first time you add a field, for example the HTTP <code>User-Agent</code> header, it would break most of those perl scripts. This is one example of where building a log format that is optimized for computer consumption starts to make sense.</p>
+
+<p>Another problem is when you are writing these format string log messages, you don&#8217;t always know what information people will need to debug the issue. Since you are targeting them for human consumption you try to reduce the information overload, and you make a few guesses, like the path to the file, or the source IP address, but this process is error prone. From my experience in the Apache HTTP server this would mean opening <code>GDB</code> to trace what is happening. Once you figure out what information is relevant, you modify the log message to improve the output for future users with the relevant information.</p>
+
+<h2 id='what_if_we_logged_everything_into_json'>What if we logged everything into JSON?</h2>
+
+<p>If we produced a JSON object which contained the same message, it might look something like this:</p>
+<div class='highlight'><pre><code class='javascript'><span class='p'>{</span>
+    <span class='s2'>&quot;timestamp&quot;</span><span class='o'>:</span> <span class='mf'>1324830675.076</span><span class='p'>,</span>
+    <span class='s2'>&quot;status&quot;</span><span class='o'>:</span> <span class='s2'>&quot;404&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;short_message&quot;</span><span class='o'>:</span> <span class='s2'>&quot;File does not exist: /var/www/no-such-file&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;host&quot;</span><span class='o'>:</span> <span class='s2'>&quot;ord1.product.api0&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;facility&quot;</span><span class='o'>:</span> <span class='s2'>&quot;httpd&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;errno&quot;</span><span class='o'>:</span> <span class='s2'>&quot;ENOENT&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;remote_host&quot;</span><span class='o'>:</span> <span class='s2'>&quot;50.57.61.4&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;remote_port&quot;</span><span class='o'>:</span> <span class='s2'>&quot;40100&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;path&quot;</span><span class='o'>:</span> <span class='s2'>&quot;/var/www/no-such-file&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;uri&quot;</span><span class='o'>:</span> <span class='s2'>&quot;/no-such-file&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;level&quot;</span><span class='o'>:</span> <span class='mi'>4</span><span class='p'>,</span>
+    <span class='s2'>&quot;headers&quot;</span><span class='o'>:</span> <span class='p'>{</span>
+        <span class='o'>&lt;</span><span class='nx'>strong</span><span class='o'>&gt;</span><span class='s2'>&quot;user-agent&quot;</span><span class='o'>:</span> <span class='s2'>&quot;BadAgent/1.0&quot;</span><span class='p'>,</span><span class='o'>&lt;</span><span class='err'>/strong&gt;</span>
+        <span class='s2'>&quot;connection&quot;</span><span class='o'>:</span> <span class='s2'>&quot;close&quot;</span><span class='p'>,</span>
+        <span class='s2'>&quot;accept&quot;</span><span class='o'>:</span> <span class='s2'>&quot;*/*&quot;</span>
+    <span class='p'>},</span>
+    <span class='s2'>&quot;method&quot;</span><span class='o'>:</span> <span class='s2'>&quot;GET&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;unique_id&quot;</span><span class='o'>:</span> <span class='s2'>&quot;.rh-g2Tm.h-ord1.product.api0.r-axAIO3bO.c-9210.ts-1324830675.v-24e946e&quot;</span>
+<span class='p'>}</span>
+</code></pre>
+</div>
+<p>This example gives a much richer picture of information about the error. We now have data like the <code>User-Agent</code> in an easily consumable form, we could much more easily figure out that <code>BadAgent/1.0</code> is the cause of our 404s. Other information like the source server and a <a href='http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html'>mod_unique_id</a> hash can be used to correlate multiple log entries across the lifetime of an request.</p>
+
+<p>This information is also expandable. As the knowledge of what our product needs to log increases, it is easy to add more data, and we can safely do this without breaking our System Admins precious Perl scripts.</p>
+
+<h2 id='why_now'>Why now?</h2>
+
+<p>This idea is <a href='http://www.asynchronous.org/blog/archives/2006/01/25/logging-in-json'>not new</a>, it has just never been so easily accessible. Windows has had <a href='http://en.wikipedia.org/wiki/Event_Viewer'>&#8220;Event Logs&#8221; for a decade</a>, but in the more recent versions it uses XML. The emergence of JSON as a relatively compact serialization format that can be generated and parsed from almost any programming languages means it makes a great light weight interchange format.</p>
+
+<p>Paralleling the <a href='http://www.pcworld.com/businesscenter/article/246941/big_data_analytics_get_even_bigger_hotter_in_2012.html'>big data explosion</a>, is a growth in machine and infrastructure size. This means logging and the ability to spot errors in a distributed system has become even more valuable.</p>
+
+<p>Logging objects instead of a format string enables you to more easily index and trace operations across hundreds of different machines and different software systems. With traditional format strings it is too fail deadly for the programmer to not log all the necessary information for a later operator to trace an operation.</p>
+
+<h2 id='generating_json_with_log_magic'>Generating JSON with Log Magic</h2>
+
+<p><a href='https://github.com/pquerna/node-logmagic'>Log Magic is a small and fast logging library for Node.js</a> that I wrote early on for our needs at Rackspace. It only has a few features, and it is only about 300 lines of code.</p>
+
+<p>Log Magic has the concept of a local logger instance, which is used by a single module for logging. A logger instance automatically populates information like the the <code>facility</code> in a log entry. Here is an example of creating a logger instance for a module named <code>&#39;myapp.api.handler</code> and using it:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>log</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;logmagic&#39;</span><span class='p'>).</span><span class='nx'>local</span><span class='p'>(</span><span class='s1'>&#39;myapp.api.handler&#39;</span><span class='p'>);</span>
+
+<span class='nx'>exports</span><span class='p'>.</span><span class='nx'>badApiHandler</span> <span class='o'>=</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>,</span> <span class='nx'>res</span><span class='p'>)</span> <span class='p'>{</span>
+  <span class='nx'>log</span><span class='p'>.</span><span class='nx'>dbg</span><span class='p'>(</span><span class='s2'>&quot;Something is wrong&quot;</span><span class='p'>,</span> <span class='p'>{</span><span class='nx'>request</span><span class='o'>:</span> <span class='nx'>req</span><span class='p'>});</span>
+  <span class='nx'>res</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
+<span class='p'>};</span>
+</code></pre>
+</div>
+<p>The second feature that Log Magic provides is what I call a &#8220;Log Rewriter&#8221;. This enables the programmer to just consistently pass in the <code>request</code> object, and we will take care of picking out the fields we really want to log. In this example, we ensure the logged object always has an <code>accountId</code> and <code>txnId</code> fields set:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>logmagic</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;logmagic&#39;</span><span class='p'>);</span>
+<span class='nx'>logmagic</span><span class='p'>.</span><span class='nx'>addRewriter</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>(</span><span class='nx'>modulename</span><span class='p'>,</span> <span class='nx'>level</span><span class='p'>,</span> <span class='nx'>msg</span><span class='p'>,</span> <span class='nx'>extra</span><span class='p'>)</span> <span class='p'>{</span>
+  <span class='k'>if</span> <span class='p'>(</span><span class='nx'>extra</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='k'>if</span> <span class='p'>(</span><span class='nx'>extra</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>.</span><span class='nx'>account</span><span class='p'>)</span> <span class='p'>{</span>
+      <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>accountId</span> <span class='o'>=</span> <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>.</span><span class='nx'>account</span><span class='p'>.</span><span class='nx'>getKey</span><span class='p'>();</span>
+    <span class='p'>}</span>
+    <span class='k'>else</span> <span class='p'>{</span>
+      <span class='cm'>/* unauthenticated user */</span>
+      <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>accountId</span> <span class='o'>=</span> <span class='kc'>null</span><span class='p'>;</span>
+    <span class='p'>}</span>
+    <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>txnId</span> <span class='o'>=</span> <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>.</span><span class='nx'>txnId</span><span class='p'>;</span>
+    <span class='k'>delete</span> <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>;</span>
+  <span class='p'>}</span>
+  <span class='k'>return</span> <span class='nx'>extra</span><span class='p'>;</span>
+<span class='p'>});</span>
+</code></pre>
+</div>
+<p>The final feature of Log Magic is dynamic routes and sinks. For the purposes of this article, we are mostly interested in the <code>graylog2-stderr</code>, which outputs a <a href='http://www.graylog2.org/about/gelf'>GELF JSON format</a> message to <code>stderr</code>:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>logmagic</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;logmagic&#39;</span><span class='p'>);</span>
+    <span class='nx'>logmagic</span><span class='p'>.</span><span class='nx'>route</span><span class='p'>(</span><span class='s1'>&#39;__root__&#39;</span><span class='p'>,</span> <span class='nx'>logmagic</span><span class='p'>[</span><span class='s1'>&#39;DEBUG&#39;</span><span class='p'>],</span> <span class='s2'>&quot;graylog2-stderr&quot;</span><span class='p'>);</span>
+</code></pre>
+</div>
+<p>With this configuration, if we ran that <code>log.dbg</code> example from above, we would get a message like the following:</p>
+<div class='highlight'><pre><code class='javascript'><span class='p'>{</span>
+    <span class='s2'>&quot;version&quot;</span><span class='o'>:</span> <span class='s2'>&quot;1.0&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;host&quot;</span><span class='o'>:</span> <span class='s2'>&quot;product-api0&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;timestamp&quot;</span><span class='o'>:</span> <span class='mf'>1324936418.221</span><span class='p'>,</span>
+    <span class='s2'>&quot;short_message&quot;</span><span class='o'>:</span> <span class='s2'>&quot;Something is wrong&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;full_message&quot;</span><span class='o'>:</span> <span class='kc'>null</span><span class='p'>,</span>
+    <span class='s2'>&quot;level&quot;</span><span class='o'>:</span> <span class='mi'>7</span><span class='p'>,</span>
+    <span class='s2'>&quot;facility&quot;</span><span class='o'>:</span> <span class='s2'>&quot;myapp.api.handler&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;_accountId&quot;</span><span class='o'>:</span> <span class='s2'>&quot;ac42&quot;</span><span class='p'>,</span>
+    <span class='s2'>&quot;_txnId&quot;</span><span class='o'>:</span> <span class='s2'>&quot;.rh-3dT5.h-product-api0.r-pVDF7IRM.c-0.ts-1324936588828.v-062c3d0&quot;</span>
+<span class='p'>}</span>
+</code></pre>
+</div>
+<h3 id='other_implementations'>Other implementations</h3>
+
+<p>There are many other libraries that are starting to emerge that can output logs in a JSON or GELF format:</p>
+
+<p>* <a href='https://github.com/flatiron/winston'>winston</a>: (Node.js) A more complete (or complex?) logging module compared to Log Magic, but the prolific crew at <a href='http://nodejitsu.com/'>Nodejitsu</a> have done a great job.</p>
+
+<p>* <a href='http://pypi.python.org/pypi/graypy'>graypy</a>: (Python) A graylog2 logger that interacts with the standard Python logging module.</p>
+
+<p>* <a href='https://github.com/pstehlik/gelf4j'>gelf4j</a> (Java) We use a modified version of this library that logs to <code>stderr</code> instead of using UDP.</p>
+
+<h2 id='the_transaction_id'>The Transaction Id</h2>
+
+<p>One field we added very early on to our system was what we called the &#8220;Transaction Id&#8221; or <code>txnId</code> for short. In retrospect, we could of picked a better name, but this is essentially a unique identifier that follows a request across all our of services. When a User hits our API we generate a new <code>txnId</code> and attach it to our <code>request</code> object. Any requests to a backend service also include the <code>txnId</code>. This means you can clearly see how a web request is tied to multiple backend service requests, or what frontend request caused a specific Cassandra query.</p>
+
+<p>We also send the <code>txnId</code> to our user&#8217;s in our 500 error messages and the <code>X-Response-Id</code> header, so if a user reports an issue, we can quickly see all of the related log entries.</p>
+
+<p>While we treat the <code>txnId</code> as an opaque string, we do encode a few pieces of information into it. By putting the current time and the origin machine into the <code>txnId</code>, even if we can&#8217;t figure out what went wrong from searching for the <code>txnId</code>, we have a place to start deeper debugging.</p>
+
+<h2 id='transporting_logs'>Transporting Logs</h2>
+
+<p>Since our product spans multiple data centers, and we don&#8217;t trust our LAN networking, our primary goal is that all log entries hit disk on their origin machine first. Some people have been using UDP or HTTP for their first level logging, and I believe this is a mistake. I believe having a disk default that consistently works is critical in a logging system. Once our messages have been logged locally, we stream them to an aggregator which then back hauls the log entries to various collection and aggregation tools.</p>
+
+<p>Since all of our services run under <a href='http://smarden.org/runit/'>runit</a>, our programs simply log their JSON to <code>stderr</code>, and <a href='http://smarden.org/runit/svlogd.8.html'>svlogd</a> takes care of getting the data into a local file. Then we use a custom tool written in Node.js that is like running a <code>tail -F</code> on the log file, sending this data to a local <a href='https://github.com/facebook/scribe'>Scribe</a> instance. The Scribe instance is then responsible for transporting the logs to our log analyzing services.</p>
+
+<p>For locally examining the log files generated by <code>svlogd</code>, we also made a tool called <code>gelf-chainsaw</code>. Since JSON strings cannot contain a newline, the log format is easy to parse, you just split up the file by <code>\n</code>, and try to <code>JSON.parse</code> each line. This is useful for our systems engineers when they are on a single machine, trying to debug an issue.</p>
+
+<h2 id='collecting_indexing_searching'>Collecting, Indexing, Searching</h2>
+
+<p>Once the logs crossing machines, there are many options to process those logs. Some examples that can all accept JSON as their input format:</p>
+
+<p>* Perl Scripts (Hah! Did you think Perl will <em>ever</em> go away?)</p>
+
+<p>* <a href='http://www.graylog2.org/'>Graylog2</a> (open source)</p>
+
+<p>* <a href='http://logstash.net/'>LogStash</a> (open source)</p>
+
+<p>* <a href='http://loggly.com/'>Loggly</a> (SaaS)</p>
+
+<p>* <a href='http://www.splunk.com/'>Splunk</a> (Proprietary Software, <a href='http://splunk-base.splunk.com/apps/22337/jsonutils'>can do JSON with an extra tool</a>)</p>
+
+<p>For <a href='http://www.rackspace.com/cloud/blog/2011/12/15/announcing-rackspace-cloud-monitoring-private-beta/'>Rackspace Cloud Monitoring</a> we are currently using Graylog2 with a <a href='https://github.com/Graylog2/graylog2-server/pull/52'>patch to support Scribe as a transport</a> written by <a href='https://twitter.com/wirehead'>@wirehead</a>.</p>
+
+<p>Bellow is an example of searching for specific <code>txnId</code> in our system in Graylog2:</p>
+
+<p><a href='http://journal.paul.querna.org/wp-content/uploads/2011/12/graylog-txnId-search.png'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/12/graylog-txnId-search.png' alt='' /></a></p>
+
+<p>While this example is simple, we have some situations where a single <code>txnId</code> spans multiple services, and the ability to trace all of them transparently is critical in a distributed system.</p>
+
+<h2 id='conclusion'>Conclusion</h2>
+
+<p>Write your logs for machines to process. Build tooling around those logs to transform them into something that is consumable by a human. Humans cannot process information in the massive flows that are created by concurrent and distributed systems. This means you should store the data from these systems in a format that enables innovative and creative ways for it to be processed. Right now, the best way to do that is to log in JSON. Stop logging with format strings.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2011/12/18/the-switch-python-to-node-js/" title="The Switch: Python to Node.js">&larr; The Switch: Python to Node.js</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2011/12/31/2011-timecards/" title="2011 Timecards">2011 Timecards &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>26 December 2011</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

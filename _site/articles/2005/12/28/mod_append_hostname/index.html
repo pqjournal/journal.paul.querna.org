@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>mod_append_hostname</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>mod_append_hostname</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p><a href='http://people.apache.org/~pquerna/modules/mod_append_hostname-0.1.0.tar.bz2'>mod_append_hostname</a> is a very simple Apache 2.x filter module. It appends the <a href='http://www.freebsd.org/cgi/man.cgi?query=gethostname'>hostname</a> of the current machine, in an HTML comment, at the bottom of HTML content types:</p>
+
+<blockquote />
+<!-- water-wireless.in.force-elite.com -->
+<p>Configuration:</p>
+
+<blockquote />
+
+<p>LoadModule append_hostname_module modules/mod_append_hostname.so</p>
+
+<p>AddOutputFilterByType append_hostname text/html</p>
+
+<p>Very useful when one of your machines behind a load balancer is kinda broken. Based on the an example from <a href='http://public.yahoo.com/~radwin/'>Hacking Apache HTTP Server at Yahoo!</a>. I actually wrote it an hour after the session, at <a href='http://apachecon.com/2005/US/index'>ApacheCon US 2005</a>, but I haven&#8217;t had a chance to post anything about it.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/12/19/in-case-you-missed-it/" title="In case you missed it.">&larr; In case you missed it.</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/12/30/the-colo-move-was-good/" title="The colo move was good...">The colo move was good... &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>28 December 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

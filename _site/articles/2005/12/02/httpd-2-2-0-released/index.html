@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>HTTPD 2.2.0 Released</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>HTTPD 2.2.0 Released</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>I was the release manager for Apache HTTPD 2.2.0. I have to say, being the release manager was the hardest thing I have ever done for Apache HTTPD. I think now that the 2.2.x branch is started, it will hopefully be an easier task. This also means we have are 2.3-dev on <a href='https://svn.apache.org/repos/asf/httpd/httpd/trunk/'>/trunk/</a>. I am hoping to find time to help with the <a href='https://svn.apache.org/repos/asf/httpd/httpd/branches/async-read-dev/'>improved async work</a> on the <a href='http://httpd.apache.org/docs/trunk/mod/event.html'>Event MPM</a>.</p>
+
+<p>After 9 alphas and beta in the last year, 2.2 is the next &#8216;stable&#8217; branch of Apache. Its a relatively easy jump from 2.0 too, but adds <a href='http://httpd.apache.org/docs/2.2/new_features_2_2.html'>lots of new features</a>. You should upgrade now.</p>
+
+<p>We finally sent the <a href='http://mail-archives.apache.org/mod_mbox/httpd-announce/200512.mbox/%3c438F7076.6090801@apache.org%3e'>release announcement</a> yesterday. Coverage from the RSS Feeds and searches:</p>
+
+<p>* <a href='http://www.zdnet.com.au/news/software/soa/New_Apache_aims_to_please/0,2000061733,39225677,00.htm'>ZDNet</a> (same article on <a href='http://uk.builder.com/0,39026540,39286878,00.htm'>Builder.com</a>)- Kinda weird quoting the announcement like it was a press release. They also mention the <a href='http://www.apache.org/dev/rfp/'>RFP for helping with the ASF&#8217;s Infrastructure</a>.</p>
+
+<p>* <a href='http://apache.slashdot.org/article.pl?sid=05/12/02/0124224&amp;tid=162&amp;tid=95&amp;tid=164&amp;tid=2'>Slashdot</a> - Smattering of comments all over the board. Seems like most people do like the Large File Support. At least <a href='http://apache.slashdot.org/comments.pl?sid=169930&amp;cid=14165533'>one person</a> likes the new <a href='http://httpd.apache.org/docs/2.2/programs/httpd.html#options'>httpd -M</a> option, which dumps all loaded modules. I think that feature will be one of the best for helping confused users.</p>
+
+<p>* <a href='http://www.livejournal.com/users/brad/2180763.html'>Brad</a> - says: &#8220;_Looks like most the stupid shit has been fixed:_&#8221; Which, is a pretty good way to describe the 2.2 feature set. Lots of low hanging fruit fixes and features</p>
+
+<p>* <a href='http://www.stdlib.net/~colmmacc/2005/12/01/apache-httpd-220-released/'>collmmacc</a> - No comments, but I will try to help increase his page rank.</p>
+
+<p>* <a href='http://www.jimjag.com/imo/index.php?/archives/50-guid.html'>JimJag</a> - Notes that Apache 1.0.0 was released on the same day 10 years ago. Even if most of the original developers are no longer active, the project is still successful. I believe this is one of the most undervalued attributes of community, and hopefully other open source projects will learn that its the community that matters to long term success, not fighting over silly features.</p>
+
+<p>* <a href='http://bugs.gentoo.org/show_bug.cgi?id=114232'>Gentoo Bugzilla</a> - Already have an open bug, requesting the ebuild.</p>
+
+<p>A <strong>HUGE</strong> round of thanks to the <a href='http://httpd.apache.org/contributors/'>many other</a> Apache HTTP Server developers.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/11/20/sms/" title="cingular sms">&larr; cingular sms</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/12/12/current-status/" title="current status">current status &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>02 December 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

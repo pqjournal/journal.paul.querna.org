@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>APR Memory Pools Rock.</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>APR Memory Pools Rock.</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>I was tracking down a memory leak inside HTTPD and got to play with <a href='http://httpd.apache.org/docs-2.0/developer/debugging.html' class='ng_url'>Memory Pool Debugging</a>. In this <a href='http://issues.apache.org/bugzilla/show_bug.cgi?id=33382' class='ng_url'>specific case</a>, Reverse Proxying a Windows Media Server would cause a signifigant leak. This leak was happening while streaming data to the client, so the longer the client was connected, the more memory they used.</p>
+
+<p>I had suspected the bug was in the relatively new and untested mod_proxy code. mod_proxy simply hasn&#8217;t had the same vetting as the core of httpd. I was surprised to find that the bug turned out to be in the <a href='http://lxr.webperf.org/ident.cgi?i=core_input_filter' class='ng_url'>core_input_fitler</a>, far away from the newer Proxy Code. The erroneous use of <a href='http://apr.apache.org/docs/apr-util/group___a_p_r___util___bucket___brigades.html#ga24' class='ng_url'>apr_brigade_split</a> was creating a new bucket brigade every time httpd tried to read data fromt he client.</p>
+
+<p>Now, on to the part where APR memory pools rock. By compiling APR with <code>--enable-pool-debug=all</code>, most actions against the memory pool are logged. This includes every allocation, clear or destroying of a Pool. The log includes the size of the Global APR Pool:</p>
+
+<p>Quote from Example Pool Debug Entry:</p>
+
+<pre><code>POOL DEBUG: [27325/16384] PALLOC ( 244/ 244/ 256702) 0x080A0568 &quot;plog&quot; &lt;strings/apr_strings.c:78&gt; (6/6/1)</code></pre>
+
+<p>By graphing these entries, you can actually see how indiviual apache children act:</p>
+
+<p><a href='http://corelands.com/posts/apr-pools/idle-child.png'><img src='http://corelands.com/posts/apr-pools/idle-child.png' width='700' /></a><br />The above is a single Idle Apache Child, with just the startup allocations.</p>
+
+<p><a href='http://corelands.com/posts/apr-pools/one-stream.png'><img src='http://corelands.com/posts/apr-pools/one-stream.png' width='700' /></a><br />This is a Single Streaming Request. Once the Stream is established, we reach a steady state of memory usage.(That is a <em>good</em> thing)</p>
+
+<p><a href='http://corelands.com/posts/apr-pools/multi-requests.png'><img src='http://corelands.com/posts/apr-pools/multi-requests.png' width='700' /></a><br />This is a graph of multiple non-streaming requests. Because of how Apache puts the entire connection into a pool, once the client is done, all of the memory used for them can be released.</p>
+
+<p>I made all of the above graphs using a few lines of Python. First I split the <code>error_log</code> into one log for every Child using <a href='http://corelands.com/posts/apr-pools/split.py' class='ng_url'>split.py</a>. Then I graphed each using <a href='http://corelands.com/posts/apr-pools/plot.py' class='ng_url'>plot.py</a>.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/02/04/how-to-not-write-a-signal-handler-by-example/" title="How to not write a Signal Handler... by example">&larr; How to not write a Signal Handler... by example</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/03/02/deceptive/" title="Deceptive">Deceptive &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>23 February 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

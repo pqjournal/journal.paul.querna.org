@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>downtime page in apache</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>downtime page in apache</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>It is good practice to send 503 Status codes when your site has downtime or is doing an upgrade.</p>
+
+<p>The easiest way to do this for all your URLs is something like this using <a href='http://httpd.apache.org/docs/trunk/mod/mod_asis.html'>mod_asis</a>:</p>
+
+<pre><code>       # Bind mod_asis to files ending in .asis
+       AddHandler send-as-is asis
+       # Add other Aliaes/AliasMatches for any other resources needed (logos, css, etc)
+       Alias /logo.png /opt/mysite/maint/logo.png
+       # The magic line, pulling all matching URLs into one file
+       AliasMatch /(.*) /opt/mysite/maint/index.html.asis</code></pre>
+
+<p>Your index.html.asis would contain something like this:</p>
+
+<pre><code>Status: 503
+Cache-Control: no-cache
+Content-type: text/html
+
+&lt;html&gt;&lt;h1&gt;My site is down, be back soon!&lt;/h1&gt;&lt;/html&gt;</code></pre>
+
+<p>I can&#8217;t help you make a fail whale / <a href='http://www.flickr.com/photos/vista/2905439095/'>plumber image</a> though, that is up to you</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2009/08/23/email-is-awesome/" title="email is awesome">&larr; email is awesome</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2009/09/02/crazier-than-expected/" title="crazier than expected.">crazier than expected. &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>24 August 2009</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

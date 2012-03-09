@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>three things</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>three things</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <h3 id='three_things_i_would_like_to_hear_more_about'>Three things I would like to hear more about:</h3>
+
+<p>* <strong>DIRT</strong>: <a href='http://dtrace.org/blogs/bmc/2010/10/02/the-dirt-on-jsconf-eu-and-surge/'>Data Intensive Real Time, coined by Bryan</a>. I&#8217;ve been thinking about how we use <a href='http://orbited.org/'>orbited</a> to do this, and I think a real revolution in web application infrastructure is just around the corner as more people get involved with Node.js type projects.</p>
+
+<p>* <strong>Django non-rel</strong>: An odd choice I think, but its these kind of projects that are taking a hard look at the ORMs most programmers have come to expect, and how to make their nice features feasible with very creative backends. <a href='http://www.allbuttonspressed.com/projects/django-nonrel'>Django non-rel</a> won&#8217;t be the last ORM on top of a non-relational datastore, and I think it will be years before its all settled out, but I know most people will never want to use <a href='http://wiki.apache.org/cassandra/API'>Cassandra&#8217;s raw Thrift API</a>.</p>
+
+<p>* <strong>Upcoming Web Frameworks</strong>: Hinted at by my first two, I think current web frameworks don&#8217;t fit the evolving model of a web application. Something that really combines a non-relational backend, with a process and communication model that supports DIRT, in addition to traditional HTML. I don&#8217;t think there is a leader here yet, but I think within a year or two, there will be serious disruption in the framework space &#8211; a Rails or Django of the 2010s. The key will be finding the right places of abstraction, because you still need to make it easy to use, even with all the crazy complicated things going on underneath, but if the wrong abstractions are selected, <a href='http://en.wikipedia.org/wiki/Leaky_abstraction'>you&#8217;ll just end up with leaks everywhere</a>.</p>
+
+<h3 id='three_things_i_am_tired_of_hearing_about'>Three things I am tired of hearing about:</h3>
+
+<p>* <strong>Benchmarks of HTTP servers</strong>: If the HTTP server is your applications bottleneck,  Congratulations! But it probably means you are serving static files, and not using a database or a dynamic language. HTTP is hard, but <a href='http://github.com/ry/http-parser'>Ryan has made it easier</a>. HTTP though, isn&#8217;t the bottleneck on your Rails/PHP/Django/node.js application, some backend datastore will be.</p>
+
+<p>* <strong>NoSQL</strong>: I&#8217;m tired of some non-durable non-multi-master NoSQL projects.  We had that before, its called BDB in the 90s. Oh, and again with MySQL.  There are innovative NoSQL projects, stop polluting the name. Anyways, the name in general is terrible, but innovation is not building a new BDB, it is building a multi-master multi-datacenter data storage system.</p>
+
+<p>* <strong>Meg Whitman vs Jerry Brown</strong>: Only makes sense if you are a California resident I guess, but I don&#8217;t like either candidate at this point. Voting by mail, and just wish the election would be done, so I can stop seeing <a href='http://www.neontommy.com/news/2010/10/puppet-or-parrot-which-one-are-you-voting-governor-california'>their terrible attack advertisements</a> on each other.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/10/22/evolution-of-apaches-websites/" title="Evolution of Apache's websites">&larr; Evolution of Apache's websites</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/11/02/the-case-for-gossip/" title="The case for Gossip">The case for Gossip &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>23 October 2010</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

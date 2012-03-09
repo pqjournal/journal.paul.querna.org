@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>The Illusion of Stability</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>The Illusion of Stability</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Back at the <a href='http://www.apache.org/foundation/records/minutes/2010/board_minutes_2010_05_19.txt'>May 2010 Board meeting of the Apache Software Foundation</a>, there was a discussion about releases.  It got me thinking about how my own use of many open source projects has changed.</p>
+
+<p><strong>The Past - Long Cycles, few releases, software ships on physical media</strong></p>
+
+<p><a href='http://en.wikipedia.org/wiki/Myst'>Myst</a> pushed the limits by being shipped on a CD-ROM instead of floppy disks, and <a href='http://en.wikipedia.org/wiki/Riven'>Riven</a> followed with pushing the adoption of DVDs by shipping on 1 DVD, or 5 CDs.  Physical media kept accelerating to a point, now days most software can be downloaded.  Even for game consoles, previously one of the last barriers for things like patches, games like Call of Duty: Modern Warfare 2 have a half dozen post-<a href='http://en.wikipedia.org/wiki/Gold_master'>gold master</a> patches, pushed down to internet connected consoles.</p>
+
+<p>If you look at the development of software over the last 20 years, one of biggest changes for many products is the shift in distribution, lots of people talk about Software as a Service, but really you need to just look at software on desktops &#8211; products like Google Chrome automatically apply updates without bothering the user, and most products ship with an auto-update mechanism at a minimum.</p>
+
+<p>But the fundamental difference in this is a shift in the software development and release models, that the software distribution systems have finally caught up to.</p>
+
+<p><strong>Release Cycles</strong></p>
+
+<p>I view Ubuntu as one of the first large projects to recognize this shift and embrace it.  Many large-scale projects in the mid-2000s had massive problems tracking dependencies, and synchronizing anything resembling a stable final product was a challenge.  <a href='https://wiki.ubuntu.com/TimeBasedReleases'>Ubuntu&#8217;s model of picking a date</a>, and shipping whatever was stable at that point shifted the responsibility model for stability.  Other projects have done this before Ubuntu, but Ubuntu has stuck to it and exposed so many more people to the model.  Every 6 months, Ubuntu drew a line in the sand, and whatever was stable before that date, became the next Ubuntu release.</p>
+
+<p>This meant, you didn&#8217;t just wait for the new release of GNOME or KDE and then try to stabilize everything;  You certainly hoped for dependencies to add new features before your dates, but if they missed it, they would go into the next release.  Compare this to the traditional Linux distribution: multiple rounds of betas to squash out all the integration pain of bringing together thousands of dependencies into a stable final product.</p>
+
+<p><strong>But I don&#8217;t make a Linux distribution!</strong></p>
+
+<p>Most  software projects I&#8217;ve worked on have had large dependencies on Open Source Software.  Not thousands of projects like a Linux distribution. Some only had a few dependencies. Others had a few dozen projects that they were directly built on top of.  In the past, you took a recent stable release and built packages of it or pulled it into a <a href='http://svnbook.red-bean.com/en/1.5/svn.advanced.vendorbr.html'>vendor branch</a>.  There was an expectation that releases were&#8230; Stable and would get maintenance patches for serious bugs.</p>
+
+<p>At <a href='http://en.wikipedia.org/wiki/Bloglines'>Bloglines</a>, the product was built on top of 30+ open source projects, from <a href='http://www.oracle.com/technology/products/berkeley-db/index.html'>BerkeleyDB</a>, to <a href='http://curl.haxx.se/libcurl/'>libcurl</a>,  to <a href='http://www.clearsilver.net/'>Clearsilver</a>.  We tried to take the stable releases, and knit it all together into something that worked. For the most part we were successful.  However, we patched lots of projects, some of them were patches we pushed upstream, others were Bloglines specific modifications, but we thought it was okay, we were taking stable version of Foo, and appling a few patches.  We knew upgrading to the next version of Foo might be painful, but there normally was documentation explaining what changed.</p>
+
+<p><strong>The End of releases</strong></p>
+
+<p>But what the Apache Board meeting got me thinking about, was our dependencies at <a href='https://www.cloudkick.com/'>Cloudkick</a>.  We use a ton of Python at Cloudkick, a few projects like <a href='http://twistedmatrix.com/trac/'>Twisted</a>, and <a href='http://www.python.org/'>Python</a> itself, we generally use a stable release, and its fine and dandy.  But for many of our more esoteric dependencies like <a href='https://launchpad.net/txamqp'>txAMQP</a>, <a href='http://incubator.apache.org/libcloud/'>libcloud</a>, <a href='http://github.com/facebook/scribe'>scribe</a>, a few <a href='http://www.djangoproject.com/'>Django</a> applications, oauth, sales force libraries, etc, we are using snapshots, mostly from someone&#8217;s GitHub repository.</p>
+
+<p>I am grateful for the projects we build on, and we try to contribute back to them whenever we can, but it is no longer taking a stable release and making a few local modifications &#8211; we are lucky if a project has releases at all, let alone stable releases!</p>
+
+<p>I don&#8217;t think its the fault of things like GitHub, they have download areas, and some projects use them, but the majority don&#8217;t.  They give you a git url, and its up to you to pick a &#8216;stable&#8217; point in time, and hope for the best.</p>
+
+<p><strong>What did those releases provide anyways?</strong></p>
+
+<p>On some levels, I miss stable releases.  It made me feel good, it let me judge at face value, some programer I probably will never meet in person felt good enough about some code, to call it &#8216;stable&#8217;.    But the reality was, any code I&#8217;ve pushed hard, I&#8217;ve found bugs, and then I patched those bugs or added new features.</p>
+
+<p>Code that wasn&#8217;t pushed hard, it probably didn&#8217;t matter if someone else thought it was stable, it was good or bad, it worked or it didn&#8217;t.</p>
+
+<p>Those releases from someone else provided me with the illusion of a stable product. Something I can build upon;  But the truth when I look hard at the projects I thought were stable, we ended up patching some of those the most!</p>
+
+<p>This newer age paradigms for software releases mean you can move unbeilievability quickly, bringing together diverse peices of software and building communities around new software faster than ever.  I look at the <a href='http://wiki.github.com/ry/node/modules'>Node.JS modules page</a>,  and I&#8217;m blown away.  There are many projects that probally should be added to that list, many removed, but the sheer number of projects, most of them only a few months old, exploding in popularity, its all enabled because the expectations for an open source product have changed.</p>
+
+<p>You no longer wait for the once a year stable release of any dependency, you grab the snapshot from GitHub, find the author on IRC or twitter if there is a problem, patch it locally, submit a pull request, and then keep on building your product.</p>
+
+<p>This model does bring other problems, many of them core to traditional thought at the Apache Software Foundation. Code pulled from SVN trunk aren&#8217;t vetted in the same way at the ASF.  Many of the younger ASF projects have had more trouble making releases, and this is difficult for the slow moving foundation to always understand why releases are not a higher priority.  I believe this lack of stable products definitely has hurt the Ruby/Rails community in the last few years too.</p>
+
+<p>We should embrace this change. We are all developing software at breakneck speeds. Software has always been unstable, nowadays we are just honest enough to admit it. What we need is better tooling, not just a distributed version control, but more on the deployment and packaging side for most web applications. The tools have not caught up to changes in development and dependency philosophy, when most sites are still deployed with some variation of a hacked together shell script.</p>
+<hr />
+<p>Thanks to <a href='http://geoff.greer.fm/'>Geoff</a> for giving feedback on this post.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/06/22/slides/" title="Velocity Ignite">&larr; Velocity Ignite</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/07/10/overclocking-mod_ssl/" title="Overclocking mod_ssl">Overclocking mod_ssl &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>09 July 2010</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

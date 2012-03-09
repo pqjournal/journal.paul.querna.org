@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Where is the Campfire API?</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Where is the Campfire API?</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p><a href='http://campfirenow.com'>Campfire</a> seems great. We have been playing with using it at <a href='http://www.bloglines.com/'>work</a>, rather than our internal IRC network, after <a href='http://37signals.blogs.com/products/2007/07/web-firm-viget-.html'>seeing this blog post</a>.</p>
+
+<p>The UI is great, the file sharing is great&#8230; But the only major blocking issue right now is the complete lack of an API.</p>
+
+<p>Most other 37 signals <a href='http://loggedoff.org/articles/2006/07/20/api-projects-for-37signals-applications/'>apps have official APIs</a>, but Campfire only has an unofficial &#8216;API&#8217; which is just a <a href='http://rubyforge.org/projects/tinder'>Ruby Module which scrapes the HTML</a>.</p>
+
+<p>Look, Ruby is great, but when you are integrating a large project, with existing chat services, you need a standard protocol with good API libraries. Right now on our IRC channel, we have Bots written in Ruby, Python, TCL, and C/Lua.</p>
+
+<p>They perform all kinds of services, from searching Google, to SVN commit notification, to controlling our <a href='http://buildbot.sourceforge.net/'>buildbot builds</a>.</p>
+
+<p>If Campfire at least had some kind of official API, it could be XML based, JSON based, or even something else, I don&#8217;t really care &#8211; it would allow us to easily port our existing tools in many languages. Heck, if it had an API, you could also make a <a href='http://www.danga.com/djabberd/'>Jabber Gateway easily</a>.</p>
+
+<p>So, here is my request to 37 signals: <strong>I just want an API.</strong></p>
+
+<p>An API so we can become entrenched into your solution. So we would never leave. Right now its a hard sell &#8211; we would be either writing/porting Tinder for 3 or more languages, or investing lots of time in a Ruby based Proxy of some kind, but that all seems excessive. Look at the other 37 signals apps with APIs, a whole ecosystem of things that support your products appear. APIs are good for you, and good for us, a potential user.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2007/06/12/ev-certificates/" title="ev certificates.">&larr; ev certificates.</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2007/07/14/announcement-cluster-tail-released/" title="announcement: cluster tail released">announcement: cluster tail released &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>05 July 2007</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

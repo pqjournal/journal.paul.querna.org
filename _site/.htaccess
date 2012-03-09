@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteBase /
+RewriteRule ^xml/(.*) /atom.xml [R=301,L]
+RewriteRule /feed(.*) /atom.xml [R=301,L]

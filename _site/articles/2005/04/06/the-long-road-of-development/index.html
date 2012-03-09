@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>The long road of development....</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>The long road of development....</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>I released <a href='http://www.outoforder.cc/projects/apache/mod_gnutls/'>mod_gnutls</a> today. I started hacking on the idea in August 2004, more than 7 months ago. This is the longest any of my open source modules have been under development without a release.</p>
+
+<p>mod_gnutls is an alternative to mod_ssl. mod_ssl is a giant beast of a module &#8211; no offense to it&#8217;s authors is intended &#8211; but I believe it has fallen prey to massive feature bloat.</p>
+
+<p>When I started hacking on httpd, mod_ssl remained a great mystery to me, and when I actually looked at it, I ran away. The shear ammount code is depressing, and it does not conform to the style guidelines. It was painful to read, and even harder to debug. I wanted to understand how it worked, and I had recently heard about GnuTLS, so long story short, I decided to write mod_gnutls.</p>
+
+<p>Lines of Code in mod_ssl: 15,324</p>
+
+<p>Lines of Code in mod_gnutls: <strong>1,886</strong></p>
+
+<p>One of the unique features is support for a distributed SSL Session Cache using <a href='http://www.danga.com/memcached/'>memcached</a>. If anyone has a cluster of HTTPS servers, and would like a performance boost, I would love some test results.</p>
+
+<p>Right now its not quite a viable alternative to mod_ssl &#8211; it mostly needs testing and some serious code reviews. I plan to add full support for SSL Client Certificates in the next version.</p>
+
+<p>I am pretty sure I will release a 0.1.1 in the next week that can compile on the 2.0.x branch. There are a few function renames that force the current 0.1.0 release to require the 2.1.x-dev branch.</p>
+
+<p>It only took 7 months of hacking, but I am happy with the results so far. mod_gnutls forced me to truely learn about input and output filters like never before. The best way to really understand something is to write it from scratch &#8211; and the result is that I now understand mod_ssl and GnuTLS better than before.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/03/31/lt-limit-gt-is-a-bad-idea/" title="Limit is a bad idea">&larr; Limit is a bad idea</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/04/07/tcp_cork-is-good-for-your-server/" title="TCP_CORK is good for your server">TCP_CORK is good for your server &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>06 April 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>mod_svn_view development</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>mod_svn_view development</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Added two big features to <a href='http://www.outoforder.cc/projects/apache/mod_svn_view/'>mod_svn_view</a> recently:</p>
+
+<p><strong><a href='http://svnbook.red-bean.com/en/1.1/ch06s04.html#svn-ch-6-sect-4.4.2'>mod_authz_svn</a> support!</strong> <code>mod_svn_view</code> can now use the same Path Based Authorization files as many mod_dav_svn users use.</p>
+
+<pre><code>SVNViewAuthzSvnFile /test/trunk/svn-authz</code></pre>
+
+<p>This eliminates the need to duplicate access control. You can se one file to control both mod_dav_svn users, and all access from mod_svn_view. I don&#8217;t believe any of the alternatives like <a href='http://websvn.tigris.org/'>WebSVN</a>, <a href='http://viewcvs.sourceforge.net/'>ViewCVS</a> or <a href='http://www.horde.org/chora/'>Chora</a> support this.</p>
+
+<p><strong>New Themes System.</strong> I want to make it extremely easy for end users to customize mod_svn_view, so now its even easier to create and manage themes. Here is the new filesystem layout:</p>
+
+<pre><code>themes/
+    blueview/
+        style.css
+        images/
+            file.png
+            dir.png
+            parent.png</code></pre>
+
+<p>This is Configured in Apache using two Directives:</p>
+
+<pre><code>SVNViewThemesDir /test/sv/themes
+SVNViewTheme blueview</code></pre>
+
+<h1 id='we_must_also_allow_file_system_access_to_the_themes_directory'>We must also allow file system access to the themes directory:</h1>
+
+<pre><code>&lt;Directory &quot;/test/sv/themes&quot;&gt;
+    Order allow,deny
+    Allow from All
+    Deny From none
+&lt;/Directory&gt;</code></pre>
+
+<p><code>mod_svn_view</code> will translate any svn-view urls that start with <em>/<em>theme</em>/</em> to the active theme directory. For example, a request for &#8216;/svn-view/<em>theme</em>/style.css&#8217; will be translated to &#8216;/test/sv/themes/<strong>blueview</strong>/style.css&#8217;.</p>
+
+<p>This allows one XSL file to be used for every CSS or image based theme. This eliminates the need for administrators to copy the CSS or image files into their DocumentRoot, as mod_svn_view handles all of the URL translation itself.</p>
+
+<p>I am starting to get very happy with mod_svn_view. There are now only 3 things left on my list to fix before an initial public offering:</p>
+
+<p>* Cleanup of Time/Date Display. I am not sure if I want to use the &#8216;20 Days Ago&#8217; type string that ViewCVS has made common, or a more traditional &#8216;MM/DD/YYYY HH:MM&#8217; format. The current one looks like <em>&#8216;2004-03-18T18:37:48.276683Z&#8217;</em>. This is a show stopper for a public release.</p>
+
+<p>* Finish Blame Support. I am about 50% done writing my Server Side Blame code. As with the Authz support, the other alternatives do not support this.</p>
+
+<p>* Pretty Icons. I am still looking for a good set of Icons that I can include in an initial release of mod_svn_view. I want the default/first theme to be really good. Just look at how many ViewCVS installations use the default theme. I want mine to look nice, and have the best features compared to any Web Based Viewer of Subversion Repos.</p>
+
+<p>I will try to get up a demo server later this week so the world can examine the progress.</p>
+
+<p><em>Edit:</em> Trying to fix the formating of a &gt;code&lt; block insdie a &gt;list&lt;. Stupid BBCode.</p>
+
+<p><em>Edit #2:</em> Explain the file translation stuff better.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2004/11/29/admit-it-when-youre-wrong/" title="Admit it when you're wrong">&larr; Admit it when you're wrong</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2004/12/03/on-economics/" title="On Economics...">On Economics... &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>01 December 2004</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

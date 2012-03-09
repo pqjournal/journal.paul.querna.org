@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Dynamo</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Dynamo</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>If you care about distributed systems, you need to read the <a href='http://www.allthingsdistributed.com/2007/10/amazons_dynamo.html'>paper about Amazon&#8217;s Dynamo</a>.</p>
+
+<p>Comments:</p>
+
+<p>* Making node joining/leaving an administrative command is not something most academics consider, but it significantly reduces complexity.  We made a similar decision with the PodServer system for Bloglines.  I believe this is the right decision, since a node changing membership on the long term is a rare event.  Even with our growing blog index, we only add new nodes once every 6 months or so. (Plan ahead :-) )</p>
+
+<p>* Shout out to <a href='http://www.oracle.com/database/berkeley-db.html'>BerkeleyDB</a>.  Glad to see other people pushing it hard. Combined with the <a href='http://www.google.com/url?sa=t&amp;ct=res&amp;cd=1&amp;url=http%3A%2F%2Fwww.oracle.com%2Fcustomers%2Fsnapshots%2Fgoogle-oracle-berkeley-db-casestudy.pdf&amp;ei=6mAER7-mAoaUgQOh95DrAw&amp;usg=AFQjCNH5ItttgUP9p5QVke76BnVtltqUBA&amp;sig2=f1qn_GPg8O-jf_S_jjLyLQ'>older white-paper about Google using BerkeleyDB</a> for their Google Accounts system, it just validates my positive feelings on continuing to use it as a core part of the Bloglines architecture.</p>
+
+<p>* The configurability of N/R/W is a great idea.  Most systems make N configurable, but skimp out on giving full flexibility to the people using the system.</p>
+
+<p>* I&#8217;m convinced I need to read more about <a href='http://en.wikipedia.org/wiki/Vector_clocks'>Vector Clocks</a>.  For the Bloglines PodServer, we are blessed with only have a single writer per record due to how our crawlers work, so we just &#8216;cheat&#8217; on versioning, but this has caused us pain a few times.</p>
+
+<p>* I wish Amazon would Open Source Dynamo. I can understand the difficulties in doing that, but its a nice thing to dream about.</p>
+
+<p>* I think I will propose an <a href='http://labs.apache.org/'>Apache Labs</a> project to start something like Dynamo.  For a basic key/value storage system on a constant hashing ring, without all of the High Availability concerns, you could get something working pretty quickly.   Adding all of the high end features could take time of course&#8230;..</p>
+
+<p>More discussion over Sam Ruby&#8217;s Blog: <a href='http://intertwingly.net/blog/2007/10/03/Key-Data'>Key + Data</a>.</p>
+
+<p>This all ties in nicely with the <a href='http://www.geeksessions.com/'>GeekSessions</a> 1.2 topic  of &#8220;Designing beyond the database&#8221;, where I <a href='http://www.al3x.net/2007/10/notes-from-geeksessions-beyond-database.html'>presented last night</a>.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2007/09/26/amazon-mp3-store-is-freaking-awesome/" title="Amazon MP3 Store is freaking awesome.">&larr; Amazon MP3 Store is freaking awesome.</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2007/10/04/goodbye-rdbms/" title="goodbye RDBMs">goodbye RDBMs &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>03 October 2007</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

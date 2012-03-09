@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Drinking the Node.js Kool-Aid</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Drinking the Node.js Kool-Aid</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p><strong>The Past and Present</strong></p>
+
+<p>I&#8217;ve written dozens of event loops for network services, in C, C++, Python, Perl, Java, Lua, Go and probably other languages at this point.  They all make me reinvent handling of events, none of them are perfect, some are faster than others, but in the end, it is a waste of my time to rewrite them.</p>
+
+<p>My recent favorites has been a combination of C for the low level event loop, and higher level Lua to provide scripting of event handlers;  This is what the <a href='https://labs.omniti.com/trac/reconnoiter'>Reconnoiter</a> Monitoring system, the <a href='https://support.cloudkick.com/Main_Page#Cloudkick_Agent'>Cloudkick Agent</a> and some proposals for Apache HTTP Server 3.0, are all built on.  It generally gives you a good combination of performance with the ability to bind down to EPoll or KQueue, and the light weightiness of Lua means your processes don&#8217;t get bogged down on the memory side.  But as <a href='http://marc.info/?l=apache-httpd-dev&amp;m=127569009805517&amp;w=2'>Brian Akins was musing this week on dev@httpd</a>, sometimes it just is not enough.  In addition, I have found that most people don&#8217;t know Lua all that well, and you end up stumbling on bad practices when its exposed to a wider audience &#8211; the tooling for Lua is still limited, although I did find <a href='http://lua-users.org/wiki/LuaLint'>LuaLint</a> this week which relieved some pain.</p>
+
+<p>At the same time at <a href='https://www.cloudkick.com/'>Cloudkick</a>, most of our infrastructure is build around <a href='http://twistedmatrix.com/trac/'>Twisted Python</a>Application services, communicating over combination of AMQP and <a href='http://incubator.apache.org/thrift/'>Apache Thrift</a>.  Twisted Python&#8217;s name is well deserved, multi-layer callbacks can be difficult to wrap your head around, but after coding in it daily for almost a year, we can crank out mostly working code with minimal bugs &#8211; so there is some good behind it, and Inline deferreds generally make it easier to understand, but again the tooling is limited when it comes to debugging Twisted.  In addition, we are always fighting with the Standard Library and common Python modules, because of Twisted&#8217;s model, you either need to do everything the &#8216;_twisted way_&#8217;, or you end up sending it off to another thread anyways.</p>
+
+<p>For these reasons, I have been on the lookout for something better.</p>
+
+<p><strong>Enter Javascript</strong></p>
+
+<p><a href='http://journal.paul.querna.org/wp-content/uploads/2010/06/rhino50.jpg'><img src='http://journal.paul.querna.org/wp-content/uploads/2010/06/rhino50-300x150.jpg' alt='' /></a></p>
+
+<p>I have to admit, I had a bad first experience with server side Javascript.  At Joost, we used server side Javascript in a custom environment, built on top of <a href='http://www.mozilla.org/rhino/'>Rhino</a> and a proprietary Java framework.  It was painful, we were pushing things too hard, inventing too much ourselves, Rhino was too slow, and the JVM just isn&#8217;t a great platform for fast cycle web development.</p>
+
+<p>Because you are always fighting the JVM and existing Java code to provide features inside the environment, you end up needing to write Java code too. In addition, almost all your JVM interfaces are blocking, meaning you are back to threading to get anywhere anyways.</p>
+
+<p><strong>Bring on Node.js</strong></p>
+
+<p><a href='http://journal.paul.querna.org/wp-content/uploads/2010/06/nodejs.png'><img src='http://journal.paul.querna.org/wp-content/uploads/2010/06/nodejs-300x153.png' alt='' /></a><a href='http://nodejs.org/' /></p>
+
+<p><a href='http://nodejs.org/'>Node.js</a> however doesn&#8217;t build on the JVM.  It builds from a clean room environment on top of <a href='http://code.google.com/p/v8/'>Google&#8217;s v8 engine</a>.  I played with v8 back when it was first released, cranking out an <a href='http://journal.paul.querna.org/articles/2008/12/23/mod_v8/'>unmaintained mod_v8</a>.  It was fast back then, and has only gotten better.  The best thing is its embedding API &#8211; Mozilla&#8217;s <a href='http://www.mozilla.org/js/spidermonkey/'>Spidermonkey</a> has been around for ages, but it was always painful to embed and depend on it.</p>
+
+<p>The main things Node has going for it:</p>
+
+<p>* <strong>Everything is Async</strong>:  Because the base environment has been built essentially from scratch, everything is asynchronous.  This means there is no &#8216;defer to thread&#8217; like in Twisted Python;  You just can&#8217;t make blocking code.</p>
+
+<p>* <strong>No existing standard library</strong>: While this is somewhat a disadvantage today, because its harder to get going with &#8216;batteries included&#8217; development, it means every bit of  Javascript is written specifically for Node.js, in a style that fits in with Node.</p>
+
+<p>* <strong>First Class Sockets and HTTP</strong>: The example Hello World is over HTTP.  Node keeps you focused on on dealing with the data, rather than spending all your time dealing with the sockets or protocols.</p>
+
+<p><strong>Writing network services in Node just feels natural</strong>. I don&#8217;t have a better way to explain it &#8211; I don&#8217;t feel like I do in Twisted Python, where it seems like I am always fighting with the Python environment.  Not only that, Javascript is a high productivity language, with lots of tooling like <a href='http://github.com/reid/node-jslint'>node-jslint</a> and even debuggers coming along.</p>
+
+<p>In addition because of all the competition on the browser side, Node.js is blazing fast.  No programing language has had the level of technical investment and innovation on their Virtual Machines in the last few years compared to Javascript.</p>
+
+<p><strong>Not a Webapp &#8211; an Application Server</strong></p>
+
+<p>Lots of people seem to be excited about building replacement&#8217;s for their Rails Website in Node, but I am not. Front end web applications aren&#8217;t that interesting to me.  You take a template, fill it with variables from various sources, and send it down to the client.  PHP, Django, Drupal, Rails, even Clearsilver, along with millions of other frameworks have had this figured out for a long time.  They all have special features and such, but they are mostly irrelevant to me &#8211; find something your developers will have high productivity in, and let em loose.</p>
+
+<p>Node is exciting because it provides a framework for producing reliable backend services, with an easily built REST-style API, that makes accessing it from anywhere else trivial.  It lets you just write clean, async style code for possibly long running processes, in a garbage collected beautiful environment.</p>
+
+<p>The backend engineers all too often reinvent everything every few years, with AMQP becoming more popular; And just as quickly it seems to be falling out of popularity.  The tooling on backend services seems to always lag behind, Java has giant complicated things you can use, but they aren&#8217;t the right fit for most projects.  Apache Thrift presented at least a common communications platform for services which is a good start, and hopefully <a href='http://avro.apache.org/'>Apache Avro</a> will make them even easier to use.</p>
+
+<p>Backend services lack a Rails.  They lack a Django.  They lack a JQuery or Dojo.  They lack a revolution in how things are structured and built.  Maybe it was SOA, or REST, or a million other terrible acronyms, but it all got mired in stupid marketing.  Node.js seems to have the possibility to change how I build application servers, and for that reason I am very excited for Node&#8217;s future.</p>
+
+<p><strong>What I&#8217;ve been hacking on!</strong></p>
+
+<p>Full drinking the Kool-Aid disclaimer: Earlier today, my first patch to Node.js was merged.  It <a href='http://groups.google.com/group/nodejs/browse_thread/thread/665422a1dc28d874'>provided UDP &amp; dgram unix daemon socket support</a>.  I don&#8217;t think it makes me a biased Node.js zealot yet, I just contributed it because it seemed useful for my own projects, and I wrote it in only a few hours.</p>
+
+<p>I wrote the UDP patch to support my unpublicized <a href='http://github.com/pquerna/ndislocate'>Dislocate project</a>.  It is basically seeking to unify service discovery, load balancing and administration across multiple data centers with varying latency &#8211; something I think is required to build true auto-scalling solutions.  It is replacing in a sense part of DNS, part of Load Balancers, and part of configuration management.  I am hoping to get something like a first beta release out this June of Dislocate, and will write up more about it at that time.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/06/12/forever-storage/" title="Forever Storage">&larr; Forever Storage</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/06/22/slides/" title="Velocity Ignite">Velocity Ignite &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>12 June 2010</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

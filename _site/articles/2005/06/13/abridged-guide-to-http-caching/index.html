@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Abridged guide to HTTP Caching</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Abridged guide to HTTP Caching</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>At the highest level, HTTP is a very simple protocol. It is quite easy to write both a server and a client. However, the parts of the standard that control Cacahing of HTTP Requests become complex very quickly. So complex, that most web applications do not behave correctly. So here is &#8221;<code>chip&#39;s abridged guide to HTTP Caching for Web Application Developers</code>&#8221;.</p>
+
+<p><strong>The Vary Header</strong></p>
+
+<p>Simple Rule: If you look at <strong>any</strong> header from the client, and do something based on it, you <strong>must</strong> add it to the Vary header. This means if you use the User-Agent, the Accept-Encoding, or any Cookies, you must add them to the Vary Header.</p>
+
+<p>The <a href='http://wiki.apache.org/general/'>ASF Wiki</a> uses <a href='http://moinmoin.wikiwikiweb.de/'>MoinMoin</a>. I would venture to say that it is one of the most popular Wiki software available. Despite popularity, it doesn&#8217;t handle the Vary Header correctly at all. Due to excessive load on the wiki server, <a href='http://httpd.apache.org/docs-2.1/mod/mod_cache.html'>mod_cache</a> was added. People browsing the site quickly had problems. Users would get pages in different languages. Sometimes you would get a page with different person&#8217;s login. This wasn&#8217;t the fault of mod_cache, infact, the same problems would happen with any <a href='http://webmaster.info.aol.com/caching.html'>downstream caching proxy</a>.</p>
+
+<p>To start fixing MoinMoin, you need to add <strong><code>Vary: Cookie,Accept-Encoding</code></strong> to the output for every page. This means for every different value of the Cookie headers and the Accept-Encoding, mod_cache will cache a different version. If you do not do this, people will get the page in the wrong language, or with someone else&#8217;s login.</p>
+
+<p><strong>The Cache-Control Header</strong></p>
+
+<p>Simple Rule: You must use this for <strong>any</strong> personalized page. If you have any information that is specific to a logged in user, you <strong>must</strong> use the Cache-Control Header.</p>
+
+<p>Now, Cache-Control is harder to put into a simple box, because it can be used to control many different things. For most applications however, it can be shortened to &#8216;If you have private content, you must add <strong><code>Cache-Control: private, must-revalidate</code></strong>.</p>
+
+<p>MoinMoin doesn&#8217;t do this for pages generated for logged in users. This means it is possible for another user to see a different user&#8217;s logged in page, as it was cached. This is mostly harmless and more annoying in the MoinMoin case, but for other applications, you might have private information that you do not want cached.</p>
+
+<p>If you follow those two relatively simple rules, most web applications will at the very least behave correctly behind an HTTP Cache. For details, there is always <a href='http://www.faqs.org/rfcs/rfc2068.html'>the RFC</a>, but <a href='http://webmaster.info.aol.com/faq.html#cachingfaq'>some</a> <a href='http://drupal.org/node/18390'>other</a> <a href='http://wp.wikidev.net/MediaWiki_caching'>sites have more friendly</a> <a href='http://www.web-caching.com/mnot_tutorial/'>information</a>.</p>
+
+<p><strong>Update:</strong> Added <code>must-revalidate</code> to the Cache-Control section.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/06/08/talking-water-fountains-should-be-banned/" title="Talking water fountains should be banned.">&larr; Talking water fountains should be banned.</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/06/16/for-the-record/" title="For the Record!">For the Record! &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>13 June 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

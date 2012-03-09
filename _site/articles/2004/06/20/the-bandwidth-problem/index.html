@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>The Bandwidth Problem</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>The Bandwidth Problem</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Most shared hosting systems want some sort of system to prevent a few hosts from using all the available bandwidth. I have been rather disappointed by my choices.</p>
+
+<p>For Apache 1.3.XX there are many options:</p>
+
+<p>* <a href='http://www.snert.com/Software/mod_throttle/'>mod_throttle</a> (Semi-Public Domain License) - Shared Mem based (good!). Active Development.</p>
+
+<p>* <a href='http://www.cohprog.com/mod_bandwidth.html'>mod_bandwidth</a> (Apache License) - File Based in /tmp (BAD). Inactive Development.</p>
+
+<p>* <a href='http://www.topology.org/src/bwshare/README.html'>mod_bwshare</a> (Artistic License) - Shared Memory based (good!). Inactive Development.</p>
+
+<p>* OS Based: <a href='http://www.netfilter.org/'>Netfilter - Linux</a> (GPL License) - In Kernel (good!). Active Development. (1)</p>
+
+<p>* OS Based: <a href='http://pf4freebsd.love2party.net/altq.html'>FreeBSD - ALTQ</a> (BSD License) - In Kernel (good!). Active Development. (1)</p>
+
+<p>For Apache 2.0.XX:</p>
+
+<p>* <a href='http://www.topology.org/src/bwshare/README.html'>mod_bwshare</a> (Artistic License) - Shared Memory based (good!). Inactive Development.</p>
+
+<p>* OS Based: <a href='http://www.netfilter.org/'>Netfilter - Linux</a> (GPL License) - In Kernel (good!). Active Development. (1)</p>
+
+<p>* OS Based: <a href='http://pf4freebsd.love2party.net/altq.html'>FreeBSD - ALTQ</a> (BSD License) - In Kernel (good!). Active Development. (1)</p>
+
+<p>(1) Not easy todo filtering based on filetype/vhost/http specific things.</p>
+
+<p>Ah. Only mod_bwshare for Apache 2.0. And its not actively supported by its author for Apache 2.0. Not a good situation at all. It seems to <em>work</em> with Apache 2, but I do not like modules that have been abandoned by their authors.</p>
+
+<p>Personaly, I would prefer an OS level bandwidth shapping, but these do not allow the type of configurations that most shared hosting companies want.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2004/06/18/commit-bits-for-apache/" title="Commit-bits for Apache">&larr; Commit-bits for Apache</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2004/06/22/yet-another-project-idea/" title="Yet Another Project Idea">Yet Another Project Idea &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>20 June 2004</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Async TLS</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Async TLS</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>We started discussing TLS in Node.js at the meetup in Palo Alto tonight.</p>
+
+<p>Lets imagine you wanted to implement <a href='http://en.wikipedia.org/wiki/Transport_Layer_Security'>SSL/TLS</a> in an Asynchronous framework, like <a href='http://nodejs.org/'>node.js</a>.</p>
+
+<p>For the sake of discussion, I will be using OpenSSL as an example.  At least as far as I know, these issues also apply equally to GnuTLS or NSS. I would be happy to be wrong!</p>
+
+<h2 id='the_goal'>The Goal</h2>
+
+<p>The goal is to provide both a TLS Client and Server API, allowing high level code to determine many of the common behavoirs you need to hook to provide a powerful TLS Platform.  This includes basics like verification of certificates chains, but should also include: <a href='http://journal.paul.querna.org/articles/2007/06/07/ssl-session-caching-in-memcached/'>SSL Session Caching</a>, <a href='http://en.wikipedia.org/wiki/OCSP_Stapling'>OCSP stapling</a>, <a href='http://en.wikipedia.org/wiki/Server_Name_Indication'>SNI Validation</a>, SPDY Protocol hinting, and more.</p>
+
+<h2 id='the_problem'>The Problem</h2>
+
+<p>OpenSSL can decouple IO operations from sockets, using the <a href='http://www.openssl.org/docs/crypto/bio.html'>BIO abstraction</a>.  This means your process can handle the actual socket, and its buffers, which is good for Node.js, and for most other asynchronous systems that don&#8217;t want to block for SSL to do work.</p>
+
+<p>While the IO operations has a good abstraction in OpenSSL, many common operations, rely upon a callback.</p>
+
+<p>For example, lets consider the <a href='http://www.openssl.org/docs/ssl/SSL_CTX_sess_set_get_cb.html'>OpenSSL SSL Session Cache API</a>:</p>
+
+<pre><code>&lt;code&gt;SSL_CTX_sess_set_new_cb(ctx,    ssl_callback_NewSessionCacheEntry);
+SSL_CTX_sess_set_get_cb(ctx,    ssl_callback_GetSessionCacheEntry);
+SSL_CTX_sess_set_remove_cb(ctx, ssl_callback_DelSessionCacheEntry);&lt;/code&gt;</code></pre>
+
+<p>It is a basic caching API, you have 3 functions for caching an SSL Session object, Add new, Reading existing, and deletion.</p>
+
+<p>If you examine the function signature for the get function, it returns an SSL_SESSION object directly, meaning when you return from the function you must either have the correct session, or return NULL to indicate a cache miss:</p>
+
+<pre><code>&lt;code&gt;SSL_SESSION *ssl_callback_GetSessionCacheEntry(SSL *ssl,
+                                               unsigned char *id,
+                                               int idlen, int *do_copy)
+{
+  /* Your SSL Session cache goes here! */
+  return NULL;
+}&lt;/code&gt;</code></pre>
+
+<p>The difficulty for async systems here, is that they most likely want to now perform file IO, network IO, or potentially other operations that go outside the current C stack in order to fetch the Session.</p>
+
+<p>In Node.js&#8217; case, this means you cannot provide a callback as users expect it to work in Node &#8211; they expect to be able to make an async callback, and then notify the caller when they have found the data.</p>
+
+<p>In an ideal world, the Node.js api would look something like the following:</p>
+
+<pre><code>&lt;code&gt;var sslctx = crypto.createContext{key: privateKey, cert: certificate,
+session_cache_get: function(session_id, result_callback) {
+  memcached.get(session_id, function(data, err) {
+    result_callback(data, err);
+  })
+}});
+var server = http.createServer(..);
+server.setSecure(sslctx);
+server.listen(8443);&lt;/code&gt;</code></pre>
+
+<p>We started talking through the ideas. How could you accomplish this API for TLS in Node?</p>
+
+<p>This cannot work with the standard OpenSSL callbacks, because of how Node.js works, after the initial cache get call returned undefined, we would unwind up the C-stack, and we have no way to notify OpenSSL later on that we got a Session Cache from memcached.</p>
+
+<h2 id='possible_hacks'>Possible Hacks</h2>
+
+<p>There are a few more hackish ways to solve this, they include:</p>
+
+<p>* Using Co-routines from C. Something like <a href='http://swtch.com/libtask/'>libtask</a> could be used to jump out of the OpenSSL stack, back down to Node.js, and it could resume again once we go the response for the session.</p>
+
+<p>* Running every SSL Context inside a dedicated thread.  When a callback is invoked, dispatch a message to the main thread, where Node.js will notify the waiting thread once it has an answer.  I think this is actually one of the easier solutions, but it kills the promise of an Evented framework like Node.js, and not having a 1:1 client to thread mapping.</p>
+
+<h2 id='the_rabbit_hole'>The Rabbit Hole</h2>
+
+<p>Hey guys, what if we just implemented the a TLS Protocol parser?</p>
+
+<p>It <a href='http://four.livejournal.com/893082.html'>wasn&#8217;t a new idea</a>.  But then we started talking it through the idea of implementing a TLS protocol parser, but still using OpenSSL for all of the actual cryptography, it seemed to make more and more sense.  This would let an <a href='http://github.com/ry/http-parser'>http-parser style API</a> be used for TLS, which as far as any of us know, has not been done.  The parser could be written in C (or javascript, but thats irrelevant), the TLS record protocol itself isn&#8217;t too complex, it consistents of a few fixed width fields, a few optional fields, but most of the complexity comes from the implementation of all the cryptography, which none of us have an interest in replacing.</p>
+
+<p><strong>I am scared.  Reimplementing SSL or TLS just seems wrong.</strong></p>
+
+<p>But on the other hand, most SSL implementations are tightly coupled to their cryptographic libraries, GnuTLS perhaps being the least so, but these libraries we still designed before many evented style programing paradigms became popular.  It seems like there is a niche to be filled by a liberally licensed, TLS record protocol parser library, which provided stubs to use OpenSSL (or another) backend for the actual cryptography, but basing everything on callbacks to user code.</p>
+
+<p>Is this insane?</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/07/10/overclocking-mod_ssl/" title="Overclocking mod_ssl">&larr; Overclocking mod_ssl</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/08/23/writing-node-js-native-extensions/" title="Writing Node.js Native Extensions">Writing Node.js Native Extensions &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>11 August 2010</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

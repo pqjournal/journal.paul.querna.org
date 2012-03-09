@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>in reply to "bloglines sucks"</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>in reply to "bloglines sucks"</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>In reply to Scoble&#8217;s post today, &#8221;<a href='http://scobleizer.com/2007/12/27/bloglines-sucks-2/'>Bloglines Sucks</a>&#8221;&#8230;..</p>
+
+<p>I will first try to outline the &#8220;issue&#8221;.</p>
+
+<p>At the bottom of every post on a wordpress.com blog, is a tracker image used for statistics. It includes a rand parameter, which changes every time the feed is fetched over HTTP. The image URL is something like this:</p>
+
+<blockquote>
+<p>http://stats.wordpress.com/b.gif?host=scobleizer.com&amp;rand=2045631674&amp;blog=3428&amp;post=3957&amp;subd=scobleizer&amp;ref=&amp;feed=1</p>
+</blockquote>
+
+<p>Because this rand value changes every time we read the feed, we considered the Item &#8217;<strong>Updated</strong>&#8217;.</p>
+
+<p>The behavior of the last 40 posts being shown as updated, every time a new post was added was caused by our use of the <a href='http://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers'>HTTP ETags and Last-Modified features</a>. Since Wordpress.com returns a 304 Not Modified for most of our crawls, we would only &#8216;reparse&#8217; the entire feed when a new post was added.</p>
+
+<p>Now, The reason users do not see this <em>problem</em>in Google Reader, is that Google Reader has no concept of an &#8221;<strong>Updated</strong>&#8221; item. When a writer edits a blog post later, users in Google Reader would never see the changes. In Bloglines, we have always considered this a feature, showing you the user when a blog post is edited.</p>
+
+<p>In Bloglines you can disable this feature, on a per-feed basis:</p>
+
+<blockquote>
+<p>In <a href='http://beta.bloglines.com/'>Bloglines Beta</a>, click on the feed, then select Edit. Change the &#8220;Updated Items:&#8221; to &#8220;Ignore&#8221;.</p>
+</blockquote>
+
+<p>In Bloglines Classic, click on the feed, then select edit subscription. Change the &#8220;Updated Items:&#8221; to &#8220;Ignore&#8221;.</p>
+
+<p>As far as I can tell, the use of a rand parameter in the Wordpress.com statistics image is a new change, also introduced at the same time the inline comment images were added to feeds.</p>
+
+<p><a href='http://www.feedburner.com'>FeedBurner</a> includes similar statistics, tracking images and comment images, but they do not include a constantly changing image url. This works correctly in Bloglines.</p>
+
+<p>In regards to placing blame, <a href='http://silverstr.ufies.org/blog/archives/001029.html'>Dana Epp says &#8220;Bloglines says it&#8217;s not them&#8221;</a>. I don&#8217;t know who Dana has talked to inside Bloglines. When these type of issues are reported, we generally try to get in touch and investigate with the publisher, and hopefully figure out what is going on together, rather than outright saying its not our fault. It is a bad experience for our users, and we always want to be involved and help fix it.</p>
+
+<p>I first heard about this issue on Friday, December 21st from <a href='http://photomatt.net/'>Matt</a> via email. (also <a href='http://journal.paul.querna.org/articles/2007/12/21/22-23/'>my birthday</a>) I forwarded that email onto our internal Bloglines Engineering Mailing list, but frankly, I didn&#8217;t expect anyone to work on the issue on the Friday before Christmas. <a href='http://sp.ask.com/en/docs/about/company_overview.shtml'>IAC Search and Media</a>, the parent company of Bloglines and Ask.com, also has a mandatory Holiday Shutdown this week for all employees. No one will be in the office officially until January 2nd, 2008.</p>
+
+<p>Luckily or unlucky, depending on your perspective, I took some time this afternoon away from my family to read my feeds. For now the bug^H^H^Hfeature in Bloglines of showing edited posts has been fixed. I&#8217;ve have simply turned it off for all users.</p>
+
+<p>I hope you had a Merry Christmas, and have a Happy New Year.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2007/12/21/22-23/" title="22->23">&larr; 22->23</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2008/01/18/joining-joost/" title="Joining Joost">Joining Joost &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>27 December 2007</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

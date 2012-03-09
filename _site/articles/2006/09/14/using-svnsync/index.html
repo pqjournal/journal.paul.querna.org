@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>using svnsync</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>using svnsync</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p><a href='http://asdf.blogs.com/'>Garrett</a> helped write svnsync as part of <a href='http://subversion.tigris.org/svn_1.4_releasenotes.html'>Subversion 1.4</a>, but I wasn&#8217;t able to find any documentation for it, other than passing &#8211;help.</p>
+
+<p>svnsync is a one way replication system for Subversion. It allows you to create a read-only replica of a repository over any RA layer (including http, https, svn, svn+ssh).</p>
+
+<p>First, lets setup the initial sync. We have two repositories, I will skip the details of <a href='http://svnbook.red-bean.com/nightly/en/svn.reposadmin.create.html'>svnadmin create</a>. For the remote access to the replica repository, I used <a href='http://svnbook.red-bean.com/nightly/en/svn.serverconfig.svnserve.html'>svnserve</a>, and I <a href='http://svnbook.red-bean.com/nightly/en/svn.serverconfig.svnserve.html#svn.serverconfig.svnserve.auth.users'>added a user with full write access</a>. The destination repository should be completely empty before starting.</p>
+
+<p>So, to make this easier, I am going to put the repository URIs into enviroment variables:</p>
+
+<pre><code>$ export FROMREPO=svn://svn.example.com/
+$ export TOREPO=svn://dest.example.com/</code></pre>
+
+<p>Because the svnsync is allowed to rewrite anything on the TOREPO, we need to <a href='http://svnbook.red-bean.com/nightly/en/svn.reposadmin.create.html#svn.reposadmin.create.hooks'>make sure the commit hooks</a> are configured to allow our &#8216;svnsync&#8217; user to do anything it wants.</p>
+
+<p>On the server hosting TOREPO, I ran this:</p>
+
+<pre><code>$ echo &quot;#!/bin/sh&quot; &gt; hooks/pre-revprop-change
+$ chmod 755 hooks/pre-revprop-change</code></pre>
+
+<p>Now we are ready to setup the sync:</p>
+
+<pre><code>$ svnsync init ${TOREPO} ${FROMREPO}</code></pre>
+
+<p>This will prompt you for the username, password, and also sets several revision properties on the $TOREPO, for revision zero. It doesn&#8217;t actually copy any of the data yet. To list the properties that it created, run:</p>
+
+<pre><code>$ svn proplist --revprop -r 0 ${TOREPO}
+
+  svn:sync-from-uuid
+  svn:sync-last-merged-rev
+  svn:date
+  svn:sync-from-url
+
+$ svn propget svn:sync-from-url --revprop -r 0 ${TOREPO}
+
+  svn://svn.example.com/</code></pre>
+
+<p>So all the knowledge about what we are syncing from is stored at the destination repository. No state about this sync is stored in the source repository.</p>
+
+<p>We are now ready to begin copying data:</p>
+
+<pre><code>$ svnsync --non-interactive sync ${TOREPO}</code></pre>
+
+<p>And if everything is setup correctly, you will start replicating data.</p>
+
+<p>Except, I suck. And the first thing I did was hit control+c. I figured this is a cool replication system, so I just ran the <code>sync</code> command from above again, and got this:</p>
+
+<pre><code>$ svnsync --non-interactive sync ${TOREPO}
+
+Failed to get lock on destination repos, currently held by &#39;svn.example.com:0e4e0d98-631d-0410-9a00-9320a90920b3&#39;
+Failed to get lock on destination repos, currently held by &#39;svn.example.com:0e4e0d98-631d-0410-9a00-9320a90920b3&#39;
+Failed to get lock on destination repos, currently held by &#39;svn.example.com:0e4e0d98-631d-0410-9a00-9320a90920b3&#39;
+Failed to get lock on destination repos, currently held by &#39;svn.example.com:0e4e0d98-631d-0410-9a00-9320a90920b3&#39;
+Failed to get lock on destination repos, currently held by &#39;svn.example.com:0e4e0d98-631d-0410-9a00-9320a90920b3&#39;
+Failed to get lock on destination repos, currently held by &#39;svn.example.com:0e4e0d98-631d-0410-9a00-9320a90920b3&#39;
+Failed to get lock on destination repos, currently held by &#39;svn.example.com:0e4e0d98-631d-0410-9a00-9320a90920b3&#39;
+Failed to get lock on destination repos, currently held by &#39;svn.example.com:0e4e0d98-631d-0410-9a00-9320a90920b3&#39;
+Failed to get lock on destination repos, currently held by &#39;svn.example.com:0e4e0d98-631d-0410-9a00-9320a90920b3&#39;
+Failed to get lock on destination repos, currently held by &#39;svn.example.com:0e4e0d98-631d-0410-9a00-9320a90920b3&#39;
+svnsync: Couldn&#39;t get lock on destination repos after 10 attempts</code></pre>
+
+<p>Oh snap. I guess its not so easy to restart after an aborted sync.</p>
+
+<p>I started debugging, and found that svnsync kept its lock state in a special property in revision zero again.</p>
+
+<p>So, To fix this, we can safely just delete this lock:</p>
+
+<pre><code>$ svn propdelete svn:sync-lock --revprop -r 0  ${TOREPO}</code></pre>
+
+<p>Now running <code>sync</code> again works! Hurrah!</p>
+
+<p>After the sync finishes, we will want to keep the replica up to date.</p>
+
+<p>I personally set a &#8216;live&#8217; sync, but it is also possible to <a href='http://www.freebsd.org/cgi/man.cgi?query=crontab&amp;apropos=0&amp;sektion=0&amp;manpath=FreeBSD+6.1-RELEASE&amp;format=html'>use a crontab</a> or other scheduling method to invoke sync whenever you want.</p>
+
+<p>To setup a live sync, on the FROMREPO server, I appended this to my hooks/post-commit file:</p>
+
+<pre><code>svnsync --non-interactive sync svn://dest.example.com/ &amp;</code></pre>
+
+<p>You will want to make sure that the user-running subversion (and the hook script) has a cached copy of the authentication info for the destination repository.</p>
+
+<p>Unfortunately, the post-commit hook won&#8217;t catch everything, so we also need to added this to the <code>post-revprop-change</code> hook:</p>
+
+<pre><code>svnsync --non-interactive copy-revprops  svn://dest.example.com/ ${REV} &amp;</code></pre>
+
+<p>This will help propagate things <a href='http://subversion.tigris.org/faq.html#change-log-msg'>like editing svn:log messages</a>.</p>
+
+<p>And there you go, thats the path I took to mirror one of my repositories onto another machine.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2006/09/09/whitelists-for-secure-html/" title="whitelists for secure HTML">&larr; whitelists for secure HTML</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2006/09/14/bloglines-general-manager/" title="Bloglines General Manager">Bloglines General Manager &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>14 September 2006</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

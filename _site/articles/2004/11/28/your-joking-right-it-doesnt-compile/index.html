@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Your Joking right? it doesn't compile?</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Your Joking right? it doesn't compile?</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>For the first time in my recent memory, the <a href='http://httpd.apache.org/'>httpd</a> development branch would <a href='http://marc.theaimsgroup.com/?l=apache-httpd-dev&amp;m=110159777324460&amp;w=2'>not compile</a>! It turned out to be some old functions were not exported properly, and this caused undefined symbols on some platforms. Is a broken build a sign of progress for a project that has been idle? Is this the starting of a new life?</p>
+
+<p>On the <a href='http://httpd.apache.org/'>httpd frontpage</a> there is now a link to the <a href='http://httpd.apache.org/docs-2.1/'>2.1/2.2 Documentation</a>. The next step is get a <em>2.1-alpha</em> release on there. Hopefully that will get done this week, since <a href='http://www.pcre.org/'>PCRE 5.0</a> has been merged in.</p>
+
+<p>I also knocked off an <a href='http://issues.apache.org/bugzilla/show_bug.cgi?id=25718'>old bug</a> in APR where it was trying to do runtime detection of <a href='http://www.freebsd.org/cgi/man.cgi?query=sendfile&amp;sektion=2'>sendfile</a> support on FreeBSD. <a href='http://svn.apache.org/viewcvs?view=rev&amp;rev=106850'>r106850</a></p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2004/11/27/this-week-in-coding/" title="This Week in Coding">&larr; This Week in Coding</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2004/11/29/null-termination-attacks/" title="NULL termination attacks">NULL termination attacks &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>28 November 2004</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

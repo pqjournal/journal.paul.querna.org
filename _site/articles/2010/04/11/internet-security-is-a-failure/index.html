@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Internet Security is a failure</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Internet Security is a failure</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Security on the Internet sucks, and it is only getting worse.  The problem is systemic, with security researchers and developers not producing viable ways for the average user to live on the Internet in a secure fashion without excessive paranoia.</p>
+
+<p><strong>The story of Apache&#8217;s Infrastructure</strong></p>
+
+<p>The <a href='http://www.apache.org/'>Apache Software Foundation</a> runs <a href='http://monitoring.apache.org/status/'>about 40 machines</a>, with varying access policies, but some have upwards of 2300 shell accounts, one for every commiter.  In the last year, there have been three major incidents in this infrastructure:</p>
+
+<p>* The first attack was in August 2009 was caused by misconfiguration of our backup procedures, and is detailed in<a href='https://blogs.apache.org/infra/entry/apache_org_downtime_report'>this downtime report</a>.</p>
+
+<p>* The second attack was a persistent DDoS attack against <a href='https://blogs.apache.org/infra/entry/ddos_mystery_involving_linux_and'>issues.apache.org in October 2009</a>.</p>
+
+<p>* The third attack started this week, was a directed attack against the Apache JIRA instance, targeting individual Apache Infrastructure team members.  Full details have not yet been posted online about this attack, but you can see <a href='http://people.apache.org/~joes/jira-hacked.txt'>the initial email from Joe</a> <a href='http://people.apache.org/~joes/jira-hacked.txt.asc'>gpg signature</a>.  Hopefully later this week, we will get up a blog post with full details.</p>
+
+<p>As a mostly volunteer organization, it is difficult to implement draconian security policies, but the ASF  has avoided running most dynamic webapps &#8211; the vast majority of our websites are static HTML.  Maybe this has saved us from untold other security issues, but even with our believed limited exposure, we still got hacked.</p>
+
+<p>The ASF is by no means perfect, it has half-implemented some of the best practices we know we need to do, but I believe overall the ASF is more secure than most big companies.  It has some of the best sysadmins I have known, but it still has issues.   Maybe we can just blame that on having too many users, but I believe fundamentally, Internet security is a failure.</p>
+
+<p>I believe there are four major facets around our insecure Internet:</p>
+
+<p>1. Identity and Authentication</p>
+
+<p>2. Transport Security</p>
+
+<p>3. Secure Software and Operating Systems</p>
+
+<p>4. Law Enforcement</p>
+
+<p><strong>Identity and Authentication: Failed.</strong></p>
+
+<p>If there was one thing I would change, it would be to stop everyone in the world from using <strong>Passwords</strong>.  Individuals might pick good ones, but on a whole, they pick bad passwords.  They also use the same password across a multitude of services.</p>
+
+<p>The problem is most attackers collect these passwords, and then use them to escalate privileges to more services.</p>
+
+<p>Wait a minute you might ask, you just combined Identity with Authentication, but they are different!  And yes, you are right, but for the common user, they don&#8217;t know the difference.  To solve both on a wide scale, I believe their issues are joined at the hip, as authentication depends on identity in most important use cases.</p>
+
+<p>There are many ways you can avoid using passwords, but they are all too difficult for the average user and widespread adoption.</p>
+
+<p><a href='http://openid.net/'>OpenID</a> was one of the first real innovators in this area, and much credit is due to <a href='http://www.bradfitz.com/'>Brad</a> for it. Even though <a href='http://openid.net/get-an-openid'>most people on the internet likely have a provider</a>, very few use it on a daily basis.  Between the user experience issues and <a href='http://wiki.openid.net/OpenID_Phishing_Brainstorm'>phishing problems,</a> I do not believe OpenID will ever be a real replacement for passwords for all websites.  It has solved many problems like how to comment on a blog &#8211; which is great, I hate blog spam &#8211; but it isn&#8217;t the end of Identity and Authentication.</p>
+
+<p><a href='http://oauth.net/'>OAuth</a> is taking a different approach, and solving a different problem, which is great for my twitter account.  It is still too early to know if OAuth will really improve the wide-scale security of connected web services, but it has been three years since the project started and real-world use cases are still limited.  The standard <a href='http://wiki.oauth.net/OAuth-WRAP'>still changing quickly</a> certainly isn&#8217;t helping adoption.</p>
+
+<p>Both Amazon Web Services and PayPal let you <a href='http://en.wikipedia.org/wiki/Two-factor_authentication'>use multi-factor authentication</a> easily, and I applaud them for this, but most websites and services do not, notability for things like email, which today is the primary identify of most people on the Internet.  I believe more services should adopt SMS based multi-factor authentication, and products like <a href='http://www.twilio.com/sms/'>Twilio&#8217;s SMS</a> API make this easier than ever.  I still can count on a single hand the services I have ever logged into using MFA though &#8211; I still can&#8217;t login to <a href='https://www.wellsfargo.com/'>my bank</a> with it, nor my email. Companies like <a href='http://yubico.com'>YubiCo</a> are also providing open stacks to improve security, but again most people don&#8217;t own a token.</p>
+
+<p>You can find limited cases of SSL Client Certificates being useful and working, but on the whole they are still painful with many sharp edges.  I used client certificates <a href='http://journal.paul.querna.org/articles/2009/07/29/leaving-joost/'>extensively at Joost</a>, and I never ever want to repeat that experience, and I am a fairly technical user.   The difficulties are not just on the clients and users, but also on running a Certificate Authority correctly with the right policies, revocations and security models.</p>
+
+<p>It isn&#8217;t just the users that have problems &#8211; providers like DreamHost are unable to authenticate their own users, <a href='http://news.ycombinator.com/item?id=1229247'>letting attackers take over accounts mostly via social engineering</a>.</p>
+
+<p><strong>Transport Security: Failed.</strong></p>
+
+<p>As part of the <a href='http://en.wikipedia.org/wiki/Transport_Layer_Security'>TLS protocol,</a> you need to establish trust between various parties, and so for the most common configurations on the Internet, SSL/TLS depends upon <a href='http://en.wikipedia.org/wiki/Certificate_authority'>Certificate Authorities</a>.</p>
+
+<p>Trusting Certificate Authorities has turned into an oxymoron.  With Certificates being shipped that <a href='http://news.ycombinator.com/item?id=1244444'>no one even knows how they got in the trusted list,</a> to the threat of <a href='http://news.ycombinator.com/item?id=1234460'>man in the middle attacks from valid certificates</a>, to <a href='http://arstechnica.com/security/news/2010/03/govts-certificate-authorities-conspire-to-spy-on-ssl-users.ars'>off the shelf devices for sale to attack it</a>, TLS has failed.</p>
+
+<p>In addition the problems of <a href='http://it.slashdot.org/story/09/11/16/2327230/SSL-Renegotiation-Attack-Becomes-Real'>the SSL renegotiation attacks</a> don&#8217;t help the situation, and it will take years before everyone has <a href='http://www.openssl.org/news/secadv_20091111.txt'>upgraded their SSL software to</a> prevent this exploit.</p>
+
+<p>I believe while issues in the TLS protocol itself are going to be rare overall, the problem of the CAs will not go away.  I don&#8217;t know how to solve the trusted CA problem &#8211; distributed trust systems are one of the hardest problems to solve for the average end user.  As a normal user, at some point you will need to trust a large company to make trust decisions for you, but this process is still too opaque to provide real trust for most people.  I personally have doubts that the <a href='http://en.wikipedia.org/wiki/Extended_Validation_Certificate'>Extended Validation Certificates</a> are a good thing, in fact I believe it might be providing an illusion of being more secure. We are still trusting the same Certificate Authorities that have almost zero business motivation to provide good security.</p>
+
+<p><strong>Secure Software and Operating Systems: Failed.</strong></p>
+
+<p>Do your Linux servers have an uptime of over 30 days?  Then it is very likely they have a <a href='http://www.ubuntu.com/usn/USN-914-1'>local root kernel exploit</a>.  It used to be funny to make fun of Windows exploits, and there have been many remote ones which is terrible, but Linux and most open source alternatives have not truly improved security for the average server.  The problem isn&#8217;t just that the operating system kernels are insecure, it is that privilege escalation is far too easy, and far too common.</p>
+
+<p>You should design software around expecting a local user to be compromised, and not to pick on projects like Wordpress, but they have seen a rash of severe security issues over the years, with a relatively small code base &#8211; and most webapps, open source or not have similar records.   The problem is once an attacker can execute local code, in almost all situations it means with a little work, they can also gain root.</p>
+
+<p>On the user&#8217;s side, browsers and their plugins, <a href='http://www.f-secure.com/vulnerabilities/SA200900917'>like flash</a>,  have had a similarly abysmal track record.  Real innovation has come from Google Chrome, and most other browsers <a href='https://wiki.mozilla.org/Electrolysis'>are copying these methods</a>. This is a very good thing. Hopefully it will reduce the size of <a href='http://en.wikipedia.org/wiki/Botnet'>botnets</a> in the future, but today most users are vulnerable to a multitude of remote attacks.</p>
+
+<p><strong>Law Enforcement: Failed.</strong></p>
+
+<p>In most cities, crime isn&#8217;t a major problem anymore.  You still lock your doors, take basic <a href='http://www.kryptonitelock.com'>precautions with your bike</a>, but the truth is, if someone really wanted to steal something from you, they probably could, but crime is not rampant.  You have an expectation that law enforcement will help you.</p>
+
+<p>While law enforcement can sometimes turn a blind eye to a class of crimes, often <a href='http://en.wikipedia.org/wiki/Victimless_crime'>victimless ones</a>, they have on the whole turned a blind eye to Internet hacking.  As long as <a href='http://en.wikipedia.org/wiki/Sarah_Palin_email_hack'>an attacker doesn&#8217;t go after Sarah Pallin&#8217;s email</a>, there are rarely any consequences for most incidents.</p>
+
+<p>Inside Apache, we have discussed <a href='http://www.fbi.gov/cyberinvest/cyberhome.htm'>going to the FBI</a> several times, but the conclusion every time is it would be a waste of our time.  The FBI doesn&#8217;t care about our problems, because we aren&#8217;t a political candidate, nor do we have millions of credit cards.    They have their <a href='http://www.ic3.gov/default.aspx'>Internet Crime Complaint Center (IC3),</a> but I believe its just a synonym for &#8217;<a href='http://www.urbandictionary.com/define.php?term=circular%20file'>circular file</a>&#8217;.</p>
+
+<p>Obama&#8217;s White House  has published their <a href='http://www.whitehouse.gov/assets/documents/Cyberspace_Policy_Review_final.pdf'>Cyberspace Policy Review (PDF)</a>, and it talks about many great points, but it does not actually bring change to the Internet in any measurable fashion.</p>
+
+<p>I don&#8217;t want to <a href='http://www.itsecurity.com/features/hacker-high-061008/'>lock up 12 year old kids for the rest of their lives</a> because they defaced some website, but there must be a better framework and structure for prosecuting attackers world wide.  No matter the  improvements made to software, users, or best practices, with attackers essentially taking zero risk of ever getting caught today, they have no motivation to stop.</p>
+
+<p><strong>What now?</strong></p>
+
+<p>People are working on making the Internet a better place, but it isn&#8217;t enough.  Everyone, in every part of the stack must care about their security.  Providers, both big and small, software developers, open source and proprietary, users both advanced and novice, they all live in a difficult world, and most of them live in an insecure one.</p>
+
+<p>We won&#8217;t all switch to <a href='http://www.openbsd.org/security.html'>OpenBSD</a>.  We won&#8217;t all switch to <a href='http://blog.chromium.org/2008/10/new-approach-to-browser-security-google.html'>Chrome</a>.   We won&#8217;t all stop <a href='http://www.yubico.com/products/yubikey/'>using passwords</a>.  And <a href='http://www.us-cert.gov/cas/tips/'>the government can&#8217;t save you either</a>.</p>
+
+<p>I wish I had a single answer, I dream that it was a solvable problem.  <strong>As a technical person, I am more scared of having my own identity stolen, than of any terrorists attacks.</strong></p>
+
+<p>Right now, the mission is on the individual to make smart choices, and do their best, but the only way the world will truly be a better place is if there is a systemic shift, to caring about security of the average human on the Internet, and maybe it will be big companies like Google or Microsoft that end up conquering this problem, but I hope we can learn form existing open source patterns, and find a better distributed way.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2010/04/10/living-the-dream/" title="Living the dream">&larr; Living the dream</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/06/12/forever-storage/" title="Forever Storage">Forever Storage &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>11 April 2010</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

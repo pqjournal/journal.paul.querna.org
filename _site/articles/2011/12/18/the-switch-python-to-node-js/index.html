@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>The Switch: Python to Node.js</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>The Switch: Python to Node.js</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>In <a href='http://journal.paul.querna.org/articles/2011/12/17/technology-cloud-monitoring/'>my previous post</a>, I glossed over our team switching from Python to Node.js. I kept it brief because the switch wasn&#8217;t the focus of the post, but since I believe I am being misunderstood, I will explain it in depth:</p>
+
+<blockquote>
+<p>Cloudkick was primarily written in Python. Most backend services were written in <a href='http://www.twistedmatrix.com/'>Twisted Python</a>. The API endpoints and web server were written in <a href='https://www.djangoproject.com/'>Django</a>, and used <a href='http://code.google.com/p/modwsgi/'>mod_wsgi</a>. We felt that while we greatly value the asynchronous abilities of Twisted Python, and they matched many of our needs well, we were unhappy with our ability to maintain Twisted Python based services. Specifically, the deferred programming model is difficult for developers to quickly grasp and debug. It tended to be &#8216;fail&#8217; deadly, in that if a developer didn&#8217;t fully understand Twisted Python, they would make many innocent mistakes. Django was mostly successful for our needs as an API endpoint, however we were unhappy with our use of the Django ORM. It created many dependencies between components that were difficult to unwind later. Cloud Monitoring is primarily written in <a href='http://www.nodejs.org/'>Node.js</a>. Our team still loves Python, and much of our secondary tooling in Cloud Monitoring uses Python.</p>
+</blockquote>
+
+<p>This attracted a few tweets, <a href='https://twitter.com/#!/g0rm/status/148284022181732354'>accusing various things about our developers,</a> but I want to explore the topic in depth, and 140 characters just isn&#8217;t going to cut it.</p>
+
+<h2 id='just_how_much_python_did_cloudkick_have'>Just how much Python did Cloudkick have?</h2>
+
+<p>We had about 140,000 lines of Python in Cloudkick. We had 40 <a href='http://twistedmatrix.com/documents/current/core/howto/plugin.html'>Twisted Plugins</a>. Each Plugin roughly corresponds to a backend service. About 10 of them are random DevOps tools like IRC bots and the like, leaving about 30 backend services that dealt with things in production. We built most of this code in a 2.5 year experience, growing the team from the 3 founders to about a dozen different developers. I know there are larger Twisted Python code bases out there, but I do believe we had a large corpus of experiences to build our beliefs upon.</p>
+
+<p>This wasn&#8217;t just a weekend hack project and a blog post about how I don&#8217;t like deferreds, this was 2.5 years of building real systems.</p>
+
+<h2 id='it_worked'>It worked.</h2>
+
+<p><a href='http://www.rackspace.com/information/newsroom/pressreleases/rackspace-acquires-cloudkick-to-provide-powerful-server-management-tools-for-the-cloud-computing-era/'>We were acquired.</a></p>
+
+<p>Our Python code got the job done. We built a product amazingly quickly, built our users up, and were able to iterate quickly. I meant it when I said our team still <strong>still loves Python</strong>.</p>
+
+<p>What I didn&#8217;t mention in the original post, is that after the acquisition, the Cloudkick team was split into two major projects &#8211; Cloud Monitoring, which the previous post was about, and another unannounced product team. This other product is being built in Django and Twisted Python. Cloud Monitoring has very different requirements moving forward &#8211; our goals are to survive and keep working after <a href='http://www.datacenterknowledge.com/archives/2007/11/13/truck-crash-knocks-rackspace-offline/'>a truck drives into our data centers</a>, and this is very different from how the original Cloudkick product was built.</p>
+
+<h2 id='what_happened_to_python_then'>What happened to Python then?</h2>
+
+<p>Simply put, our requirements changed. These new requirements for Cloud Monitoring included:</p>
+
+<p>* Multi-Region availability / durability</p>
+
+<p>* Multiple order of magnitude increases in servers monitored</p>
+
+<p>* Scalable system, that can still be used 5 year from now. (Remember Rackspace Cloud <a href='http://seekingalpha.com/article/306015-rackspace-hosting-s-ceo-discusses-q3-2011-results-earnings-call-transcript'>grew 89% year over year right now</a>)</p>
+
+<p>Cloudkick was built as a startup. We took shortcuts. It scaled pretty damn well, but even if we changed nothing in our technology stack, it was clear we needed to refresh our architecture and how we modeled data.</p>
+
+<p>The mixing of both blocking-world Django, and Twisted Python also created complications. We would have utility code that could be called from both environments. This meant extensive use of <code>deferToThread</code> in order to not block Twisted&#8217;s reactor thread. This created an overhead for every programmer to understand both how Twisted worked, and how Django worked, even if your project in theory only involved the web application layer. Later on, we did build enough tooling with function decorators to reduce the impact of these multiple environments, but the damage was done.</p>
+
+<p>I believe our single biggest mistake from a technical side was not reigning in our use Django ORM earlier in our applications life. We had Twisted services running huge Django ORM operations inside of the Twisted thread pool. It was very easy to get going, but as our services grew, not only was this not very performant, and it was extremely hard to debug. We had a series of memory leaks, places where we would reference a QuerySet, and hold on to it forever. The Django ORM also tended to have us accumulate large amounts of business logic on the model objects, which made building strong service contracts even harder.</p>
+
+<p>These were our problems. We dug our own grave. We should&#8217;ve used <a href='http://www.sqlalchemy.org/'>SQLAlchemy</a>. We should&#8217;ve built stronger service separations. But we didn&#8217;t. Blame us, blame Twisted, blame Django, blame whatever you like, but thats where we were.</p>
+
+<p>We knew by April 2011 that the combination of new requirements and a legacy code base meant we needed to make some changes, but we also didn&#8217;t want to fall into a &#8220;Version 2.0&#8221; syndrome and over engineering every component.</p>
+
+<h2 id='picking_the_platform'>Picking the Platform.</h2>
+
+<p>We wanted some <em>science</em> behind this kind of decision, but unfortunately this decision is about programming languages, and everyone had their own opinions.</p>
+
+<p>We wanted to avoid &#8220;just playing with new things&#8221;, because at the time half our team was enamored with <a href='http://golang.org/'>Go Lang</a>. We were also very interested in <a href='http://www.gevent.org/'>Python Gevent</a>, since OpenStack Nova had recently switched to it from Twisted Python.</p>
+
+<p>We decided to make a <a href='https://docs.google.com/spreadsheet/ccc?key=0AvBGESHWxhk2dHJ2Q0lWRFF3dkxLZmFiMVVGRElQaEE'>spreadsheet of the possible environments</a> we would consider using for our next generation product. The inputs were:</p>
+
+<ul>
+<li>Community</li>
+
+<li>Velocity</li>
+
+<li>Correctness (aka, static typing-like things)</li>
+
+<li>Debuggability/Tooling</li>
+
+<li>Downtime/Compile Time</li>
+
+<li>Libraries (Standard/External)</li>
+
+<li>Testability</li>
+
+<li>Team Experience</li>
+
+<li>Performance</li>
+
+<li>Production</li>
+</ul>
+
+<p>We setup the spreadsheet so we could change the weight of each category. This let us play with our feelings, what if we only cared about developer velocity? What if we only cared about testability?</p>
+
+<p>Our conclusion was, that it came down to was a choice between the JVM platform and Node.js. It is obvious that the JVM platform is one of the best ways to build large distributed systems right now. Look at everything <a href='https://github.com/twitter'>Twitter</a>, <a href='http://engineering.linkedin.com/tags/sna'>LinkedIn</a> and others are doing. I <a href='http://journal.paul.querna.org/articles/2010/10/12/java-trap-2010-edition/'>personally have serious reservations</a> about investing on top of the JVM, and Oracles recent behavior (<a href='https://news.ycombinator.com/item?id=3294783'>here</a>, <a href='https://news.ycombinator.com/item?id=3357623'>here</a>) isn&#8217;t encouraging.</p>
+
+<p>After much humming and hawing, we picked Node.js.</p>
+
+<p>After picking Node.js, other choices like using Apache Cassandra for all data storage were side effects &#8211; there was nothing like SQL Alchemy for Node.js at the time, so we were on our own either way, and Cassandra gave us definite improvements in operational overhead of compared to running a large number of MySQL servers in a master/slave configuration.</p>
+
+<h2 id='nodejs_it_has_nested_callbacks_everywhere_thats_ugly'>Node.js? It has nested callbacks everywhere, thats ugly!</h2>
+
+<p>I think this is one of the first complaints people lob at Node.js when they just start. It makes a regular occurrence on the users mailing list &#8211; people think they want coroutines, generators or fibers.</p>
+
+<p>I believe they are wrong.</p>
+
+<p><strong>The zen of Node.js is its minimalist core</strong>, both in size and in features. You can read the core lib Javascript in a day, and one more day for the C++. Don&#8217;t venture into v8 itself, that is a rabbit hole, but you can pretty quickly understand how Node.js itself works.</p>
+
+<p>Our experience was that we just needed to pick one good tool to contain callback flows, and use it everywhere.</p>
+
+<p>We use <a href='https://twitter.com/Caolan'>@Caolan&#8217;s</a> excellent <a href='https://github.com/caolan/async'>Async library</a>. Our code is not 5 level deep nested callbacks.</p>
+
+<p>We currently have about 45,000 lines of Javascript in our main repository. In this code base, we have used the <code>async</code> library as our only flow control library. Our current use of the library in our code base:</p>
+
+<ul>
+<li><code>async.waterfall</code>: 74</li>
+
+<li><code>async.forEach</code>: 55</li>
+
+<li><code>async.forEachSeries</code>: 21</li>
+
+<li><code>async.series</code>: 8</li>
+
+<li><code>async.parallel</code>: 4</li>
+
+<li><code>async.queue</code>: 3</li>
+</ul>
+
+<p>I highly suggest, that if you are unsure about Node.js and are going to do an experiment project, make sure you use <a href='https://github.com/caolan/async'>Async</a>, <a href='https://github.com/creationix/step'>Step</a>, or one of the other flow control modules for your experiment. It will help you better understand how most larger Node.js applications are built.</p>
+
+<h2 id='closing'>Closing</h2>
+
+<p>In the end, we had new requirements. We re-evaluated what platforms made sense for us to build a next generation product on. Node.js came out on top. We all have our biases, and our preferences, but I do believe we made a reasonable choice. Our goal in the end is still to move our product forward, and improve our business. Everything else is just a distraction, so pick your platform, and get real work done.</p>
+
+<p>PS: If you haven&#8217;t already read it, read SubStack&#8217;s great <a href='http://substack.net/posts/b96642/the-node-js-aesthetic'>the node.js aesthetic</a> post.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2011/12/17/technology-cloud-monitoring/" title="Technology behind Rackspace Cloud Monitoring">&larr; Technology behind Rackspace Cloud Monitoring</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2011/12/26/log-for-machines-in-json/" title="Write Logs for Machines, use JSON">Write Logs for Machines, use JSON &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>18 December 2011</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

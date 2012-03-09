@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>Paul's Journal</title>
+ <link type="application/atom+xml" href="http://journal.paul.querna.org/atom.xml" rel="self"/>
+ <link type="text/html" href="http://journal.paul.querna.org"/>
+ <updated>2012-03-09T18:47:20+09:00</updated>
+ <id>http://journal.paul.querna.org</id>
+ <author>
+   <name>Paul Querna</name>
+   <email>journal@paul.querna.org</email>
+ </author>
+
+ 
+ <entry>
+   <title>March 2012</title>
+   <link rel="alternate" type="text/html" href="http://journal.paul.querna.org/articles/2012/03/01/march-2012/"/>
+   <updated>2012-03-01T10:31:38+09:00</updated>
+   <published>2012-03-01T10:31:38+09:00</published>
+   <id>hhttp://journal.paul.querna.org/articles/2012/03/01/march-2012</id>
+   <content type="html" xml:base="http://journal.paul.querna.org/articles/2012/03/01/march-2012/">&lt;p&gt;Vacation:&lt;/p&gt;
+
+&lt;p&gt;* March 2 to 15: Japan&lt;/p&gt;
+
+&lt;p&gt;* March 16 to 19: San Francisco&lt;/p&gt;
+
+&lt;p&gt;* March 19 to 30: Chile and Argentina&lt;/p&gt;
+
+&lt;p&gt;I don&amp;#8217;t expect to be reading much email.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#8217;m still undecided about where/how to post pictures.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Designing Network Protocols</title>
+   <link rel="alternate" type="text/html" href="http://journal.paul.querna.org/articles/2012/02/22/designing-network-protocols/"/>
+   <updated>2012-02-22T18:24:10+09:00</updated>
+   <published>2012-02-22T18:24:10+09:00</published>
+   <id>hhttp://journal.paul.querna.org/articles/2012/02/22/designing-network-protocols</id>
+   <content type="html" xml:base="http://journal.paul.querna.org/articles/2012/02/22/designing-network-protocols/">&lt;p&gt;Hacker News user &lt;a href='http://news.ycombinator.com/user?id=peterwwillis'&gt;peterwwillis&lt;/a&gt; started &lt;a href='http://news.ycombinator.com/item?id=3617247'&gt;a discussion about a new network protocol&lt;/a&gt; introduced by the &lt;a href='http://httpd.apache.org/docs/2.4/mod/mod_heartbeat.html'&gt;mod_heartbeat&lt;/a&gt; module in Apache 2.4:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;It frustrates me when people use ASCII instead of packed bitmaps for things like this (packet transmitted once a second from potentially hundreds or thousands of nodes, that each frontend proxy has to parse into a binary form anyway before using it). Maybe it&amp;#8217;s a really small amount of CPU but it&amp;#8217;s just one of many things which could easily be more efficient.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This thread on HN continued with dozens of other posts from many authors, with &lt;code&gt;peterwwillis&lt;/code&gt; holding his ground on his original point.&lt;/p&gt;
+
+&lt;p&gt;I disagree with the belief that a binary format should have been used and will attempt to show why the chosen network protocol for &lt;code&gt;mod_heartbeat&lt;/code&gt; was both reasonable and correct.&lt;/p&gt;
+
+&lt;h2 id='background'&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href='http://mail-archives.apache.org/mod_mbox/httpd-announce/201202.mbox/%3C2922160F-CBF2-4633-8B1E-C5045CC35918%40apache.org%3E'&gt;Apache 2.4 was released this week&lt;/a&gt;, 6 years &lt;a href='http://journal.paul.querna.org/articles/2005/12/02/httpd-2-2-0-released/'&gt;after 2.2 was released&lt;/a&gt;. Compared to the 2.2 development cycle, where I was the Release Manager, I have not been as active in 2.4. However, one of the few features I did write for 2.4 was the &lt;code&gt;mod_heartbeat&lt;/code&gt; module. &lt;a href='http://httpd.apache.org/docs/2.4/mod/mod_heartbeat.html'&gt;mod_heartbeat&lt;/a&gt; is a method for distributing server load information via multicast. While I wrote &lt;a href='http://svn.apache.org/viewvc?view=revision&amp;amp;revision=721952'&gt;mod_heartbeat 3 years ago&lt;/a&gt;, many other Apache HTTP Server developers have added features and bug fixes since then.&lt;/p&gt;
+
+&lt;p&gt;The primary use case is for use by the &lt;a href='http://httpd.apache.org/docs/2.4/mod/mod_lbmethod_heartbeat.html'&gt;mod_lbmethod_heartbeat module&lt;/a&gt;, to direct traffic to the least loaded server in a reverse proxy pool.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;mod_heartbeat&lt;/code&gt; code and design was derived from a project at &lt;a href='http://en.wikipedia.org/wiki/Joost'&gt;Joost&lt;/a&gt;. After stopping development of our thick client and peer to peer systems, we were moving to a HTTP based distribution of video content. We had a pool of super cheap storage nodes, which liked to die far too often. We built a system to have the storage nodes heartbeat with what content they had available, and a reverse proxy that would send clients to the correct storage server.&lt;/p&gt;
+
+&lt;p&gt;This enabled a low operational overhead around configuration of both our storage nodes and of the reverse proxy. Operations would just bring on a new storage node, put content on it, and it would automatically begin serving traffic. If the storage node died, traffic would be directed to other nodes still online.&lt;/p&gt;
+
+&lt;h2 id='understand_your_goals'&gt;Understand your goals&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;mod_heartbeat&lt;/code&gt;&amp;#8217;s primary goal is: &lt;strong&gt;Enable flexible load balancing for reverse proxy servers&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;For Joost we had good switches since we were previously setup for high packet rate peer to peer traffic. We also had previously used multicast for other projects. We choose to use a simple UDP multicast heartbeat as our server communication medium.&lt;/p&gt;
+
+&lt;p&gt;When designing the content of this heartbeat packet, I was thinking about the following issues:&lt;/p&gt;
+
+&lt;p&gt;* &lt;strong&gt;10 to 200 servers&lt;/strong&gt;: If you only have 10 nodes, you can do everything by hand. If you have hundreds of nodes, you are most likely building a hierarchical distribution of load. In my experience it is not a common configuration to have 10,000 application servers behind a single load balancer. I believe the sweet spot for this automatic configuration via multicast is pools between 10 and 200 servers.&lt;/p&gt;
+
+&lt;p&gt;* &lt;strong&gt;Multiple Implementers&lt;/strong&gt;: The Apache HTTP server is all about being the flexible centerpiece of internet architectures, with many diverse producers, consumers, and interfaces. We must have a network protocol that is easily implemented in any programing language or enviroment, without adding additional dependencies.&lt;/p&gt;
+
+&lt;p&gt;* &lt;strong&gt;Extensibility&lt;/strong&gt;: At Joost we embedded the available video content catalogs into the heartbeat advertisements. We needed a protocol that would be open to proprietary extensions without causing pain.&lt;/p&gt;
+
+&lt;p&gt;* &lt;strong&gt;Limited Network Impact&lt;/strong&gt;: In a clustered systems you do not want the overhead of the cluster communication to negatively affect your application. It is important here to understand that many systems will actually hit &lt;a href='http://www.cisco.com/web/about/security/intelligence/network_performance_metrics.html'&gt;packet-per-second limits before raw bandwidth limits&lt;/a&gt;. We also assumed at this point in time all systems have gigabit internal networking. In my experience the difference between a 20 byte packet and an 8 byte packet that is being multicasted once a second is not a relevant issue on modern LANs. Even with 1000 servers emitting packets, this is 19.53 KB/s of bandwidth. How efficient this network flow is will depend on your exact multicast configuration and your specific switches, but in most configurations it is a non-issue.&lt;/p&gt;
+
+&lt;p&gt;* &lt;strong&gt;Operability / Debug-ability&lt;/strong&gt;: &lt;a href='http://www.wireshark.org/'&gt;Wireshark&lt;/a&gt; and packet dumps are the best friend of a Network Admin. When people are doing packet dumps, they are looking for problems. A simple ASCII encoding of data will be easy for these people to see when they are in times of stress. Decoding a more complex binary encoding might get added as a feature to Wireshark someday, but it is yet another barrier&lt;/p&gt;
+
+&lt;p&gt;* &lt;strong&gt;Design for the long term&lt;/strong&gt;: Design all public network protocols to be around for 10 years or longer. Include a versioning scheme. Don&amp;#8217;t assume that 10 years from now your encoding system will still be around. I love &lt;a href='http://msgpack.org/'&gt;msgpack&lt;/a&gt; for internal applications, but on these time scales for a public protocol, nothing beats straight up ASCII bytes.&lt;/p&gt;
+
+&lt;h2 id='what_i_did_in_2007'&gt;What I did in 2007&lt;/h2&gt;
+
+&lt;p&gt;Given the above considerations in 2007 at Joost, I started sketching out the possible formats for the multicast packet.&lt;/p&gt;
+
+&lt;p&gt;I considered using a binary format, but the immediate problem was having extendable fields. This meant we would need more than a few simple bytes. To create an extensible binary format, I started looking at serialization frameworks like &lt;a href='http://thrift.apache.org/'&gt;Apache Thrift&lt;/a&gt;. At this time in 2007 &lt;a href='http://blog.facebook.com/blog.php?post=2261927130'&gt;Thrift had only been open sourced a few months&lt;/a&gt;, and it really wasn&amp;#8217;t a stable project. It also didn&amp;#8217;t have a pure C implementation, and instead would have added a C++ dependency to Apache HTTP server, which is unacceptable. Since 2007 the number of binary object formats like &lt;a href='http://bsonspec.org/'&gt;BSON&lt;/a&gt;, &lt;a href='http://code.google.com/apis/protocolbuffers/'&gt;Google Protocol Buffers&lt;/a&gt;, &lt;a href='http://avro.apache.org/'&gt;Apache Avro&lt;/a&gt;, and &lt;a href='http://msgpack.org/'&gt;Msgpack&lt;/a&gt; have exploded, but just 4 years ago there really weren&amp;#8217;t any good standardized choices or formats for a pure-C project. The only existing choice would be to use &lt;a href='http://en.wikipedia.org/wiki/ASN.1'&gt;ASN.1 DER&lt;/a&gt;, which would of implied a large external dependency, in addition to &lt;a href='http://luca.ntop.org/Teaching/Appunti/asn1.html'&gt;just being too complex&lt;/a&gt;. I decided that because of this and the other goals around debug-ability to peruse an ASCII based encoding of the content.&lt;/p&gt;
+
+&lt;p&gt;The choices for non-binary formats were:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;XML&lt;/strong&gt;: While XML is everywhere, and almost all languages have good bindings, it would be the most verbose choice. I also felt that it is &lt;em&gt;too&lt;/em&gt; extendable. Someone later would add namespaces and other features that would make implementing a consumer much more difficult.&lt;/li&gt;
+
+&lt;li&gt;&lt;strong&gt;JSON&lt;/strong&gt;: Easier to consume, and &lt;em&gt;today&lt;/em&gt; there are libraries for all languages. A major problem was that in 2007, there were no good JSON parsers in pure C. I know this because at the same time I was working on &lt;a href='http://code.google.com/p/libjsox/'&gt;libjsox&lt;/a&gt;, a pure C JSON parser with Rici Lake, and it was incomplete. (As an aside, &lt;a href='http://lloyd.github.com/yajl/'&gt;YAJL is an excellent JSON parsing library&lt;/a&gt; for C that you should use now days). Like XML, JSON would also mean consumers would potentially have to handle more complex objects, rather than a simple key value pair.&lt;/li&gt;
+
+&lt;li&gt;&lt;strong&gt;Query parameters&lt;/strong&gt;: &lt;a href='http://tools.ietf.org/html/rfc3986
+'&gt;RFC 3986&lt;/a&gt; defined URLs, including the structure of &lt;a href='http://en.wikipedia.org/wiki/Query_string'&gt;query parameters&lt;/a&gt;. This format is understood by every component in a web server stack, and Apache already included examples of parsing this type of format. The format is also easy to build without external libraries, meaning reimplementation in any language is very easy. The use of a key and value system also means implementers can use simple data structures like a linked list or hash for interacting with their representation.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I made the decision to use query string style parameters as the best compromise for the content of the multicast packet&amp;#8217;s content.&lt;/p&gt;
+
+&lt;p&gt;In the open source version of &lt;code&gt;mod_heartbeat&lt;/code&gt;, there are two fields that are exposed today:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ready&lt;/strong&gt;: The number of worker processes that are ready to accept new connections.&lt;/li&gt;
+
+&lt;li&gt;&lt;strong&gt;busy&lt;/strong&gt;: The number of worker processes that currently servicing requests.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Adding the version string &lt;code&gt;v=1&lt;/code&gt;, and then encoding the fields above we get something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;v=1&amp;amp;ready;=75&amp;amp;busy;=0&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id='what_would_i_change_today'&gt;What would I change today?&lt;/h2&gt;
+
+&lt;p&gt;If I were to need to implement the same system today, there are a few things I might change, but I don&amp;#8217;t think any of them are critical mistakes given the original design constraints:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Consider using Gossip:&lt;/strong&gt; &lt;a href='http://en.wikipedia.org/wiki/Gossip_protocol'&gt;Gossip based systems are more complex&lt;/a&gt;, but with more and more systems moving to Cloud based infrastructure, multicast communication is not a viable choice. Additionally, in some infrastructures, multicast can be problematic if not well configured, or if you have too many hosts joining and leaving the multicast group.&lt;/li&gt;
+
+&lt;li&gt;&lt;strong&gt;Consider using JSON&lt;/strong&gt;: JSON is a more verbose format, but the availability of parsers in all languages, including C, has significantly improved. I still do not think Thrift or Protocol Buffers are ubiquitous enough to anoint one of them as the only way Apache HTTP Server transports data.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id='conclusion'&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Binary encodings of information can be both smaller and faster, but sometimes a simple ASCII encoding is sufficient, and should not be overlooked. The decision should consider the real world impact of the choice. In the last few years we have seen the emergence of Thrift or Protocol Buffers which are great for internal systems communication, but are still questionable when considering protocols implemented by many producers and consumers. For products like the Apache HTTP server, we also do not want to be encumbered by large dependencies, which rules out many of these projects. I believe that the choice of ASCII strings, using query string encoded keys and values is an excellent balance for &lt;code&gt;mod_heartbeat&lt;/code&gt;&amp;#8217;s needs, and will stand the test of time.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Rackspace Open Sources Dreadnot, a Continuous Deployment tool</title>
+   <link rel="alternate" type="text/html" href="http://journal.paul.querna.org/articles/2012/01/05/dreadnot-continuous-deployment/"/>
+   <updated>2012-01-05T13:55:40+09:00</updated>
+   <published>2012-01-05T13:55:40+09:00</published>
+   <id>hhttp://journal.paul.querna.org/articles/2012/01/05/dreadnot-continuous-deployment</id>
+   <content type="html" xml:base="http://journal.paul.querna.org/articles/2012/01/05/dreadnot-continuous-deployment/">&lt;p&gt;Today we open sourced Dreadnot, our take on a Continuous Deployment tool. Details are &lt;a href='http://www.rackspace.com/cloud/blog/2012/01/05/rackspace-open-sources-dreadnot/'&gt;posted over on the Rackspace Cloud Blog&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Source is up on &lt;a href='https://github.com/racker/dreadnot'&gt;github.com/racker/dreadnot&lt;/a&gt;.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>2011 Timecards</title>
+   <link rel="alternate" type="text/html" href="http://journal.paul.querna.org/articles/2011/12/31/2011-timecards/"/>
+   <updated>2011-12-31T05:11:20+09:00</updated>
+   <published>2011-12-31T05:11:20+09:00</published>
+   <id>hhttp://journal.paul.querna.org/articles/2011/12/31/2011-timecards</id>
+   <content type="html" xml:base="http://journal.paul.querna.org/articles/2011/12/31/2011-timecards/">&lt;h2 id='work_project'&gt;Work Project:&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href='http://chart.apis.google.com/chart?cht=s&amp;amp;chs=800x300&amp;amp;chd=e:CkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639b,IAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAn.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.................................................,BZAWAAAAAWBDCyCyGnJDNOIsHqOQJZLIOQHTIWHqE4GRBvG9DIAWAABZE4E4DfELELE4ELE4GREhHTFOHTE4D1CcD1BZDIBvD1D1CyAtBDIAHTL1QAZvemqFlNsK0KlkgAUhF6DfE4BDF6CGCyFkD1AtE4ELG9LeYAj0kLl6mm1j..l6osgAIWKcIsF6GnIAIsHTDIEhLeIAFORDd6jerIosshz0tNtjkhVOM3FOG9HTHqLeIWELAtBvDfFkOQU3lkrIzIyFpY6b5Y70sKmQMLHTJvMhO9ELBvD1DIBvCcLINkPTd6chwWkhn.2m16yxv.n.RDIsIAGnEhHTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&amp;amp;chxt=x,y&amp;amp;chxl=0:%7c%7c0%7c1%7c2%7c3%7c4%7c5%7c6%7c7%7c8%7c9%7c10%7c11%7c12%7c13%7c14%7c15%7c16%7c17%7c18%7c19%7c20%7c21%7c22%7c23%7c%7c1:%7c%7cSun%7cSat%7cFri%7cThu%7cWed%7cTue%7cMon%7c&amp;amp;chm=o,333333,1,1.0,25,0&amp;amp;chds=-1,24,-1,7,0,20'&gt;&lt;img src='http://chart.apis.google.com/chart?cht=s&amp;amp;chs=800x300&amp;amp;chd=e:CkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639b,IAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAn.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.................................................,BZAWAAAAAWBDCyCyGnJDNOIsHqOQJZLIOQHTIWHqE4GRBvG9DIAWAABZE4E4DfELELE4ELE4GREhHTFOHTE4D1CcD1BZDIBvD1D1CyAtBDIAHTL1QAZvemqFlNsK0KlkgAUhF6DfE4BDF6CGCyFkD1AtE4ELG9LeYAj0kLl6mm1j..l6osgAIWKcIsF6GnIAIsHTDIEhLeIAFORDd6jerIosshz0tNtjkhVOM3FOG9HTHqLeIWELAtBvDfFkOQU3lkrIzIyFpY6b5Y70sKmQMLHTJvMhO9ELBvD1DIBvCcLINkPTd6chwWkhn.2m16yxv.n.RDIsIAGnEhHTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&amp;amp;chxt=x,y&amp;amp;chxl=0:%7c%7c0%7c1%7c2%7c3%7c4%7c5%7c6%7c7%7c8%7c9%7c10%7c11%7c12%7c13%7c14%7c15%7c16%7c17%7c18%7c19%7c20%7c21%7c22%7c23%7c%7c1:%7c%7cSun%7cSat%7cFri%7cThu%7cWed%7cTue%7cMon%7c&amp;amp;chm=o,333333,1,1.0,25,0&amp;amp;chds=-1,24,-1,7,0,20' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id='hobby_project'&gt;Hobby Project:&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href='http://chart.apis.google.com/chart?cht=s&amp;amp;chs=800x300&amp;amp;chd=e:CkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639b,IAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAn.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.................................................,MzAACkCkHrFIAAAAFIPXZmcKXCrhhR..euKPcKAACkFIFIMzFIKPAAAAAAAAAAAAKPXCcKhRrhUehRZmj1HrAAAAAACkAAXCFIFIFIAAAAAAAAAAFICkAAAAAAAAAAAAAAAAAAAAAAKPKPAAAACkAAAAAAAAAAAAAAAAFIAAAAAAAAAAAAAAAAAACkAAAAMzHrAAAAAAAAAAAAAAAACkAAAAAAAAAAAAAAAAAAAAAACkPXCkFIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACkUeR7HrCkAAAAAAAAAAHrAACkKPFIAAFIHrj1UeFIAAAAAACkAAhRo9AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&amp;amp;chxt=x,y&amp;amp;chxl=0:%7c%7c0%7c1%7c2%7c3%7c4%7c5%7c6%7c7%7c8%7c9%7c10%7c11%7c12%7c13%7c14%7c15%7c16%7c17%7c18%7c19%7c20%7c21%7c22%7c23%7c%7c1:%7c%7cSun%7cSat%7cFri%7cThu%7cWed%7cTue%7cMon%7c&amp;amp;chm=o,333333,1,1.0,25,0&amp;amp;chds=-1,24,-1,7,0,20'&gt;&lt;img src='http://chart.apis.google.com/chart?cht=s&amp;amp;chs=800x300&amp;amp;chd=e:CkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639bCkFIHrKPMzPXR7UeXCZmcKeuhRj1mZo9rhuEwozM1w4U639b,IAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAIAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAQAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAYAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAgAn.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.v.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.3.................................................,MzAACkCkHrFIAAAAFIPXZmcKXCrhhR..euKPcKAACkFIFIMzFIKPAAAAAAAAAAAAKPXCcKhRrhUehRZmj1HrAAAAAACkAAXCFIFIFIAAAAAAAAAAFICkAAAAAAAAAAAAAAAAAAAAAAKPKPAAAACkAAAAAAAAAAAAAAAAFIAAAAAAAAAAAAAAAAAACkAAAAMzHrAAAAAAAAAAAAAAAACkAAAAAAAAAAAAAAAAAAAAAACkPXCkFIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACkUeR7HrCkAAAAAAAAAAHrAACkKPFIAAFIHrj1UeFIAAAAAACkAAhRo9AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&amp;amp;chxt=x,y&amp;amp;chxl=0:%7c%7c0%7c1%7c2%7c3%7c4%7c5%7c6%7c7%7c8%7c9%7c10%7c11%7c12%7c13%7c14%7c15%7c16%7c17%7c18%7c19%7c20%7c21%7c22%7c23%7c%7c1:%7c%7cSun%7cSat%7cFri%7cThu%7cWed%7cTue%7cMon%7c&amp;amp;chm=o,333333,1,1.0,25,0&amp;amp;chds=-1,24,-1,7,0,20' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id='2012_goal'&gt;2012 Goal&lt;/h1&gt;
+
+&lt;p&gt;Finish the hobby project.&lt;/p&gt;
+
+&lt;p&gt;Created using &lt;a href='http://dustin.github.com/2009/01/11/timecard.html'&gt;Dustin&amp;#8217;s git-timecard&lt;/a&gt;.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Write Logs for Machines, use JSON</title>
+   <link rel="alternate" type="text/html" href="http://journal.paul.querna.org/articles/2011/12/26/log-for-machines-in-json/"/>
+   <updated>2011-12-26T15:10:15+09:00</updated>
+   <published>2011-12-26T15:10:15+09:00</published>
+   <id>hhttp://journal.paul.querna.org/articles/2011/12/26/log-for-machines-in-json</id>
+   <content type="html" xml:base="http://journal.paul.querna.org/articles/2011/12/26/log-for-machines-in-json/">&lt;h2 id='logging_for_humans'&gt;Logging for Humans&lt;/h2&gt;
+
+&lt;p&gt;A &lt;a href='http://en.wikipedia.org/wiki/Printf_format_string'&gt;printf style format string&lt;/a&gt; is the de facto method of logging for almost all software written in the last 20 years. This style of logging crosses almost all programing language boundaries. &lt;a href='http://logging.apache.org/index.html'&gt;Many libraries&lt;/a&gt; build upon this, adding log levels and various transports, but they are still centered around a formated string.&lt;/p&gt;
+
+&lt;p&gt;I believe the widespread use of format strings in logging is based on two presumptions:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;The first level consumer of a log message is a human.&lt;/li&gt;
+
+&lt;li&gt;The programer knows what information is needed to debug an issue.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I believe these presumptions are &lt;strong&gt;no longer correct&lt;/strong&gt; in server side software.&lt;/p&gt;
+
+&lt;h2 id='an_example_of_the_problem'&gt;An example of the problem&lt;/h2&gt;
+
+&lt;p&gt;An example is this classic error message inside the &lt;a href='http://httpd.apache.org/'&gt;Apache HTTP Server&lt;/a&gt;. The following code is called any time a client hits a URL that doesn&amp;#8217;t exist on the file system:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='c'&gt;&lt;span class='n'&gt;ap_log_rerror&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;APLOG_MARK&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;APLOG_INFO&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;r&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+  &lt;span class='s'&gt;&amp;quot;File does not exist: %s&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;r&lt;/span&gt;&lt;span class='o'&gt;-&amp;gt;&lt;/span&gt;&lt;span class='n'&gt;filename&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;This would generate a log message like the following in your &lt;code&gt;error.log&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[Mon Dec 26 09:14:46 2011] [info] [client 50.57.61.4] File does not exist: /var/www/no-such-file&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is fine for human consumption, and for decades people have been writing Perl scripts to munge it into fields for a computer to understand too. However, the first time you add a field, for example the HTTP &lt;code&gt;User-Agent&lt;/code&gt; header, it would break most of those perl scripts. This is one example of where building a log format that is optimized for computer consumption starts to make sense.&lt;/p&gt;
+
+&lt;p&gt;Another problem is when you are writing these format string log messages, you don&amp;#8217;t always know what information people will need to debug the issue. Since you are targeting them for human consumption you try to reduce the information overload, and you make a few guesses, like the path to the file, or the source IP address, but this process is error prone. From my experience in the Apache HTTP server this would mean opening &lt;code&gt;GDB&lt;/code&gt; to trace what is happening. Once you figure out what information is relevant, you modify the log message to improve the output for future users with the relevant information.&lt;/p&gt;
+
+&lt;h2 id='what_if_we_logged_everything_into_json'&gt;What if we logged everything into JSON?&lt;/h2&gt;
+
+&lt;p&gt;If we produced a JSON object which contained the same message, it might look something like this:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;timestamp&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='mf'&gt;1324830675.076&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;status&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;404&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;short_message&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;File does not exist: /var/www/no-such-file&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;host&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;ord1.product.api0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;facility&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;httpd&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;errno&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;ENOENT&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;remote_host&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;50.57.61.4&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;remote_port&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;40100&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;/var/www/no-such-file&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;uri&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;/no-such-file&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='mi'&gt;4&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;headers&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='nx'&gt;strong&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;user-agent&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;BadAgent/1.0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='err'&gt;/strong&amp;gt;&lt;/span&gt;
+        &lt;span class='s2'&gt;&amp;quot;connection&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;close&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='s2'&gt;&amp;quot;accept&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;*/*&amp;quot;&lt;/span&gt;
+    &lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;method&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;GET&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;unique_id&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;.rh-g2Tm.h-ord1.product.api0.r-axAIO3bO.c-9210.ts-1324830675.v-24e946e&amp;quot;&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;This example gives a much richer picture of information about the error. We now have data like the &lt;code&gt;User-Agent&lt;/code&gt; in an easily consumable form, we could much more easily figure out that &lt;code&gt;BadAgent/1.0&lt;/code&gt; is the cause of our 404s. Other information like the source server and a &lt;a href='http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html'&gt;mod_unique_id&lt;/a&gt; hash can be used to correlate multiple log entries across the lifetime of an request.&lt;/p&gt;
+
+&lt;p&gt;This information is also expandable. As the knowledge of what our product needs to log increases, it is easy to add more data, and we can safely do this without breaking our System Admins precious Perl scripts.&lt;/p&gt;
+
+&lt;h2 id='why_now'&gt;Why now?&lt;/h2&gt;
+
+&lt;p&gt;This idea is &lt;a href='http://www.asynchronous.org/blog/archives/2006/01/25/logging-in-json'&gt;not new&lt;/a&gt;, it has just never been so easily accessible. Windows has had &lt;a href='http://en.wikipedia.org/wiki/Event_Viewer'&gt;&amp;#8220;Event Logs&amp;#8221; for a decade&lt;/a&gt;, but in the more recent versions it uses XML. The emergence of JSON as a relatively compact serialization format that can be generated and parsed from almost any programming languages means it makes a great light weight interchange format.&lt;/p&gt;
+
+&lt;p&gt;Paralleling the &lt;a href='http://www.pcworld.com/businesscenter/article/246941/big_data_analytics_get_even_bigger_hotter_in_2012.html'&gt;big data explosion&lt;/a&gt;, is a growth in machine and infrastructure size. This means logging and the ability to spot errors in a distributed system has become even more valuable.&lt;/p&gt;
+
+&lt;p&gt;Logging objects instead of a format string enables you to more easily index and trace operations across hundreds of different machines and different software systems. With traditional format strings it is too fail deadly for the programmer to not log all the necessary information for a later operator to trace an operation.&lt;/p&gt;
+
+&lt;h2 id='generating_json_with_log_magic'&gt;Generating JSON with Log Magic&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href='https://github.com/pquerna/node-logmagic'&gt;Log Magic is a small and fast logging library for Node.js&lt;/a&gt; that I wrote early on for our needs at Rackspace. It only has a few features, and it is only about 300 lines of code.&lt;/p&gt;
+
+&lt;p&gt;Log Magic has the concept of a local logger instance, which is used by a single module for logging. A logger instance automatically populates information like the the &lt;code&gt;facility&lt;/code&gt; in a log entry. Here is an example of creating a logger instance for a module named &lt;code&gt;&amp;#39;myapp.api.handler&lt;/code&gt; and using it:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;log&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;logmagic&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;local&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;myapp.api.handler&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+
+&lt;span class='nx'&gt;exports&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;badApiHandler&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;req&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;res&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+  &lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;dbg&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;Something is wrong&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;req&lt;/span&gt;&lt;span class='p'&gt;});&lt;/span&gt;
+  &lt;span class='nx'&gt;res&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;end&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
+&lt;span class='p'&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;The second feature that Log Magic provides is what I call a &amp;#8220;Log Rewriter&amp;#8221;. This enables the programmer to just consistently pass in the &lt;code&gt;request&lt;/code&gt; object, and we will take care of picking out the fields we really want to log. In this example, we ensure the logged object always has an &lt;code&gt;accountId&lt;/code&gt; and &lt;code&gt;txnId&lt;/code&gt; fields set:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;logmagic&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;logmagic&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+&lt;span class='nx'&gt;logmagic&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;addRewriter&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;modulename&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;level&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;msg&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+  &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;account&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+      &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;accountId&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;account&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;getKey&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='k'&gt;else&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+      &lt;span class='cm'&gt;/* unauthenticated user */&lt;/span&gt;
+      &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;accountId&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kc'&gt;null&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;txnId&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;txnId&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+    &lt;span class='k'&gt;delete&lt;/span&gt; &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='p'&gt;}&lt;/span&gt;
+  &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+&lt;span class='p'&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;The final feature of Log Magic is dynamic routes and sinks. For the purposes of this article, we are mostly interested in the &lt;code&gt;graylog2-stderr&lt;/code&gt;, which outputs a &lt;a href='http://www.graylog2.org/about/gelf'&gt;GELF JSON format&lt;/a&gt; message to &lt;code&gt;stderr&lt;/code&gt;:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;logmagic&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;logmagic&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+    &lt;span class='nx'&gt;logmagic&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;route&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;__root__&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;logmagic&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;DEBUG&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;graylog2-stderr&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;With this configuration, if we ran that &lt;code&gt;log.dbg&lt;/code&gt; example from above, we would get a message like the following:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;version&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;1.0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;host&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;product-api0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;timestamp&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='mf'&gt;1324936418.221&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;short_message&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;Something is wrong&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;full_message&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='kc'&gt;null&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='mi'&gt;7&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;facility&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;myapp.api.handler&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;_accountId&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;ac42&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='s2'&gt;&amp;quot;_txnId&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;.rh-3dT5.h-product-api0.r-pVDF7IRM.c-0.ts-1324936588828.v-062c3d0&amp;quot;&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id='other_implementations'&gt;Other implementations&lt;/h3&gt;
+
+&lt;p&gt;There are many other libraries that are starting to emerge that can output logs in a JSON or GELF format:&lt;/p&gt;
+
+&lt;p&gt;* &lt;a href='https://github.com/flatiron/winston'&gt;winston&lt;/a&gt;: (Node.js) A more complete (or complex?) logging module compared to Log Magic, but the prolific crew at &lt;a href='http://nodejitsu.com/'&gt;Nodejitsu&lt;/a&gt; have done a great job.&lt;/p&gt;
+
+&lt;p&gt;* &lt;a href='http://pypi.python.org/pypi/graypy'&gt;graypy&lt;/a&gt;: (Python) A graylog2 logger that interacts with the standard Python logging module.&lt;/p&gt;
+
+&lt;p&gt;* &lt;a href='https://github.com/pstehlik/gelf4j'&gt;gelf4j&lt;/a&gt; (Java) We use a modified version of this library that logs to &lt;code&gt;stderr&lt;/code&gt; instead of using UDP.&lt;/p&gt;
+
+&lt;h2 id='the_transaction_id'&gt;The Transaction Id&lt;/h2&gt;
+
+&lt;p&gt;One field we added very early on to our system was what we called the &amp;#8220;Transaction Id&amp;#8221; or &lt;code&gt;txnId&lt;/code&gt; for short. In retrospect, we could of picked a better name, but this is essentially a unique identifier that follows a request across all our of services. When a User hits our API we generate a new &lt;code&gt;txnId&lt;/code&gt; and attach it to our &lt;code&gt;request&lt;/code&gt; object. Any requests to a backend service also include the &lt;code&gt;txnId&lt;/code&gt;. This means you can clearly see how a web request is tied to multiple backend service requests, or what frontend request caused a specific Cassandra query.&lt;/p&gt;
+
+&lt;p&gt;We also send the &lt;code&gt;txnId&lt;/code&gt; to our user&amp;#8217;s in our 500 error messages and the &lt;code&gt;X-Response-Id&lt;/code&gt; header, so if a user reports an issue, we can quickly see all of the related log entries.&lt;/p&gt;
+
+&lt;p&gt;While we treat the &lt;code&gt;txnId&lt;/code&gt; as an opaque string, we do encode a few pieces of information into it. By putting the current time and the origin machine into the &lt;code&gt;txnId&lt;/code&gt;, even if we can&amp;#8217;t figure out what went wrong from searching for the &lt;code&gt;txnId&lt;/code&gt;, we have a place to start deeper debugging.&lt;/p&gt;
+
+&lt;h2 id='transporting_logs'&gt;Transporting Logs&lt;/h2&gt;
+
+&lt;p&gt;Since our product spans multiple data centers, and we don&amp;#8217;t trust our LAN networking, our primary goal is that all log entries hit disk on their origin machine first. Some people have been using UDP or HTTP for their first level logging, and I believe this is a mistake. I believe having a disk default that consistently works is critical in a logging system. Once our messages have been logged locally, we stream them to an aggregator which then back hauls the log entries to various collection and aggregation tools.&lt;/p&gt;
+
+&lt;p&gt;Since all of our services run under &lt;a href='http://smarden.org/runit/'&gt;runit&lt;/a&gt;, our programs simply log their JSON to &lt;code&gt;stderr&lt;/code&gt;, and &lt;a href='http://smarden.org/runit/svlogd.8.html'&gt;svlogd&lt;/a&gt; takes care of getting the data into a local file. Then we use a custom tool written in Node.js that is like running a &lt;code&gt;tail -F&lt;/code&gt; on the log file, sending this data to a local &lt;a href='https://github.com/facebook/scribe'&gt;Scribe&lt;/a&gt; instance. The Scribe instance is then responsible for transporting the logs to our log analyzing services.&lt;/p&gt;
+
+&lt;p&gt;For locally examining the log files generated by &lt;code&gt;svlogd&lt;/code&gt;, we also made a tool called &lt;code&gt;gelf-chainsaw&lt;/code&gt;. Since JSON strings cannot contain a newline, the log format is easy to parse, you just split up the file by &lt;code&gt;\n&lt;/code&gt;, and try to &lt;code&gt;JSON.parse&lt;/code&gt; each line. This is useful for our systems engineers when they are on a single machine, trying to debug an issue.&lt;/p&gt;
+
+&lt;h2 id='collecting_indexing_searching'&gt;Collecting, Indexing, Searching&lt;/h2&gt;
+
+&lt;p&gt;Once the logs crossing machines, there are many options to process those logs. Some examples that can all accept JSON as their input format:&lt;/p&gt;
+
+&lt;p&gt;* Perl Scripts (Hah! Did you think Perl will &lt;em&gt;ever&lt;/em&gt; go away?)&lt;/p&gt;
+
+&lt;p&gt;* &lt;a href='http://www.graylog2.org/'&gt;Graylog2&lt;/a&gt; (open source)&lt;/p&gt;
+
+&lt;p&gt;* &lt;a href='http://logstash.net/'&gt;LogStash&lt;/a&gt; (open source)&lt;/p&gt;
+
+&lt;p&gt;* &lt;a href='http://loggly.com/'&gt;Loggly&lt;/a&gt; (SaaS)&lt;/p&gt;
+
+&lt;p&gt;* &lt;a href='http://www.splunk.com/'&gt;Splunk&lt;/a&gt; (Proprietary Software, &lt;a href='http://splunk-base.splunk.com/apps/22337/jsonutils'&gt;can do JSON with an extra tool&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;For &lt;a href='http://www.rackspace.com/cloud/blog/2011/12/15/announcing-rackspace-cloud-monitoring-private-beta/'&gt;Rackspace Cloud Monitoring&lt;/a&gt; we are currently using Graylog2 with a &lt;a href='https://github.com/Graylog2/graylog2-server/pull/52'&gt;patch to support Scribe as a transport&lt;/a&gt; written by &lt;a href='https://twitter.com/wirehead'&gt;@wirehead&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Bellow is an example of searching for specific &lt;code&gt;txnId&lt;/code&gt; in our system in Graylog2:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/12/graylog-txnId-search.png'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/12/graylog-txnId-search.png' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;While this example is simple, we have some situations where a single &lt;code&gt;txnId&lt;/code&gt; spans multiple services, and the ability to trace all of them transparently is critical in a distributed system.&lt;/p&gt;
+
+&lt;h2 id='conclusion'&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Write your logs for machines to process. Build tooling around those logs to transform them into something that is consumable by a human. Humans cannot process information in the massive flows that are created by concurrent and distributed systems. This means you should store the data from these systems in a format that enables innovative and creative ways for it to be processed. Right now, the best way to do that is to log in JSON. Stop logging with format strings.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>The Switch: Python to Node.js</title>
+   <link rel="alternate" type="text/html" href="http://journal.paul.querna.org/articles/2011/12/18/the-switch-python-to-node-js/"/>
+   <updated>2011-12-18T01:33:06+09:00</updated>
+   <published>2011-12-18T01:33:06+09:00</published>
+   <id>hhttp://journal.paul.querna.org/articles/2011/12/18/the-switch-python-to-node-js</id>
+   <content type="html" xml:base="http://journal.paul.querna.org/articles/2011/12/18/the-switch-python-to-node-js/">&lt;p&gt;In &lt;a href='http://journal.paul.querna.org/articles/2011/12/17/technology-cloud-monitoring/'&gt;my previous post&lt;/a&gt;, I glossed over our team switching from Python to Node.js. I kept it brief because the switch wasn&amp;#8217;t the focus of the post, but since I believe I am being misunderstood, I will explain it in depth:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Cloudkick was primarily written in Python. Most backend services were written in &lt;a href='http://www.twistedmatrix.com/'&gt;Twisted Python&lt;/a&gt;. The API endpoints and web server were written in &lt;a href='https://www.djangoproject.com/'&gt;Django&lt;/a&gt;, and used &lt;a href='http://code.google.com/p/modwsgi/'&gt;mod_wsgi&lt;/a&gt;. We felt that while we greatly value the asynchronous abilities of Twisted Python, and they matched many of our needs well, we were unhappy with our ability to maintain Twisted Python based services. Specifically, the deferred programming model is difficult for developers to quickly grasp and debug. It tended to be &amp;#8216;fail&amp;#8217; deadly, in that if a developer didn&amp;#8217;t fully understand Twisted Python, they would make many innocent mistakes. Django was mostly successful for our needs as an API endpoint, however we were unhappy with our use of the Django ORM. It created many dependencies between components that were difficult to unwind later. Cloud Monitoring is primarily written in &lt;a href='http://www.nodejs.org/'&gt;Node.js&lt;/a&gt;. Our team still loves Python, and much of our secondary tooling in Cloud Monitoring uses Python.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This attracted a few tweets, &lt;a href='https://twitter.com/#!/g0rm/status/148284022181732354'&gt;accusing various things about our developers,&lt;/a&gt; but I want to explore the topic in depth, and 140 characters just isn&amp;#8217;t going to cut it.&lt;/p&gt;
+
+&lt;h2 id='just_how_much_python_did_cloudkick_have'&gt;Just how much Python did Cloudkick have?&lt;/h2&gt;
+
+&lt;p&gt;We had about 140,000 lines of Python in Cloudkick. We had 40 &lt;a href='http://twistedmatrix.com/documents/current/core/howto/plugin.html'&gt;Twisted Plugins&lt;/a&gt;. Each Plugin roughly corresponds to a backend service. About 10 of them are random DevOps tools like IRC bots and the like, leaving about 30 backend services that dealt with things in production. We built most of this code in a 2.5 year experience, growing the team from the 3 founders to about a dozen different developers. I know there are larger Twisted Python code bases out there, but I do believe we had a large corpus of experiences to build our beliefs upon.&lt;/p&gt;
+
+&lt;p&gt;This wasn&amp;#8217;t just a weekend hack project and a blog post about how I don&amp;#8217;t like deferreds, this was 2.5 years of building real systems.&lt;/p&gt;
+
+&lt;h2 id='it_worked'&gt;It worked.&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href='http://www.rackspace.com/information/newsroom/pressreleases/rackspace-acquires-cloudkick-to-provide-powerful-server-management-tools-for-the-cloud-computing-era/'&gt;We were acquired.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Our Python code got the job done. We built a product amazingly quickly, built our users up, and were able to iterate quickly. I meant it when I said our team still &lt;strong&gt;still loves Python&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;What I didn&amp;#8217;t mention in the original post, is that after the acquisition, the Cloudkick team was split into two major projects &amp;#8211; Cloud Monitoring, which the previous post was about, and another unannounced product team. This other product is being built in Django and Twisted Python. Cloud Monitoring has very different requirements moving forward &amp;#8211; our goals are to survive and keep working after &lt;a href='http://www.datacenterknowledge.com/archives/2007/11/13/truck-crash-knocks-rackspace-offline/'&gt;a truck drives into our data centers&lt;/a&gt;, and this is very different from how the original Cloudkick product was built.&lt;/p&gt;
+
+&lt;h2 id='what_happened_to_python_then'&gt;What happened to Python then?&lt;/h2&gt;
+
+&lt;p&gt;Simply put, our requirements changed. These new requirements for Cloud Monitoring included:&lt;/p&gt;
+
+&lt;p&gt;* Multi-Region availability / durability&lt;/p&gt;
+
+&lt;p&gt;* Multiple order of magnitude increases in servers monitored&lt;/p&gt;
+
+&lt;p&gt;* Scalable system, that can still be used 5 year from now. (Remember Rackspace Cloud &lt;a href='http://seekingalpha.com/article/306015-rackspace-hosting-s-ceo-discusses-q3-2011-results-earnings-call-transcript'&gt;grew 89% year over year right now&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;Cloudkick was built as a startup. We took shortcuts. It scaled pretty damn well, but even if we changed nothing in our technology stack, it was clear we needed to refresh our architecture and how we modeled data.&lt;/p&gt;
+
+&lt;p&gt;The mixing of both blocking-world Django, and Twisted Python also created complications. We would have utility code that could be called from both environments. This meant extensive use of &lt;code&gt;deferToThread&lt;/code&gt; in order to not block Twisted&amp;#8217;s reactor thread. This created an overhead for every programmer to understand both how Twisted worked, and how Django worked, even if your project in theory only involved the web application layer. Later on, we did build enough tooling with function decorators to reduce the impact of these multiple environments, but the damage was done.&lt;/p&gt;
+
+&lt;p&gt;I believe our single biggest mistake from a technical side was not reigning in our use Django ORM earlier in our applications life. We had Twisted services running huge Django ORM operations inside of the Twisted thread pool. It was very easy to get going, but as our services grew, not only was this not very performant, and it was extremely hard to debug. We had a series of memory leaks, places where we would reference a QuerySet, and hold on to it forever. The Django ORM also tended to have us accumulate large amounts of business logic on the model objects, which made building strong service contracts even harder.&lt;/p&gt;
+
+&lt;p&gt;These were our problems. We dug our own grave. We should&amp;#8217;ve used &lt;a href='http://www.sqlalchemy.org/'&gt;SQLAlchemy&lt;/a&gt;. We should&amp;#8217;ve built stronger service separations. But we didn&amp;#8217;t. Blame us, blame Twisted, blame Django, blame whatever you like, but thats where we were.&lt;/p&gt;
+
+&lt;p&gt;We knew by April 2011 that the combination of new requirements and a legacy code base meant we needed to make some changes, but we also didn&amp;#8217;t want to fall into a &amp;#8220;Version 2.0&amp;#8221; syndrome and over engineering every component.&lt;/p&gt;
+
+&lt;h2 id='picking_the_platform'&gt;Picking the Platform.&lt;/h2&gt;
+
+&lt;p&gt;We wanted some &lt;em&gt;science&lt;/em&gt; behind this kind of decision, but unfortunately this decision is about programming languages, and everyone had their own opinions.&lt;/p&gt;
+
+&lt;p&gt;We wanted to avoid &amp;#8220;just playing with new things&amp;#8221;, because at the time half our team was enamored with &lt;a href='http://golang.org/'&gt;Go Lang&lt;/a&gt;. We were also very interested in &lt;a href='http://www.gevent.org/'&gt;Python Gevent&lt;/a&gt;, since OpenStack Nova had recently switched to it from Twisted Python.&lt;/p&gt;
+
+&lt;p&gt;We decided to make a &lt;a href='https://docs.google.com/spreadsheet/ccc?key=0AvBGESHWxhk2dHJ2Q0lWRFF3dkxLZmFiMVVGRElQaEE'&gt;spreadsheet of the possible environments&lt;/a&gt; we would consider using for our next generation product. The inputs were:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Community&lt;/li&gt;
+
+&lt;li&gt;Velocity&lt;/li&gt;
+
+&lt;li&gt;Correctness (aka, static typing-like things)&lt;/li&gt;
+
+&lt;li&gt;Debuggability/Tooling&lt;/li&gt;
+
+&lt;li&gt;Downtime/Compile Time&lt;/li&gt;
+
+&lt;li&gt;Libraries (Standard/External)&lt;/li&gt;
+
+&lt;li&gt;Testability&lt;/li&gt;
+
+&lt;li&gt;Team Experience&lt;/li&gt;
+
+&lt;li&gt;Performance&lt;/li&gt;
+
+&lt;li&gt;Production&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We setup the spreadsheet so we could change the weight of each category. This let us play with our feelings, what if we only cared about developer velocity? What if we only cared about testability?&lt;/p&gt;
+
+&lt;p&gt;Our conclusion was, that it came down to was a choice between the JVM platform and Node.js. It is obvious that the JVM platform is one of the best ways to build large distributed systems right now. Look at everything &lt;a href='https://github.com/twitter'&gt;Twitter&lt;/a&gt;, &lt;a href='http://engineering.linkedin.com/tags/sna'&gt;LinkedIn&lt;/a&gt; and others are doing. I &lt;a href='http://journal.paul.querna.org/articles/2010/10/12/java-trap-2010-edition/'&gt;personally have serious reservations&lt;/a&gt; about investing on top of the JVM, and Oracles recent behavior (&lt;a href='https://news.ycombinator.com/item?id=3294783'&gt;here&lt;/a&gt;, &lt;a href='https://news.ycombinator.com/item?id=3357623'&gt;here&lt;/a&gt;) isn&amp;#8217;t encouraging.&lt;/p&gt;
+
+&lt;p&gt;After much humming and hawing, we picked Node.js.&lt;/p&gt;
+
+&lt;p&gt;After picking Node.js, other choices like using Apache Cassandra for all data storage were side effects &amp;#8211; there was nothing like SQL Alchemy for Node.js at the time, so we were on our own either way, and Cassandra gave us definite improvements in operational overhead of compared to running a large number of MySQL servers in a master/slave configuration.&lt;/p&gt;
+
+&lt;h2 id='nodejs_it_has_nested_callbacks_everywhere_thats_ugly'&gt;Node.js? It has nested callbacks everywhere, thats ugly!&lt;/h2&gt;
+
+&lt;p&gt;I think this is one of the first complaints people lob at Node.js when they just start. It makes a regular occurrence on the users mailing list &amp;#8211; people think they want coroutines, generators or fibers.&lt;/p&gt;
+
+&lt;p&gt;I believe they are wrong.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The zen of Node.js is its minimalist core&lt;/strong&gt;, both in size and in features. You can read the core lib Javascript in a day, and one more day for the C++. Don&amp;#8217;t venture into v8 itself, that is a rabbit hole, but you can pretty quickly understand how Node.js itself works.&lt;/p&gt;
+
+&lt;p&gt;Our experience was that we just needed to pick one good tool to contain callback flows, and use it everywhere.&lt;/p&gt;
+
+&lt;p&gt;We use &lt;a href='https://twitter.com/Caolan'&gt;@Caolan&amp;#8217;s&lt;/a&gt; excellent &lt;a href='https://github.com/caolan/async'&gt;Async library&lt;/a&gt;. Our code is not 5 level deep nested callbacks.&lt;/p&gt;
+
+&lt;p&gt;We currently have about 45,000 lines of Javascript in our main repository. In this code base, we have used the &lt;code&gt;async&lt;/code&gt; library as our only flow control library. Our current use of the library in our code base:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;async.waterfall&lt;/code&gt;: 74&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;async.forEach&lt;/code&gt;: 55&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;async.forEachSeries&lt;/code&gt;: 21&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;async.series&lt;/code&gt;: 8&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;async.parallel&lt;/code&gt;: 4&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;async.queue&lt;/code&gt;: 3&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I highly suggest, that if you are unsure about Node.js and are going to do an experiment project, make sure you use &lt;a href='https://github.com/caolan/async'&gt;Async&lt;/a&gt;, &lt;a href='https://github.com/creationix/step'&gt;Step&lt;/a&gt;, or one of the other flow control modules for your experiment. It will help you better understand how most larger Node.js applications are built.&lt;/p&gt;
+
+&lt;h2 id='closing'&gt;Closing&lt;/h2&gt;
+
+&lt;p&gt;In the end, we had new requirements. We re-evaluated what platforms made sense for us to build a next generation product on. Node.js came out on top. We all have our biases, and our preferences, but I do believe we made a reasonable choice. Our goal in the end is still to move our product forward, and improve our business. Everything else is just a distraction, so pick your platform, and get real work done.&lt;/p&gt;
+
+&lt;p&gt;PS: If you haven&amp;#8217;t already read it, read SubStack&amp;#8217;s great &lt;a href='http://substack.net/posts/b96642/the-node-js-aesthetic'&gt;the node.js aesthetic&lt;/a&gt; post.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Technology behind Rackspace Cloud Monitoring</title>
+   <link rel="alternate" type="text/html" href="http://journal.paul.querna.org/articles/2011/12/17/technology-cloud-monitoring/"/>
+   <updated>2011-12-17T18:28:03+09:00</updated>
+   <published>2011-12-17T18:28:03+09:00</published>
+   <id>hhttp://journal.paul.querna.org/articles/2011/12/17/technology-cloud-monitoring</id>
+   <content type="html" xml:base="http://journal.paul.querna.org/articles/2011/12/17/technology-cloud-monitoring/">&lt;p&gt;Earlier this week we &lt;a href='http://www.rackspace.com/cloud/blog/2011/12/15/announcing-rackspace-cloud-monitoring-private-beta/'&gt;announced a new product: Rackspace Cloud Monitoring&lt;/a&gt;. It is just starting as a (free) private beta, so if you want to try it out, be sure to &lt;a href='https://surveys.rackspace.com/Survey.aspx?s=e08d057768e04f09a8cb7811d47b82da'&gt;sign up via the survey here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id='transition_from_cloudkick_technology'&gt;Transition from Cloudkick Technology&lt;/h2&gt;
+
+&lt;p&gt;Rackspace Cloud Monitoring is based on technology built originally for the &lt;a href='https://www.cloudkick.com/features/monitoring'&gt;Cloudkick product&lt;/a&gt;. Some core concepts and parts of the architecture originated from Cloudkick, but many changes were made to enable Rackspace&amp;#8217;s scalability needs, improve operational support, and focus the Cloud Monitoring product as an API driven Monitoring as a Service, rather than all of Cloudkick&amp;#8217;s Management and Cloud Server specific features.&lt;/p&gt;
+
+&lt;p&gt;For this purpose, Cloudkick&amp;#8217;s product was successful in vetting many parts of the basic architecture, and serving as a basis on which to make a reasonable second generation system. We tried to make specific changes in technology and architecture that would get us to our goals, but without falling into an overengineering trap.&lt;/p&gt;
+
+&lt;p&gt;Cloudkick was primarily written in Python. Most backend services were written in &lt;a href='http://www.twistedmatrix.com/'&gt;Twisted Python&lt;/a&gt;. The API endpoints and web server were written in &lt;a href='https://www.djangoproject.com/'&gt;Django&lt;/a&gt;, and used &lt;a href='http://code.google.com/p/modwsgi/'&gt;mod_wsgi&lt;/a&gt;. We felt that while we greatly value the asynchronous abilities of Twisted Python, and they matched many of our needs well, we were unhappy with our ability to maintain Twisted Python based services. Specifically, the deferred programming model is difficult for developers to quickly grasp and debug. It tended to be &amp;#8216;fail&amp;#8217; deadly, in that if a developer didn&amp;#8217;t fully understand Twisted Python, they would make many innocent mistakes. Django was mostly successful for our needs as an API endpoint, however we were unhappy with our use of the Django ORM. It created many dependencies between components that were difficult to unwind later. Cloud Monitoring is primarily written in &lt;a href='http://www.nodejs.org/'&gt;Node.js&lt;/a&gt;. Our team still loves Python, and much of our secondary tooling in Cloud Monitoring uses Python. &lt;code&gt;[&lt;/code&gt;EDIT: See standalone post: &lt;a href='http://journal.paul.querna.org/articles/2011/12/18/the-switch-python-to-node-js/'&gt;The Switch: Python to Node.js&lt;/a&gt;&lt;code&gt;]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Cloudkick was reliant upon a &lt;a href='http://www.mysql.com/'&gt;MySQL&lt;/a&gt; master and slaves for most of its configuration storage. This severely limited both scalability, performance and multi-region durability. These issues aren&amp;#8217;t necessarily a property of MySQL, but Cloudkick&amp;#8217;s use of the Django ORM made it very difficult to use MySQL radically differently. The use of MySQL was not continued in Cloud Monitoring, where metadata is stored in Apache Cassandra.&lt;/p&gt;
+
+&lt;p&gt;Cloudkick used &lt;a href='http://cassandra.apache.org/'&gt;Apache Cassandra&lt;/a&gt; primarily for metrics storage. This was a key element in keeping up with metrics processing, and providing a high quality user experience, with fast loading graphs. Cassandra&amp;#8217;s role was expanded in Cloud Monitoring to include both configuration data and metrics storage.&lt;/p&gt;
+
+&lt;p&gt;Cloudkick used the &lt;a href='http://esper.codehaus.org/'&gt;ESPER engine&lt;/a&gt; and a small set of EPL queries for its Complex Event Processing. These were used to trigger alerts on a monitoring state change. ESPER&amp;#8217;s use and scope was expanded in Cloud Monitoring.&lt;/p&gt;
+
+&lt;p&gt;Cloudkick used the &lt;a href='http://labs.omniti.com/labs/reconnoiter'&gt;Reconnoiter&lt;/a&gt; &lt;code&gt;noitd&lt;/code&gt; program for its poller. We have contributed patches to the open source project as needed. Cloudkick borrowed some other parts of Reconnoiter early on, but over time replaced most of the Event Processing and data storage systems with customized solutions. Reconnoiter&amp;#8217;s &lt;code&gt;noitd&lt;/code&gt; poller is used by Cloud Monitoring.&lt;/p&gt;
+
+&lt;p&gt;Cloudkick used &lt;a href='http://www.rabbitmq.com/'&gt;RabbitMQ&lt;/a&gt; extensively for inter-service communication and for parts of our Event Processing system. We have had mixed experiences with RabbitMQ. RabbitMQ has improved greatly in the last few years, but when it breaks we are at a severe debugging disadvantage, since it is written in Erlang. RabbitMQ itself also does not provide many primitives we felt we needed when going to a fully multi-region system, and we felt we would need to invest significantly in building systems and new services on top of RabbitMQ to fill this gap. RabbitMQ is not used by Cloud Monitoring. Its use cases are being filled by a combination of &lt;a href='http://zookeeper.apache.org/'&gt;Apache Zookeeper&lt;/a&gt;, point to point REST or Thrift APIs, state storage in Cassandra and changes in architecture.&lt;/p&gt;
+
+&lt;p&gt;Cloudkick used an internal fork of &lt;a href='https://github.com/facebook/scribe'&gt;Facebook&amp;#8217;s Scribe&lt;/a&gt; for transporting certain types of high volume messages and data. Scribe&amp;#8217;s simple configuration model and API made it easy to extend for our bulk messaging needs. Cloudkick extended Scribe to include a write ahead journal and other features to improve durability. Cloud Monitoring continues to use Scribe for some of our event processing flows.&lt;/p&gt;
+
+&lt;p&gt;Cloudkick used &lt;a href='http://thrift.apache.org/'&gt;Apache Thrift&lt;/a&gt; for some RPC and cross-process serialization. Later in Cloudkick, we started using more JSON. Cloud Monitoring continues to use Thrift when we need strong contracts between services, or are crossing a programing language boundary. We use JSON however for many data types that are only used within Node.js based systems.&lt;/p&gt;
+
+&lt;h2 id='nodejs_ecosystem'&gt;Node.js ecosystem&lt;/h2&gt;
+
+&lt;p&gt;We have been very happy with our choice of using Node.js. When we started this project, I considered it one of our biggest risks to being successful &amp;#8211; what if 6 months in we are just mired in a new language and platform, and regretting sticking with the known evil of Twisted Python. The exact opposite happened. Node.js has been an awesome platform to build our product on. This is in no small part to the many modules the community has produced.&lt;/p&gt;
+
+&lt;p&gt;Here it is, the following is the list of NPM modules we have used in Cloud Monitoring, straight from our package.json:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/async'&gt;async&lt;/a&gt; (rackers patched it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/cassandra-client'&gt;cassandra-client&lt;/a&gt; (rackers wrote it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/cloudfiles'&gt;cloudfiles&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/command-parser'&gt;command-parser&lt;/a&gt; (rackers wrote it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/elementtree'&gt;elementtree&lt;/a&gt; (rackers wrote it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/express'&gt;express&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/ipv6'&gt;ipv6&lt;/a&gt; (rackers patched it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/jade'&gt;jade&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/logmagic'&gt;logmagic&lt;/a&gt; (rackers wrote it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/long-stack-traces'&gt;long-stack-traces&lt;/a&gt; (rackers patched it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/magic-templates'&gt;magic-templates&lt;/a&gt; (rackers wrote it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/metrics'&gt;metrics&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/node-dev'&gt;node-dev&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/node-int64'&gt;node-int64&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/node-uuid'&gt;node-uuid&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/nodelint'&gt;nodelint&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/optimist'&gt;optimist&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/sax'&gt;sax&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/showdown'&gt;showdown&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/simplesets'&gt;simplesets&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/strtok'&gt;strtok&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/swiz'&gt;swiz&lt;/a&gt; (rackers wrote it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/terminal'&gt;terminal&lt;/a&gt; (rackers wrote it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/thrift'&gt;thrift&lt;/a&gt; (rackers patched it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/whiskey'&gt;whiskey&lt;/a&gt; (rackers wrote it)&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://search.npmjs.org/#/zookeeper'&gt;zookeeper&lt;/a&gt; (rackers patched it)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now that our product is announced, I&amp;#8217;m hoping to find a little more time for writing. I will try to do more posts about how we are using Node.js, and the internals of Rackspace Cloud Monitoring&amp;#8217;s architecture.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;PS: as always, &lt;a href='http://rackertalent.com/san-francisco/'&gt;we are hiring&lt;/a&gt; at our sweet new office in San Francisco, if you are interested, &lt;a href='mailto:paul.querna@rackspace.com'&gt;drop me a line&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Node.js interview @ VentureBeat</title>
+   <link rel="alternate" type="text/html" href="http://journal.paul.querna.org/articles/2011/12/09/node-js-interview-venturebeat/"/>
+   <updated>2011-12-09T23:01:17+09:00</updated>
+   <published>2011-12-09T23:01:17+09:00</published>
+   <id>hhttp://journal.paul.querna.org/articles/2011/12/09/node-js-interview-venturebeat</id>
+   <content type="html" xml:base="http://journal.paul.querna.org/articles/2011/12/09/node-js-interview-venturebeat/">&lt;p&gt;&lt;a href='http://vimeo.com/33248104'&gt;Node JS&lt;/a&gt; from &lt;a href='http://vimeo.com/user7894877'&gt;Venturebeat&lt;/a&gt; on &lt;a href='http://vimeo.com'&gt;Vimeo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I was interviewed a few weeks ago by &lt;a href='https://twitter.com/#!/jolieodell'&gt;@JolieOdell&lt;/a&gt; from VentureBeat about Node.js. &lt;a href='http://venturebeat.com/2011/12/09/node-js-rackspace/'&gt;Video is here&lt;/a&gt;.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Technology enables better Support Experiences</title>
+   <link rel="alternate" type="text/html" href="http://journal.paul.querna.org/articles/2011/12/03/technology-experiences/"/>
+   <updated>2011-12-03T14:42:31+09:00</updated>
+   <published>2011-12-03T14:42:31+09:00</published>
+   <id>hhttp://journal.paul.querna.org/articles/2011/12/03/technology-experiences</id>
+   <content type="html" xml:base="http://journal.paul.querna.org/articles/2011/12/03/technology-experiences/">&lt;p&gt;My MacBook Air is my favorite laptop ever. The combination of size and enough power for most development tasks, makes it perfect for my job right now. For the last week though, whenever I&amp;#8217;d peg the CPU, by doing things like watching HD Flash Video, it would start dropping video frames and becoming unresponsive. I also noticed a &amp;#8216;clicking&amp;#8217; sound coming from it. I think thats a bad sign, probably the only moving part in the Air, a single lonely Fan, was dead, and the machine is overheating.&lt;/p&gt;
+
+&lt;p&gt;Last night I was trying to watch Netflix, and it would play for about 15 seconds, then overheat, and become unwatchable. My procrastination wasn&amp;#8217;t going to fix the fan. I went to &lt;a href='http://www.apple.com/retail/sanfrancisco/'&gt;Apple&amp;#8217;s San Francisco Store site&lt;/a&gt; and to make a reservation or the Genius Bar. Wooo! A single spot left at 11:30 this morning, perfect, and my reservation was made in under a minute.&lt;/p&gt;
+
+&lt;p&gt;I took my Air into the store, and took a seat to await my turn. Of course, a store employee found my appointment on a custom app on his iPhone, and told me it will be about 10 minutes before they will be able to see me. No problem, I grab a seat and keep reading &lt;a href='http://www.amazon.com/Children-Sky-Zones-Thought-ebook/dp/B004YD5JIW'&gt;Children of the Sky&lt;/a&gt; on my Kindle.app.&lt;/p&gt;
+
+&lt;p&gt;Anthony finishes with the previous customer and it&amp;#8217;s my turn. I explain how my Air is behaving (avoiding saying the conclusion I&amp;#8217;d already come to). He says yep, probably a dead fan or the sensor, and my Air is overheating. He then procedes to grab a USB ethernet adaptor and a blue ethernet cable that goes behind the counter. He reboots the Air, holding down the option key. He is &lt;a href='http://en.wikipedia.org/wiki/Network_booting'&gt;NetBooting&lt;/a&gt; my Air, into a custom Apple diagnostics program. It all happens in under two minutes.&lt;/p&gt;
+
+&lt;p&gt;The conclusion is in, they will need to replace the fan, but luckily it is under warranty. It&amp;#8217;s gonna be five days, which is too much as I fly to Texas on Monday. Anthony toggles a few buttons on his iPad, and prints me out a case report. Now I am back at the office finishing a Time Machine backup, so I can restore to a spare MacBook Pro. Once I&amp;#8217;m up and running on the Pro, I&amp;#8217;ll drop off my Air at the Store tomorrow so it can get repaired.&lt;/p&gt;
+
+&lt;p&gt;Now, this whole little story isn&amp;#8217;t that exciting. It probably happens hundreds of times per day across Apple&amp;#8217;s stores and business.&lt;/p&gt;
+
+&lt;p&gt;I was amazed when he started NetBooting my Air &amp;#8211; they had really thought about this problem. Do you really want to download a disk image onto a customer&amp;#8217;s computer and then try to debug things from there? No, it has a ton of problems, customers don&amp;#8217;t want random files downloaded on to their disk, and there might be problems in the OS install itself &amp;#8211; the solution of NetBooting is an elegant application of good technology to enable the Apple employees at the Genius Bar to get their job done quickly and easily.&lt;/p&gt;
+
+&lt;p&gt;Looking at the whole experience, it was driven by technology deeply integrated and enhancing a support experience. The technology got me into the store easily, the employee doing in-store triage already knew about my appointment, easy diagnostics that weren&amp;#8217;t invasive to my computer, and integrated case management. Someone at Apple thought deeply about each step in my experience, and put technology where it made sense, and people where it didn&amp;#8217;t.&lt;/p&gt;
+
+&lt;p&gt;What I found more interesting however, is how this experience aligns with &lt;a href='http://www.rackspace.com/whyrackspace/support/'&gt;Rackspace&amp;#8217;s own beliefs&lt;/a&gt;. &lt;a href='https://www.cloudkick.com/acquisition-faq'&gt;Cloudkick was acquired&lt;/a&gt; almost a year ago, and we tried to provide the best support to our customers possible. This largely meant the engineers who wrote the code responded to the support issues. In the last year, it has been interesting to see how Rackspace has to scale this process to thousands of employees &amp;#8211; it isn&amp;#8217;t a trivial problem. Delivering a great support experience requires both great technology, and great people.&lt;/p&gt;
+
+&lt;p&gt;In the end, this is all about building technology and software to produce a better outcome for the customer and the business. &lt;strong&gt;Building technology for technology&amp;#8217;s sake can sure be fun, but it is a million times more fulfilling when that technology enables a better experience for a person.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;It&amp;#8217;s also what I find interesting about my job at Rackspace. We aren&amp;#8217;t trying to just build software so that a single Racker can handle 100 customers instead of 50. We are building software so that our support Rackers can create a genuinely better experience for our customers.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>OpenSSL memory use in Node.js</title>
+   <link rel="alternate" type="text/html" href="http://journal.paul.querna.org/articles/2011/04/05/openssl-memory-use/"/>
+   <updated>2011-04-05T07:41:23+09:00</updated>
+   <published>2011-04-05T07:41:23+09:00</published>
+   <id>hhttp://journal.paul.querna.org/articles/2011/04/05/openssl-memory-use</id>
+   <content type="html" xml:base="http://journal.paul.querna.org/articles/2011/04/05/openssl-memory-use/">&lt;p&gt;Last Thursday I went to the Joyent office for &lt;a href='http://blog.nodejs.org/2011/03/23/office-hours/'&gt;Node Office Hours&lt;/a&gt; &amp;#8211; I wanted to talk to &lt;a href='http://blog.izs.me/'&gt;Isaac&lt;/a&gt; about running a &lt;a href='https://github.com/isaacs/npm/blob/master/doc/registry.md'&gt;private NPM registry&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Isaac answered my questions about private NPM registries, but &lt;a href='https://github.com/mranney'&gt;Matt Ranney&lt;/a&gt; explained a more interesting problem. He was dialed into a conference call line for Node Office hours (he is currently living in Hawaii.) Matt explained that he is using the new &lt;a href='http://nodejs.org/docs/v0.4/api/tls.html'&gt;TLS module in Node v0.4&lt;/a&gt;, and it was using &lt;strong&gt;1 megabyte of memory per connection!&lt;/strong&gt; Using 1mb per connection made us think there must be something wrong in Node.js itself, so we wrote up a simple test case client and server.&lt;/p&gt;
+
+&lt;p&gt;The TLS server says &amp;#8220;welcome&amp;#8221; to a newly connected client, and then echos anything it receives back to the client:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;tls&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;tls&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;fs&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+
+&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;options&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+  &lt;span class='nx'&gt;key&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;fs&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;readFileSync&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;test_key.pem&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;),&lt;/span&gt;
+  &lt;span class='nx'&gt;cert&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;fs&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;readFileSync&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;test_cert.pem&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;),&lt;/span&gt;
+&lt;span class='p'&gt;};&lt;/span&gt;
+
+&lt;span class='nx'&gt;tls&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;createServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;options&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+  &lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;write&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;welcome!\n&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+  &lt;span class='nx'&gt;console&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;got client&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+  &lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;pipe&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+&lt;span class='p'&gt;}).&lt;/span&gt;&lt;span class='nx'&gt;listen&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;8000&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+&lt;span class='nx'&gt;console&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;127.0.0.1:8000&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;The client spawns 200 connections, and writes &amp;#8216;hello&amp;#8217; to the server every 5 seconds for each connection:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;tls&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;tls&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+
+&lt;span class='kd'&gt;function&lt;/span&gt; &lt;span class='nx'&gt;go&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+  &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;s&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kc'&gt;null&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='nx'&gt;s&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;tls&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;connect&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;8000&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s1'&gt;&amp;#39;127.0.0.1&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;setInterval&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+      &lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;write&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;hello\n&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+    &lt;span class='p'&gt;},&lt;/span&gt; &lt;span class='mi'&gt;5000&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+  &lt;span class='p'&gt;});&lt;/span&gt;  
+&lt;span class='p'&gt;};&lt;/span&gt;
+
+&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+&lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;i&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt; &lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='mi'&gt;200&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt; &lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+  &lt;span class='nx'&gt;go&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Running the client and server on my laptop, the server used almost 200 megabytes of memory. This meant the high memory usage per-connection is not just a problem with Matt&amp;#8217;s application, but something deeper in Node.js.&lt;/p&gt;
+
+&lt;p&gt;At this point the Linux users are trembling, unsure how to debug the issue. Luckily, I still use &lt;a href='http://en.wikipedia.org/wiki/Mac_OS_X'&gt;Steve&amp;#8217;s operating system&lt;/a&gt;, and I fired up &lt;a href='http://en.wikipedia.org/wiki/Instruments_(application'&gt;Instruments.app&lt;/a&gt;) to start taking a look at the problem.&lt;/p&gt;
+
+&lt;h2 id='those_pesky_certificate_authority_certificates'&gt;Those Pesky Certificate Authority Certificates&lt;/h2&gt;
+
+&lt;p&gt;Using the builtin &lt;em&gt;Allocations&lt;/em&gt; instrument, I was looking for how memory was being used. I expected to just see a large blob of allocation being done inside &lt;a href='http://code.google.com/p/v8/'&gt;v8&lt;/a&gt;, since Instruments and DTrace that power it do not have visibility inside the VMs internals. Unexpectedly, it quickly became apparent our main use of memory was the &lt;code&gt;node::crypto::SecureContext::AddRootCerts&lt;/code&gt; function. After going back to the Javascript, we could see that for every new TLS connection being made, Node was re-parsing the list of root-certificate authorities from their string forms, into the &lt;code&gt;X509_STORE&lt;/code&gt; object used by OpenSSL: &lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/pre-fix.jpg'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/pre-fix.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Just by commenting out one line of Javascript, we were able to reduce memory usage by 20%, and increased the performance of the HTTPS server from 70 requests/second to 700 requests/second.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://tinyclouds.org/'&gt;Ryan&lt;/a&gt; changed the Node crypto code to use a single global CA store for the default root certificates in &lt;a href='https://github.com/joyent/node/commit/5c35dff4192b0e204ab4145b7f9dcdba6e76a93e
+'&gt;5c35dff41&lt;/a&gt;. The current &lt;em&gt;fix is a hack&lt;/em&gt;, the correct long term fix is to better use &lt;a href='http://www.openssl.org/docs/ssl/SSL_new.html'&gt;SSL_new&lt;/a&gt; with a shared &lt;code&gt;SSL_CTX*&lt;/code&gt;, but that will require a larger refactoring of &lt;code&gt;node_crypto.cc&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id='zlib_big_buffers_r_us'&gt;Zlib: Big Buffers &amp;#8220;R&amp;#8221; us&lt;/h2&gt;
+
+&lt;p&gt;We thought after fixing the obvious bug in parsing the certificates, we might be done. We went back to the profiling in Instruments.app, and discovered memory usage still was over 500kb per connection: &lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/compression.jpg'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/compression.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;We dove into the OpenSSL codebase, and found that Zlib Compression is enabled by default, and there isn&amp;#8217;t an easy way to turn it off. The &lt;a href='http://www.openssl.org/docs/ssl/SSL_COMP_add_compression_method.html
+'&gt;documentation for SSL_COMP_add_compression_method&lt;/a&gt; says:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Unlike the mechanisms to set a cipher list, there is no method available to restrict the list of compression method on a per connection basis.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Recent versions of OpenSSL (&amp;gt;1.0.0) have added &lt;code&gt;SSL_OP_NO_COMPRESSION&lt;/code&gt; that can be disable compression per-connection via &lt;a href='http://www.openssl.org/docs/ssl/SSL_CTX_set_options.html'&gt;SSL_CTX_set_options&lt;/a&gt;. However, most Linux distributions are still using variations of OpenSSL 0.9.8, meaning this option isn&amp;#8217;t viable for most users.&lt;/p&gt;
+
+&lt;p&gt;As an alternative, it is possible to zero out the global list of all OpenSSL compression methods after initializing OpenSSL:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='c'&gt;&lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='nf'&gt;disable_openssl_compression&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+  &lt;span class='n'&gt;STACK_OF&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SSL_COMP&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;comp_methods&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;SSL_COMP_get_compression_methods&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
+  &lt;span class='n'&gt;sk_SSL_COMP_zero&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;comp_methods&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+&lt;span class='p'&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;This is a &lt;em&gt;terrible hack&lt;/em&gt;, but it enabled us to test the effect of disabling compression on the server side, and after seeing the results, I think it is worth it.&lt;/p&gt;
+
+&lt;p&gt;With this change, we ran the test again, and see an amazing thing, we are only using about 15 megabytes of memory, and we can actually see the v8 garbage collector doing work now: &lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/all-fixed.jpg'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/all-fixed.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id='ship_it_to_production'&gt;Ship it to production&lt;/h2&gt;
+
+&lt;p&gt;Going back to Matt&amp;#8217;s original problem, he is using Node.js as part of the server side infrastructure for &lt;a href='http://voxer.com/'&gt;Voxer, a communication application for mobile devices&lt;/a&gt;. He applied the patches, and provided this graph from Cacti showing the massive improvement in free memory:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/Cacti.png'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/Cacti.png' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id='what_about_twisted_python'&gt;What about Twisted Python?&lt;/h2&gt;
+
+&lt;p&gt;At &lt;a href='https://www.cloudkick.com/'&gt;Rackspace/Cloudkick&lt;/a&gt; we use &lt;a href='http://twistedmatrix.com/trac/'&gt;Twisted Python&lt;/a&gt; for many production services, including several with many thousands of open TLS connections. We had always just assumed the high memory usage was an issue in Twisted Python itself, not something in OpenSSL. We had tried looking at the memory usage using &lt;a href='http://www.aminus.net/wiki/Dowser'&gt;Dowser&lt;/a&gt;, but we never got far, as it always looked like Python wasn&amp;#8217;t misbehaving. This now makes sense, because the OpenSSL objects used in &lt;a href='http://packages.python.org/pyOpenSSL/'&gt;pyOpenSSL&lt;/a&gt; wouldn&amp;#8217;t be counted by Dowser.&lt;/p&gt;
+
+&lt;p&gt;pyOpenSSL is a limited binding of the most useful functions in OpenSSL, so it doesn&amp;#8217;t provide bindings to the functions that can manipulate the OpenSSL Compression settings. I decided to use the &lt;a href='http://docs.python.org/library/ctypes.html'&gt;ctypes module&lt;/a&gt; to avoid needing to distribute a C based extension to disable OpenSSL compression:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;disableSSLCompression&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+  &lt;span class='k'&gt;try&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+    &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;ctypes&lt;/span&gt;
+    &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;glob&lt;/span&gt;
+    &lt;span class='n'&gt;openssl&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;CDLL&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;None&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RTLD_GLOBAL&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='k'&gt;try&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+      &lt;span class='n'&gt;f&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;openssl&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;SSL_COMP_get_compression_methods&lt;/span&gt;
+    &lt;span class='k'&gt;except&lt;/span&gt; &lt;span class='ne'&gt;AttributeError&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+      &lt;span class='n'&gt;ssllib&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nb'&gt;sorted&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;glob&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;glob&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;/usr/lib/libssl.so.*&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;))[&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+      &lt;span class='n'&gt;openssl&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;CDLL&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ssllib&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RTLD_GLOBAL&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='n'&gt;openssl&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;SSL_COMP_get_compression_methods&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;restype&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;c_void_p&lt;/span&gt;
+    &lt;span class='n'&gt;openssl&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;sk_zero&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;argtypes&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;c_void_p&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+    &lt;span class='n'&gt;openssl&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;sk_zero&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;openssl&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;SSL_COMP_get_compression_methods&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
+  &lt;span class='k'&gt;except&lt;/span&gt; &lt;span class='ne'&gt;Exception&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;e&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+    &lt;span class='n'&gt;log&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;msg&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;disableSSLCompression: Failed:&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='n'&gt;log&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;msg&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;e&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;We deployed this to one Twisted Python Service as a test, and you can see the impact on memory use, dropping form 1.15 gigabytes to around 300 megabytes:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/twisted-memory.jpg'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/twisted-memory.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id='conclusion'&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;While compression in TLS can be helpful in some situations with bulk data transfers, the method by which OpenSSL has done it is disappointing. Enabling a feature by default that has such a large impact on memory usage, and not having a reasonable way to disable it is bad library design.&lt;/p&gt;
+
+&lt;p&gt;If you have specific applications using TLS that don&amp;#8217;t benefit from compression or have many thousands of mostly idle connections, consider disabling OpenSSL&amp;#8217;s compression methods to save yourself about 500kb of memory per connection.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;PS:&lt;/strong&gt; &lt;a href='http://news.ycombinator.com/item?id=2411349'&gt;agl on HN&lt;/a&gt; mentioned that OpenSSL &amp;gt; 1.0.0 also has &lt;code&gt;SSL_MODE_RELEASE_BUFFERS&lt;/code&gt; which greatly reduces memory usage of a connection &amp;#8211; this is &lt;a href='https://github.com/joyent/node/blob/v0.4.5/src/node_crypto.cc#L622-625'&gt;already done in Node.js if available&lt;/a&gt;, but if you are updating older code be sure to add this too.&lt;/p&gt;</content>
+ </entry>
+ 
+ 
+</feed>

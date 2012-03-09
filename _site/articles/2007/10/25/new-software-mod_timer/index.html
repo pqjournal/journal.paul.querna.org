@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>new software: mod_timer</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>new software: mod_timer</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Do you have a custom logging module?</p>
+
+<p>Ever wondered how long it took to actually finish logging?</p>
+
+<p>At $<a href='http://www.ask.com'>work</a> I was helping with some problems with Apache, and we wanted to know how long until an Apache Worker Process actually goes back into the Accept Queue.</p>
+
+<p>So <a href='http://people.apache.org/~pquerna/modules/mod_timer.c'>mod_timer</a> is born. It hooks into Apache when the connection is accepted, before we start reading any data, and the timer ends when the connection memory pool is destroyed. It also performs the same measurements on <a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html'>requests inside the connection</a>.</p>
+
+<p>It produces a log file like this:</p>
+
+<blockquote>
+<p>r:127.0.0.1:51886:1193364411078414:1568</p>
+</blockquote>
+
+<p>r:127.0.0.1:51886:1193364411077069:3034 r:127.0.0.1:51886:1193364411080117:21150 r:127.0.0.1:51886:1193364411101293:99477 r:127.0.0.1:51886:1193364411200792:1856762 r:127.0.0.1:51886:1193364413057577:7000364 c:127.0.0.1:51886:1193364411077016:8980955 r:127.0.0.1:51887:1193364427909070:96608 r:127.0.0.1:51887:1193364428006034:2031335 r:127.0.0.1:51887:1193364430037392:1086699 r:127.0.0.1:51887:1193364431124508:916482 r:127.0.0.1:51887:1193364432041014:5315190 c:127.0.0.1:51887:1193364427909020:9447211</p>
+
+<p>Log Fields:</p>
+
+<p>* &#8216;r&#8217; or &#8216;c&#8217; represents if this is a request or connection being logged.</p>
+
+<p>* Remote IP Address</p>
+
+<p>* Remote Port</p>
+
+<p>* Start time, in <a href='http://apr.apache.org/docs/apr/trunk/group__apr__time.html'>apr_time_t</a> (64bit int time since 1970 in microseconds)</p>
+
+<p>* Run time in microseconds</p>
+
+<p>Using this, it becomes easier to look for &#8216;evil&#8217; clients that are doing things like sending one byte of a GET request a second.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2007/10/08/gltail/" title="gltail">&larr; gltail</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2007/11/11/ipod-warning/" title="ipod warning">ipod warning &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>25 October 2007</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

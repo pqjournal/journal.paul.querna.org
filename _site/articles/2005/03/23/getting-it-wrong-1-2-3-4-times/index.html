@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Getting it Wrong.. 1.. 2.. 3.. 4 Times.</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Getting it Wrong.. 1.. 2.. 3.. 4 Times.</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>The <a href='http://jakarta.apache.org/tomcat/'>Apache Tomcat</a> Connectors are a complete mess. Here is the list of possible modules to connect HTTPD with Tomcat:</p>
+
+<p>* mod_jserv</p>
+
+<p>* mod_jk</p>
+
+<p>* mod_webapp</p>
+
+<p>* mod_jk2</p>
+
+<p>* mod_proxy_http</p>
+
+<p>* mod_proxy_ajp</p>
+
+<p><strong>mod_jserv</strong> was the original module. It is old. I can accept that. Code does get old. Bad ideas are rewritten in new code, but it doesn&#8217;t fix the fact that the idea is bad. It started the <a href='http://httpd.apache.org/docs-2.1/mod/mod_proxy_ajp.html#overviewprotocol'>AJP format</a> for sending requests around.</p>
+
+<p><strong>mod_jk</strong> was added in Tomcat 3.x. It expanded upon the AJP protocol that mod_jserv started with, but I found its configuration to be quite&#8230; well, perhaps <em>crap</em> is the best word to describe it. Oh, and for the win32 binaries, they give you a <strong>.dll</strong> that is named <strong>mod_jk-1.2.8-apache-2.0.52.so</strong>. Yes, your win32 module ends in <strong>.so</strong>. If you want to support windows users, just make an installer. Its blooody easy. Seriously. Use <a href='http://nsis.sourceforge.net/'>NSIS</a>. Oh, mod_jk is also the only remaining connector that should be used &#8216;in production&#8217;.</p>
+
+<p><strong>mod_webapp</strong> was added in Tomcat 4.0(?). It used the <a href='http://cvs.apache.org/~jfclere/webapp_docs/warp1.html'><code>WARP/1.0</code> protocol</a>. It looks like the protocol didn&#8217;t add much advantage over AJP, and now its completely dead.</p>
+
+<p><strong>mod_jk2</strong> was added in Tomcat 4.1(?). It was a refactor of mod_jk, using <a href='http://apr.apache.org/'>APR</a>. It died a death from lack of developer love. All the people working on it stopped. Last December, the <a href='http://jakarta.apache.org/tomcat/tomcat-4.1-doc/jk2/news/20041100.html#20041115.1'>Tomcat Team officially dropped &#8216;support&#8217; for it</a>.</p>
+
+<p><strong>mod_proxy_http</strong> has been around since httpd 2.0, and it doesn&#8217;t use some super special optimizaed protocol. It uses plain old HTTP to talk to the Tomcat server. Is string munging and inserting things into arrays and tables really that slow? Is there even a need for something like AJP?</p>
+
+<p><strong>mod_proxy_ajp</strong>, the newest of all these solutions, was added to httpd 2.1.0. It uses the same AJP protocol as the previous attempts, but instead of writing a proxy module from scratch, it uses the rest of the proxy framework.</p>
+
+<p>Wait a minute. All that every single one of these modules do is <strong>PROXY A REQUEST</strong> to the Tomcat server. Its nothing extra. It only took 5 different Apache Modules and 3 different protocols, and none of them are close to perfect, and none of them are easy to configure.</p>
+
+<p>The FAQ does have <a href='http://jakarta.apache.org/tomcat/faq/connectors.html#vs'>an entry about this</a>. It basically says that mod_jk is the only one that should be used in production.</p>
+
+<p>A different issue that has me worried is how they word <a href='http://www.eu.apache.org/dist/jakarta/tomcat-connectors/'>their download page</a>:</p>
+
+<p>Quote:</p>
+
+<pre><code>Since November 2004 - &lt;strong&gt;JK2 is officially unsupported!&lt;/strong&gt;
+
+JK2 has been put in maintainer mode and no further development will take place.
+
+JK will be fully supported for all relevant web servers.</code></pre>
+
+<p>While this sounds simple, I believe it is in psuedo violation of the <a href='http://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2.0 License</a>. My concern is that they are effectively providing a Warranty that <strong>mod_jk</strong> is <strong>fully supported</strong>. Also, Saying that <strong>mod_jk2</strong> will be <strong>officially unsupported</strong> implies that something has <strong>&#8216;official support&#8217;</strong>.</p>
+
+<p>I have had some of this discussion when I have talked about depreciating httpd 1.3.x. The reality is that very few developers actively work on 1.3. Yet, it is nneither officially supported or unsupported. This wishy washy stance hasn&#8217;t helped with the adoption of 2.0. I guess one day in a couple years, the 1.3 downloads will be pulled, after <a href='http://svn.apache.org/viewcvs.cgi/httpd/httpd/branches/1.3.x/src/CHANGES?rev=156287&amp;view=log'>no one has done a commit</a> for 5 years. The simple answer is that an open source project is never dead, but all of the developers can leave, making it quite cold to the touch. The long answer is that I don&#8217;t want to deal with Apache 1.3 bugs. Right now, other developers still want to fix bugs in 1.3, good for them. (and for any other unfortunate souls still using 1.3).</p>
+
+<p>Oh. And <a href='http://www.vonage.com/'>Vonage</a> sucks. They are what got me into a grumpy mood today. For the record, they got stuff wrong, <strong>way way way way</strong> more than 4 or 5 times.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/03/13/problems/" title="Problems?">&larr; Problems?</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/03/23/please-just-give-up/" title="Please, Just give up.">Please, Just give up. &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>23 March 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

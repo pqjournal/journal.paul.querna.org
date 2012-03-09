@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ndb clusters</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>ndb clusters</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>So, <a href='http://www.mysql.com/'>MySQL AB</a> has a huge chunk of <a href='http://dev.mysql.com/doc/ndbapi/en/index.html'>new documentation on the NDB API</a>.</p>
+
+<p>Short Story: <a href='http://www.sleepycat.com/docs/gsg/C/index.html'>Semi-sleepycat</a> like API available, but its replicated/clustered and everything magically. <a href='http://dev.mysql.com/doc/ndbapi/en/example-synchronous-transactions.html'>Example</a></p>
+
+<p><a href='http://krow.net/'>Brian Aker</a> was at the memcached <a href='http://en.wikipedia.org/wiki/BOF'>BOF</a> at OSCON, saying how it is way cool, and could be used in some places to replace <a href='http://www.danga.com/memcached/'>memcached</a>.</p>
+
+<p>But, what I haven&#8217;t found is anyone talking about using the ndbclient API in large scary production environments. <strong>Is there anyone out there really hammering it?</strong></p>
+
+<p>Infact, a <a href='http://www.google.com/search?q=ndbclient&amp;ie=utf-8&amp;oe=utf-8'>Google Search for &#8220;ndbclient&#8221;</a> only returns 111 results right now, none of which look too great.</p>
+
+<p>It seems like it could be a great solution instead of using application level partitioning and <a href='http://www.sleepycat.com/docs/ref/rep/intro.html'>replicating Berkeley DB</a> in some use cases. I don&#8217;t mind being given a low level API and having to build my application level logic on top&#8230; It&#8217;s how Sleepycat has worked for 20 years.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2006/07/24/more-corn/" title="more corn">&larr; more corn</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2006/08/08/one-year/" title="one year">one year &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>31 July 2006</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

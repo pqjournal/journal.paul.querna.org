@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TLS Server Name Indication.</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>TLS Server Name Indication.</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>I have TLS 1.1 Server Name Indication working in <a href='http://www.outoforder.cc/projects/apache/mod_gnutls/'>mod_gnutls</a>.</p>
+
+<p>What is Server Name Indication?</p>
+
+<p>When a client connects to a server using SSL, the server will send the Public Certificate to them. This enables them to actually decrypt the data sent from the server later. Here is a short simplified example:</p>
+
+<pre><code>1. C: (TLS Handshake) Hello, I support XYZ Encryption.
+2. S: (TLS Handshake) Hi There, Here is my Public Certificate, and lets use this encryption algorithm.
+3. C: (TLS Handshake) Sounds good to me.
+4. C: (Encrypted) HTTP Request
+5. S: (Encrypted) HTTP Reply</code></pre>
+
+<p>The problem in HTTP is we don&#8217;t know which Public Certificate to send, until step 4. This is long after the public certificate has been sent. Protocols such as IMAP and SMTP, which use STARTTLS, have a different pattern:</p>
+
+<pre><code>1. C: (Cleartext) I am using server &#39;mail.example.com&#39;
+2. S: (Cleartext) By The Way, I also support TLS Encryptionn.
+3. C: (Cleartext) Lets use Encryption, aka &#39;STARTTLS&#39;.
+4. C: (TLS Handshake) Hello, I support XYZ Encryption.
+5. S: (TLS Handshake) Hi There, Here is my Public Certificate, and lets use this encryption algorithm.
+6. C: (TLS Handshake) Sounds good to me.
+7. C &amp; S: (Encrypted) Exchange Data</code></pre>
+
+<p>Since the client tells the server which host it is connecting to in step 1, the server can pick the correct certificate in step 5. It is possible to do this in HTTP, using <a href='http://corelands.com/blog/?postid=51'>TLS Upgrade</a>. This is slightly more complicated, and presents other security issues. The Server Name Indication approach has a much simplier setup:</p>
+
+<pre><code>1. C: (TLS Handshake) Hello, I support XYZ Encryption, and I am trying to connect to &#39;site.example.com&#39;.
+2. S: (TLS Handshake) Hi There, Here is my Public Certificate, and lets use this encryption algorithm.
+3. C: (TLS Handshake) Sounds good to me.
+4. C: (Encrypted) HTTP Request
+5. S: (Encrypted) HTTP Reply</code></pre>
+
+<p>The only difference is a few extra bytes sent in Step 1. The client passes along which hostname it wants, and the server now has a clue which public certificate to send.</p>
+
+<p>Currently, the only browser with SNI support is <a href='http://www.opera.com/products/desktop/'>Opera 8.0</a>. What Server Name Indication (SNI) has the potential to bring, is <em>cheap encryption</em>. A <a href='http://sial.org/howto/openssl/self-signed/'>Self Signed Certificate</a> might be free, but it does not mean they can easily be used. Other protocols like IMAP use <code>STARTTLS</code> to decide which server to connect to first, and then to start the TLS Connection. Traditionally, HTTP has required one IP address for every SSL Host. For some people, IP Addresses are cheap, but for many, they are not. SNI Breaks this last barrier, and allows a single IP Address to host hundreds of SSL Websites.</p>
+
+<p>I have setup a demo server at <a href='https://sni.corelands.com/'>sni.corelands.com</a>. If you visit <a href='https://one.sni.corelands.com/'>https://one.sni.corelands.com/</a> with Opera, you will not get an SSL Hostname Mismatch. If you use any other browser, you will.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/04/16/browser-detection-is-bad/" title="Browser Detection.. is bad.">&larr; Browser Detection.. is bad.</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/04/28/coal-isnt-a-fossil-fuel/" title="Coal isn't a Fossil Fuel?">Coal isn't a Fossil Fuel? &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>24 April 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

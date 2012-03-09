@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Technology behind Rackspace Cloud Monitoring</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Technology behind Rackspace Cloud Monitoring</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Earlier this week we <a href='http://www.rackspace.com/cloud/blog/2011/12/15/announcing-rackspace-cloud-monitoring-private-beta/'>announced a new product: Rackspace Cloud Monitoring</a>. It is just starting as a (free) private beta, so if you want to try it out, be sure to <a href='https://surveys.rackspace.com/Survey.aspx?s=e08d057768e04f09a8cb7811d47b82da'>sign up via the survey here</a>.</p>
+
+<h2 id='transition_from_cloudkick_technology'>Transition from Cloudkick Technology</h2>
+
+<p>Rackspace Cloud Monitoring is based on technology built originally for the <a href='https://www.cloudkick.com/features/monitoring'>Cloudkick product</a>. Some core concepts and parts of the architecture originated from Cloudkick, but many changes were made to enable Rackspace&#8217;s scalability needs, improve operational support, and focus the Cloud Monitoring product as an API driven Monitoring as a Service, rather than all of Cloudkick&#8217;s Management and Cloud Server specific features.</p>
+
+<p>For this purpose, Cloudkick&#8217;s product was successful in vetting many parts of the basic architecture, and serving as a basis on which to make a reasonable second generation system. We tried to make specific changes in technology and architecture that would get us to our goals, but without falling into an overengineering trap.</p>
+
+<p>Cloudkick was primarily written in Python. Most backend services were written in <a href='http://www.twistedmatrix.com/'>Twisted Python</a>. The API endpoints and web server were written in <a href='https://www.djangoproject.com/'>Django</a>, and used <a href='http://code.google.com/p/modwsgi/'>mod_wsgi</a>. We felt that while we greatly value the asynchronous abilities of Twisted Python, and they matched many of our needs well, we were unhappy with our ability to maintain Twisted Python based services. Specifically, the deferred programming model is difficult for developers to quickly grasp and debug. It tended to be &#8216;fail&#8217; deadly, in that if a developer didn&#8217;t fully understand Twisted Python, they would make many innocent mistakes. Django was mostly successful for our needs as an API endpoint, however we were unhappy with our use of the Django ORM. It created many dependencies between components that were difficult to unwind later. Cloud Monitoring is primarily written in <a href='http://www.nodejs.org/'>Node.js</a>. Our team still loves Python, and much of our secondary tooling in Cloud Monitoring uses Python. <code>[</code>EDIT: See standalone post: <a href='http://journal.paul.querna.org/articles/2011/12/18/the-switch-python-to-node-js/'>The Switch: Python to Node.js</a><code>]</code></p>
+
+<p>Cloudkick was reliant upon a <a href='http://www.mysql.com/'>MySQL</a> master and slaves for most of its configuration storage. This severely limited both scalability, performance and multi-region durability. These issues aren&#8217;t necessarily a property of MySQL, but Cloudkick&#8217;s use of the Django ORM made it very difficult to use MySQL radically differently. The use of MySQL was not continued in Cloud Monitoring, where metadata is stored in Apache Cassandra.</p>
+
+<p>Cloudkick used <a href='http://cassandra.apache.org/'>Apache Cassandra</a> primarily for metrics storage. This was a key element in keeping up with metrics processing, and providing a high quality user experience, with fast loading graphs. Cassandra&#8217;s role was expanded in Cloud Monitoring to include both configuration data and metrics storage.</p>
+
+<p>Cloudkick used the <a href='http://esper.codehaus.org/'>ESPER engine</a> and a small set of EPL queries for its Complex Event Processing. These were used to trigger alerts on a monitoring state change. ESPER&#8217;s use and scope was expanded in Cloud Monitoring.</p>
+
+<p>Cloudkick used the <a href='http://labs.omniti.com/labs/reconnoiter'>Reconnoiter</a> <code>noitd</code> program for its poller. We have contributed patches to the open source project as needed. Cloudkick borrowed some other parts of Reconnoiter early on, but over time replaced most of the Event Processing and data storage systems with customized solutions. Reconnoiter&#8217;s <code>noitd</code> poller is used by Cloud Monitoring.</p>
+
+<p>Cloudkick used <a href='http://www.rabbitmq.com/'>RabbitMQ</a> extensively for inter-service communication and for parts of our Event Processing system. We have had mixed experiences with RabbitMQ. RabbitMQ has improved greatly in the last few years, but when it breaks we are at a severe debugging disadvantage, since it is written in Erlang. RabbitMQ itself also does not provide many primitives we felt we needed when going to a fully multi-region system, and we felt we would need to invest significantly in building systems and new services on top of RabbitMQ to fill this gap. RabbitMQ is not used by Cloud Monitoring. Its use cases are being filled by a combination of <a href='http://zookeeper.apache.org/'>Apache Zookeeper</a>, point to point REST or Thrift APIs, state storage in Cassandra and changes in architecture.</p>
+
+<p>Cloudkick used an internal fork of <a href='https://github.com/facebook/scribe'>Facebook&#8217;s Scribe</a> for transporting certain types of high volume messages and data. Scribe&#8217;s simple configuration model and API made it easy to extend for our bulk messaging needs. Cloudkick extended Scribe to include a write ahead journal and other features to improve durability. Cloud Monitoring continues to use Scribe for some of our event processing flows.</p>
+
+<p>Cloudkick used <a href='http://thrift.apache.org/'>Apache Thrift</a> for some RPC and cross-process serialization. Later in Cloudkick, we started using more JSON. Cloud Monitoring continues to use Thrift when we need strong contracts between services, or are crossing a programing language boundary. We use JSON however for many data types that are only used within Node.js based systems.</p>
+
+<h2 id='nodejs_ecosystem'>Node.js ecosystem</h2>
+
+<p>We have been very happy with our choice of using Node.js. When we started this project, I considered it one of our biggest risks to being successful &#8211; what if 6 months in we are just mired in a new language and platform, and regretting sticking with the known evil of Twisted Python. The exact opposite happened. Node.js has been an awesome platform to build our product on. This is in no small part to the many modules the community has produced.</p>
+
+<p>Here it is, the following is the list of NPM modules we have used in Cloud Monitoring, straight from our package.json:</p>
+
+<ul>
+<li><a href='http://search.npmjs.org/#/async'>async</a> (rackers patched it)</li>
+
+<li><a href='http://search.npmjs.org/#/cassandra-client'>cassandra-client</a> (rackers wrote it)</li>
+
+<li><a href='http://search.npmjs.org/#/cloudfiles'>cloudfiles</a></li>
+
+<li><a href='http://search.npmjs.org/#/command-parser'>command-parser</a> (rackers wrote it)</li>
+
+<li><a href='http://search.npmjs.org/#/elementtree'>elementtree</a> (rackers wrote it)</li>
+
+<li><a href='http://search.npmjs.org/#/express'>express</a></li>
+
+<li><a href='http://search.npmjs.org/#/ipv6'>ipv6</a> (rackers patched it)</li>
+
+<li><a href='http://search.npmjs.org/#/jade'>jade</a></li>
+
+<li><a href='http://search.npmjs.org/#/logmagic'>logmagic</a> (rackers wrote it)</li>
+
+<li><a href='http://search.npmjs.org/#/long-stack-traces'>long-stack-traces</a> (rackers patched it)</li>
+
+<li><a href='http://search.npmjs.org/#/magic-templates'>magic-templates</a> (rackers wrote it)</li>
+
+<li><a href='http://search.npmjs.org/#/metrics'>metrics</a></li>
+
+<li><a href='http://search.npmjs.org/#/node-dev'>node-dev</a></li>
+
+<li><a href='http://search.npmjs.org/#/node-int64'>node-int64</a></li>
+
+<li><a href='http://search.npmjs.org/#/node-uuid'>node-uuid</a></li>
+
+<li><a href='http://search.npmjs.org/#/nodelint'>nodelint</a></li>
+
+<li><a href='http://search.npmjs.org/#/optimist'>optimist</a></li>
+
+<li><a href='http://search.npmjs.org/#/sax'>sax</a></li>
+
+<li><a href='http://search.npmjs.org/#/showdown'>showdown</a></li>
+
+<li><a href='http://search.npmjs.org/#/simplesets'>simplesets</a></li>
+
+<li><a href='http://search.npmjs.org/#/strtok'>strtok</a></li>
+
+<li><a href='http://search.npmjs.org/#/swiz'>swiz</a> (rackers wrote it)</li>
+
+<li><a href='http://search.npmjs.org/#/terminal'>terminal</a> (rackers wrote it)</li>
+
+<li><a href='http://search.npmjs.org/#/thrift'>thrift</a> (rackers patched it)</li>
+
+<li><a href='http://search.npmjs.org/#/whiskey'>whiskey</a> (rackers wrote it)</li>
+
+<li><a href='http://search.npmjs.org/#/zookeeper'>zookeeper</a> (rackers patched it)</li>
+</ul>
+
+<p>Now that our product is announced, I&#8217;m hoping to find a little more time for writing. I will try to do more posts about how we are using Node.js, and the internals of Rackspace Cloud Monitoring&#8217;s architecture.</p>
+
+<p><em>PS: as always, <a href='http://rackertalent.com/san-francisco/'>we are hiring</a> at our sweet new office in San Francisco, if you are interested, <a href='mailto:paul.querna@rackspace.com'>drop me a line</a>.</em></p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2011/12/09/node-js-interview-venturebeat/" title="Node.js interview @ VentureBeat">&larr; Node.js interview @ VentureBeat</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2011/12/18/the-switch-python-to-node-js/" title="The Switch: Python to Node.js">The Switch: Python to Node.js &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>17 December 2011</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

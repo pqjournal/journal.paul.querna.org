@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>iBloglines for the iPhone</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>iBloglines for the iPhone</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p><img src='http://corelands.com/~chip/ibloglines1.png' alt='' /> <img src='http://corelands.com/~chip/ibloglines2.png' alt='' /></p>
+
+<p><a href='http://journal.paul.querna.org/articles/2007/07/14/iphone'>Last Saturday</a>, I got an iPhone. It was great, but the full size Bloglines on it, with the <a href='http://docs.info.apple.com/article.html?artnum=305899'>Zoom Mode</a>, sucked. Trying to read large volumes of text is a massive pain on the iPhone.</p>
+
+<p>On Sunday morning, I started working on an iPhone specific site for Bloglines. By mid-afternoon on Sunday, I had something that worked reasonably well.</p>
+
+<p>I spent the rest of this week taking in refinements and new feature suggestions from everyone inside the company.</p>
+
+<p>Thanks to everyone on the Bloglines team for helping out with this project. It is by far the coolest thing we have released this year so far.</p>
+
+<p>The iBloglines site is written with:</p>
+
+<p>* 253 lines of C++ in 5 files</p>
+
+<p>* 382 lines of client side Javascript in 1 file</p>
+
+<p>* 287 lines of ETL Templates in 8 files</p>
+
+<p>Of course, this is only counting the code we wrote specifically for the iPhone, but it does make me doubt that you need to use a Scripting Langauge for rapid development, if your framework is good enough.</p>
+
+<p>iBloglines is built upon <a href='http://joehewitt.com/iui/'>iUI</a> . Originally we tried to just using it as a base, but in the end, we essentially forked it. We entertained using <a href='http://dojotoolkit.org/'>Dojo 0.9</a> on the iPhone, but since the only required browser to support is MobileSafari, it would of been pretty heavy.</p>
+
+<p>We used <a href='http://etl.i-want-a-pony.com/'>The Electric Template Language</a>, or ETL for generating the HTML. Relatively young compared to things like <a href='http://www.clearsilver.net/'>ClearSilver</a>, it is much cleaner and was a joy to work with.</p>
+
+<p>Developing for the iPhone has been pretty fun, but I believe Apple has been less helpful that they should be.</p>
+
+<p><strong>We might not need a SDK for &#8216;native&#8217; Applications, but we need better tools for the iPhone.</strong></p>
+
+<p>Simple things, like making an official iPhone Simulator, like Microsoft has <a href='http://msdn2.microsoft.com/en-us/windowsmobile/bb264327.aspx'>for Windows Mobile</a>, which had identical rendering to the iPhone would be very helpful. <a href='http://www.marketcircle.com/iphoney/'>iPhoney</a> is a good start, but it really should be an official Apple Developer tool.</p>
+
+<p>We did most of our development on Firefox with <a href='http://www.getfirebug.com/'>Firebug</a>, and then ported it to the MobileSafari later, because the tools for Firefox are so much better.</p>
+
+<p>In closing: I love my iPhone, I hope Apple will hurry up and make better developer tools, and I hope the Bloglines users enjoy the new <a href='http://i.bloglines.com/'>iBloglines</a>!</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2007/07/14/iphone/" title="iphone">&larr; iphone</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2007/07/26/gadget-apis/" title="Gadget APIs">Gadget APIs &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>19 July 2007</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

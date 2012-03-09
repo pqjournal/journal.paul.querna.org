@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Evil Viri</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Evil Viri</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Today I went to fix a friends computer. I was told they were unable to install <a href='http://www.symantec.com/sabu/nis/nis_pe/'>Norton Internet Security 2004</a>. So I started the installer, thinking my magic touch would make it work. Nope, get an &#8216;error has occured&#8217; without any details on what the hell just happened.</p>
+<side-rant>Can't programers just put a string describtion of an error? Why would you ever tell a user "Error 105". K. Thanks, THATS REAL HELPFUL. I believe [Brice](http://blog.headspin.com/) had this issue several days ago. It is just plain annoying!</side-rant>
+<p>I thought, hey, I will just open the registry, see what is being run on startup, and Kill it! Great Idea! I open regedit and then it would close without an error about 2 seconds later.</p>
+
+<p>At this point, I knew this wasn&#8217;t your average backyard virus.</p>
+
+<p>I Started sniffing around the system32 directory, noticed a file named &#8216;cool.exe&#8217;. Say goodbye &#8216;cool.exe&#8217;. Nuked that, but now I knew what the virus looked like. A 68Kb file modified on June 4th. Hah, it stood no chance now, I found it in 3 other places using the magical Windows XP search tool, one of them I couldn&#8217;t remove because windows said it was in use.</p>
+<side-rant>[I hate NTFS](http://force-elite.com/~chip/images/newart/ntfs-sucks.jpg). Learn about how any Unix File System works, and this is never a problem!</side-rant>
+<p>A little rename and then reboot action and it was clean.</p>
+
+<p>So, I got Norton to install. The installer took forever. I think about 30 minutes. I read some of <a href='http://slashdot.org/'>Slashdot</a>. Also saw that <a href='http://www.reuters.co.uk/newsPackageArticle.jhtml?type=topNews&amp;storyID=532181&amp;section=news'>Paul Johnson was beheaded</a>. Crap. Norton Internet Security shouldn&#8217;t take that long to install! It is not that big! Gimmie a Break!</p>
+
+<p>I ran Nortons LiveUpdate, since the virus signatures were over a year old. No dice. LiveUpdate cant contact the Symantec Servers. I try to go to their website, but it gets the extremely helpful Internet Explorer can&#8217;t find it in DNS error. Thats Odd, because Google works fine. Looked around for a few minutes, and found the virus had change the HOSTS file to make liveupdate.symantec.com resolve to 127.0.0.1. Evil. In the hosts file it also had the hostnames for every other major Anti-Virus. Pure Evil.</p>
+
+<p>After fixing up LiveUpdate, and running a scan, it only found 15 other viri. All in All, a good days work.</p>
+
+<p>But more interesting is the evolution of computer viri. They have evolved to fight the Anti-Virus Products, just like in the real world, evolution can lead to attacks on the Human Immune System. The serious issue is that Computer Viri are not a product of evolution, but rather of human ingenuity. This is much scarrier to me, because while humans might not <a href='http://impact.arc.nasa.gov/'>survive nature</a> in the long run, in the short term our ingenuity is dangerous to some <a href='http://www.microsoft.com/windows/default.mspx'>net citizens</a></p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2004/06/17/multiple-apis-arent-cool/" title="Multiple APIs aren't cool">&larr; Multiple APIs aren't cool</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2004/06/18/commit-bits-for-apache/" title="Commit-bits for Apache">Commit-bits for Apache &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>18 June 2004</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

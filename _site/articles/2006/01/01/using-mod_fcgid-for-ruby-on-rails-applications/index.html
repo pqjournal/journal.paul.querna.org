@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Using mod_fcgid for Ruby on Rails Applications</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Using mod_fcgid for Ruby on Rails Applications</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Many people know about the old school <a href='http://www.fastcgi.com/'>mod_fastcgi</a>, but very few know about <a href='http://fastcgi.coremail.cn/'>mod_fcgid</a>. To put it extremely briefly, if you are using Apache 2, and you should be, you should be using mod_fcgid, and not mod_fastcgi.</p>
+
+<p>Here quick guide on how to configure mod_fcgid for use with Apache HTTPD 2.2.0 and <a href='http://typo.leetsoft.com/trac/'>Typo</a>, a RoR blog engine:</p>
+
+<ul>
+<li>Download and Prepare mod_fcgid</li>
+</ul>
+
+<blockquote>
+<p>wget http://fastcgi.coremail.cn/mod_fcgid.1.07.tar.gz tar -xvzf mod_fcgid.1.07.tar.gz cd mod_fcgid.1.07</p>
+</blockquote>
+
+<ul>
+<li>
+<p>Edit the Makefile. Change the <code>_top_dir</code> variable to the prefix of your Apache 2 install.</p>
+</li>
+
+<li>
+<p>Apply <a href='http://constant.northnitch.com/~chip/mod_fcgid.1.07-apache2.2.0.patch'>this patch for mod_fcgid</a>:</p>
+</li>
+</ul>
+
+<blockquote>
+<pre><code>wget http://constant.northnitch.com/~chip/mod_fcgid.1.07-apache2.2.0.patch
+patch -p0 &lt; mod_fcgid.1.07-apache2.2.0.patch</code></pre>
+</blockquote>
+
+<p>This patch has been submitted upstream, and should be part of the next release.</p>
+
+<ul>
+<li>
+<p>Run &#8216;make&#8217;.</p>
+</li>
+
+<li>
+<p>Copy <em>.libs/mod</em>fcgid.so_ to your Apache modules directory</p>
+</li>
+
+<li>
+<p>Add the following to your httpd.conf, to load the module:</p>
+</li>
+</ul>
+
+<blockquote>
+<pre><code>LoadModule fcgid_module modules/mod_fcgid.so 
+IPCCommTimeout 40
+IPCConnectTimeout 10</code></pre>
+</blockquote>
+
+<ul>
+<li>Configure mod_fcgid for your Rails Application:</li>
+</ul>
+
+<blockquote>
+<pre><code>&lt;VirtualHost *:80&gt;
+...
+# Insert the rest of your vhost config here.
+ServerName foo.example.com
+
+&lt;Location /journal&gt;
+    RewriteEngine On
+    # Let apache handle purely static files like images by itself.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    # Send Everything else to Typo
+    RewriteRule ^(.*)$ dispatch.fcgi [QSA,L] 
+&lt;/Location&gt;
+
+&lt;Directory /sites/foo.example.com/public_html/journal&gt;
+    # ExecCGI is required for mod_fcgid to work.
+    Options Indexes FollowSymLinks ExecCGI
+    # Disable .htaccess files.
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+    # This tells mod_fcgid to run the dispatch.fcgi script as a FastCGI
+    AddHandler fcgid-script .fcgi
+&lt;/Directory&gt;
+....
+&lt;/VirtualHost&gt;</code></pre>
+</blockquote>
+
+<ul>
+<li>Thats it.</li>
+</ul>
+
+<p>This whole process can be easier, since mod_fcgid is also in many packaging systems, including <a href='http://www.freshports.org/www/mod_fcgid'>FreeBSD&#8217;s Ports</a>, and <a href='http://packages.gentoo.org/packages/?category=www-apache;name=mod_fcgid'>Gentoo Portage</a>.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/12/30/native-fastcgi-is-coming/" title="native FastCGI is coming">&larr; native FastCGI is coming</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2006/01/15/distractions/" title="Distractions.">Distractions. &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>01 January 2006</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

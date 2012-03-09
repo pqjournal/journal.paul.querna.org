@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>on shedding</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>on shedding</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Brian McCallister has a <a href='http://kasparov.skife.org/blog/src/shedding.html'>new post on a service location technique dubbed &#8220;Shredding&#8221;</a>.This post started out as a comment on Brian&#8217;s site, but it got a little long&#8230;.</p>
+
+<p>* Don&#8217;t underestimate using load balancers where they make sense.. You don&#8217;t need to spend tons of money on a commercial one. 2x 1u pizza boxes with modern CPUs + 1/10GigE running <a href='http://www.openbsd.org/faq/pf/carp.html'>{Free,Open}BSD + CARP + pfsync.</a></p>
+
+<p>* For &#8216;dumb clients&#8217;: Just Proxy it. Perlbal does this for LiveJournal infront of their <a href='http://www.danga.com/mogilefs/'>MogileFS</a> boxes. Or look at Dynamo for another example, the &#8216;dumb&#8217; clients can connects to any nodes, and that nodes proxies to the correct one. Reducing the number of request/response cycles down is important to keep client latency down. Its not so much about the persistent TCP connection, as the send/reply of the data just to find something.</p>
+
+<p>* For &#8216;smart clients&#8217;: I personally prefer a <a href='http://mail-archives.apache.org/mod_mbox/labs-labs/200612.mbox/%3C4583132B.7090304@apache.org%3E'>daemon</a> running on each local machine, which uses a multicast/gossip communication with other nodes to keep a local &#8216;cache&#8217; of where services are located and their status. Every couple seconds, based on the current state of the cluster, it would write it out to blob file on disk. Clients Just slurp up this file to find anything. (You can also do the same thing, but based on a unix daemon socket, but its generally slower.)</p>
+
+<p>* There is some discussion about RFC issues with 302s and sending a POST to the redirected URL. The larger issue is that almost no HTTP Client Libraries will do this correctly out of the box.</p>
+
+<p>All that said, for the Bloglines FS, we proxy writes to the data storage nodes, but that is mostly to ensure redundancy of data. For reads, we send back a sorted list of the data nodes that have a chunk to the client. The client then connects directly, and will try the other entries on the list if the first one fails.</p>
+
+<p>See also:</p>
+
+<p>* <a href='http://mail-archives.apache.org/mod_mbox/labs-labs/200612.mbox/%3C4583132B.7090304@apache.org%3E'>dislocate - my unfinished apache labs project</a>.</p>
+
+<p>* <a href='http://bugs.python.org/issue1401'>Python urlib2 issue #1401: 302 handling</a></p>
+
+<p>* HTTPClient issues: <a href='https://issues.apache.org/jira/browse/HTTPCLIENT-245'>HTTPCLIENT-245</a> <a href='https://issues.apache.org/jira/browse/HTTPCLIENT-128'>HTTPCLIENT-128</a></p>
+
+<p>* <a href='http://slbd.sourceforge.net/'>slbd - OpenBSD server load balancing using PF</a>.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2007/11/13/mod_serf-in-trunk/" title="mod_serf in trunk">&larr; mod_serf in trunk</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2007/12/21/22-23/" title="22->23">22->23 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>29 November 2007</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

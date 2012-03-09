@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>This Week in Coding</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>This Week in Coding</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>* APR: Added support for <em>apr</em>os_uuid_get()_ on Linux and FreeBSD. Linux has a <a href='http://www.fifi.org/cgi-bin/man2html/usr/share/man/man3/uuid_generate_time.3.gz'>uuid_generate</a> as part of libuuid. FreeBSD has <a href='http://www.freebsd.org/cgi/man.cgi?query=uuid_create'>uuid_create</a> as part of it&#8217;s libC, and of course, they both have completely different schematics. I first got to know the different interfaces when I ported the <a href='http://plasma.cyanworlds.com/'>Plasma Servers</a> to FreeBSD, since we use GUIDs in several places. <a href='http://svn.apache.org/viewcvs?view=rev&amp;rev=106214'>r106214</a>.</p>
+
+<p>* APR: Committed a first swing at support for Solaris 10&#8217;s <a href='http://developers.sun.com/solaris/articles/event_completion.html'>&#8216;Event Completion Framework&#8217;</a>. Their interface is a little weird. You must add a <em>file descriptor</em> back into the Set after any event is done with it. KQueue and EPoll on the other hand leave the <em>file descriptor</em> in the Set until you explicitly remove it. On a personal level, I prefer the KQueue and EPoll type interface, but the Solaris 10 one works, just with more system calls. <a href='http://svn.apache.org/viewcvs?view=rev&amp;rev=106156'>r106156</a>.</p>
+
+<p>* HTTPD: The Event MPM. This patch has been in various incarnations since mid-July. I actually did most of the coding in August on a road trip to Seattle for a <a href='http://seattle.mariners.mlb.com/'>Mariners Game</a>. The patch came in at over 160k, mostly because large portions of the code where copied from the <a href='http://httpd.apache.org/docs-2.1/mod/worker.html'>Worker MPM</a>. <a href='http://svn.apache.org/viewcvs?view=rev&amp;rev=105919'>r105919</a>.</p>
+
+<p>It was a busy week!</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2004/11/27/goodbye-comments/" title="Goodbye Comments">&larr; Goodbye Comments</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2004/11/28/your-joking-right-it-doesnt-compile/" title="Your Joking right? it doesn't compile?">Your Joking right? it doesn't compile? &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>27 November 2004</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

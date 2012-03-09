@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>httpd: disabling keep alive for hot linked images</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>httpd: disabling keep alive for hot linked images</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Lets say you are running a website, and you don&#8217;t mind people hot linking images, like your Logo, or other resources, and at the same time, you want to enable a (short) Keep Alive timeout for your normal users.</p>
+
+<p>Normal <a href='http://wiki.apache.org/httpd/DisableImageHotLinking'>anti-hot linking recipes, like the one on the HTTPD Wiki</a> are all about disabling access to the image completely.</p>
+
+<p>If you have lots of people hot linking, these users can use up valuable Keep Alive sessions, so the easiest way to solve this problem is to disable Keep Alive for just those clients viewing a hot linked image.</p>
+
+<p>This is possible by using mod_setenvif and the <a href='http://httpd.apache.org/docs/2.2/env.html#nokeepalive'>nokeepalive environment variable</a>:</p>
+
+<blockquote>
+<p>SetEnvIfNoCase Referer (.+) nokeepalive</p>
+</blockquote>
+
+<p>SetEnvIfNoCase Referer (.<em>)example.com(.</em>) !nokeepalive</p>
+
+<p>What this does is first disable KeepAlive for all users that have a Referer set, and then re-enable keepalive for those users who are coming from &#8216;exmaple.com&#8217;, which should be replaced with your site.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2009/12/13/i-have-a-plan/" title="I have a plan...">&larr; I have a plan...</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2010/01/25/httpd-mod_cache-only-caching-your-homepage/" title="httpd: mod_cache only caching your homepage">httpd: mod_cache only caching your homepage &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>25 January 2010</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Blog Software and HTTP Caching</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Blog Software and HTTP Caching</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>I took a look at 7 different weblog engines this afternoon:</p>
+
+<p>* <a href='http://blogcms.com/'>Blog::CMS</a></p>
+
+<p>* <a href='http://www.bblog.com/'>bBlog</a></p>
+
+<p>* <a href='http://b2evolution.net/'>b2evolution</a></p>
+
+<p>* <a href='http://www.s9y.org/'>Serendipity</a></p>
+
+<p>* <a href='http://textpattern.com/'>TextPattern</a></p>
+
+<p>* <a href='http://typo.leetsoft.com/trac/'>Typo</a></p>
+
+<p>* <a href='http://wordpress.org/'>WordPress</a></p>
+
+<p>The only criteria I used to compare them is the HTTP Headers they sent for the Front Page and RSS Feed. My theory is that if a blog sends the correct HTTP headers, the coders behind it might have a clue, and it might therefore be better overall software. Kudos to <a href='http://www.opensourcecms.com'>OpenSourceCMS.com</a> for having Demo sites running for most of the projects.</p>
+
+<p>My rating scale is wrong, unacceptable, acceptable and good. From worst to best:</p>
+
+<p><strong>Blog::CMS</strong></p>
+
+<p>Rating: WRONG</p>
+
+<p>Lets start with the <a href='http://demo.opensourcecms.com/blogcms/'>front page</a>:</p>
+
+<p>Quote from Front Page HTTP Headers:</p>
+
+<p>Generator: BLOG:CMS v3.6.4</p>
+
+<p>Set-Cookie: lastVisit=deleted; expires=Fri, 02-Jul-04 03:37:19 GMT; path=/</p>
+
+<p>Generator? huh? Thats not a valid HTTP Header. Yes, you can legally add your own headers, but if you are just making them up, you are supposed to prefix it with &#8216;X-&#8216;, eg &#8216;X-Generator&#8217;.</p>
+
+<p>Next, they did not send any Cache-Control or Vary Headers. But, they vary the content based on the content of cookies. This is wrong, and will cause proxies and clients to incorrectly cache pages.</p>
+
+<p>The <a href='http://demo.opensourcecms.com/blogcms/xml-rss2.php?full=yes'>RSS Feed</a> is a little better:</p>
+
+<p>Quote from RSS HTTP Headers:</p>
+
+<p>Pragma: no-cache</p>
+
+<p>Generator: BLOG:CMS v3.6.4</p>
+
+<p>Set-Cookie: lastVisit=deleted; expires=Fri, 02-Jul-04 03:38:21 GMT; path=/</p>
+
+<p>Etag: &#8220;503728b580b9894b6aa72317f138cee5&#8221;</p>
+
+<p>The inclusion of an ETag is helpful, but they still send Generator and a Set-Cookie. The use of the deprecated Pragma header is sad.</p>
+
+<p><strong>b2evolution</strong></p>
+
+<p>Rating: WRONG</p>
+
+<p>b2evolution doesn&#8217;t send any headers related to HTTP Caching for the <a href='http://demo.opensourcecms.com/b2evolution/index.php?blog=1'>Front Page</a> or <a href='http://demo.opensourcecms.com/b2evolution/xmlsrv/rss2.php?blog=1'>RSS Feed</a>. No ETags, no Last-Modified, No Cookies, nothig, nada. Come on people, this is 2005, not 1997.</p>
+
+<p><strong>bBlog</strong></p>
+
+<p>Rating: Unacceptable</p>
+
+<p>bBlog does send extra headers, but it sends them attempting to kill all caching on the <a href='http://demo.opensourcecms.com/bblog/'>Front Page</a></p>
+
+<p>Quote from Front Page HTTP Headers:</p>
+
+<p>Set-Cookie: PHPSESSID=f898e7316af0cd0f4b5e4bcfdc484523; path=/</p>
+
+<p>Expires: Thu, 19 Nov 1981 08:52:00 GMT</p>
+
+<p>Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0</p>
+
+<p>Pragma: no-cache</p>
+
+<p>Sending an Expires in the extreme past, and forcing all caches to not-cache is lame. No, I am serious, really really really lame. HTTP Caching is good, don&#8217;t try to kill it in all cases, when your frontpage can easily be cached.</p>
+
+<p>Looking at the <a href='http://demo.opensourcecms.com/bblog/rss.php?ver=2'>RSS Feed</a>, it is nearly the same story:</p>
+
+<p>Quote from RSS HTTP Headers:</p>
+
+<p>Set-Cookie: PHPSESSID=2978e587e092faa2cd705d7266f3636d; path=/</p>
+
+<p>Expires: Thu, 19 Nov 1981 08:52:00 GMT</p>
+
+<p>Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0</p>
+
+<p>Pragma: no-cache</p>
+
+<p>Last-Modified: Thu, 02 Jun 2005 23:46:28 GMT</p>
+
+<p>Etag: ae0a20e9f8140a969c320eb582b62e4b</p>
+
+<p>They do correctly add a Last-Modified and Etag, but they still are trying to bust the cache.</p>
+
+<p><strong>Serendipity</strong></p>
+
+<p>Rating: Unacceptable</p>
+
+<p>Similiar to bBlog, Serendipity&#8217;s <a href='http://blog.s9y.org/'>front page</a> does cache busting:</p>
+
+<p>Quote from Front Page HTTP Headers:</p>
+
+<p>Set-Cookie: PHPSESSID=d6c0446768d6cf4a0aa7c88d6eaba242; path=/</p>
+
+<p>Expires: Thu, 19 Nov 1981 08:52:00 GMT</p>
+
+<p>Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0</p>
+
+<p>Pragma: no-cache</p>
+
+<p>Ugh. I guess no one really wants the help of HTTP Caching?</p>
+
+<p>At leas the <a href='http://blog.s9y.org/feeds/index.rss2'>RSS Feed</a> is slightly better:</p>
+
+<p>Quote from RSS HTTP Headers:</p>
+
+<p>Expires: Thu, 19 Nov 1981 08:52:00 GMT</p>
+
+<p>Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0</p>
+
+<p>Pragma: no-cache</p>
+
+<p>Last-Modified: Fri, 01 Jul 2005 18:31:42 GMT</p>
+
+<p>ETag: &#8220;Fri, 01 Jul 2005 18:31:42 GMT&#8221;</p>
+
+<p>Okay, Last-Modified, and an ETag, but still sending the Cache Busting stuff.</p>
+
+<p><strong>Typo</strong></p>
+
+<p>Rating: Almost Acceptable</p>
+
+<p>Typo is the only <a href='http://www.rubyonrails.com/'>Ruby on Rails</a> application I tried, but the <a href='http://blog.leetsoft.com/'>front page</a> isn&#8217;t very good:</p>
+
+<p>Quote from Front Page HTTP Headers:</p>
+
+<p>Set-Cookie: <em>session</em>id=afd0a26b1f95c042e65e34bf2a598a54; path=/</p>
+
+<p>Cache-Control: no-cache</p>
+
+<p>Cache Busting. Who has been talking to these Application Developers?</p>
+
+<p>However, the <a href='http://blog.leetsoft.com/xml/rss/feed.xml'>RSS Feed</a> is acceptable:</p>
+
+<p>Quote from RSS HTTP Headers:</p>
+
+<p>Last-Modified: Sat, 02 Jul 2005 03:20:05 GMT</p>
+
+<p>ETag: &#8220;1610900121&#8221;</p>
+
+<p>Last-Modified and an ETag. No cookies. Pretty good.</p>
+
+<p><strong>WordPress</strong></p>
+
+<p>Rating: Acceptable</p>
+
+<p>Our first Acceptable entry does not send any related headers on the <a href='http://demo.opensourcecms.com/wordpress/'>Front Page</a>, but the <a href='http://demo.opensourcecms.com/wordpress/?feed=rss2'>RSS Feed</a> is good:</p>
+
+<p>Quote from RSS HTTP Headers:</p>
+
+<p>Last-Modified: Sat, 02 Jul 2005 03:26:14 GMT</p>
+
+<p>ETag: &#8220;29f855045e1d4a849c76c24bd8d2406d&#8221;</p>
+
+<p>No Cache Busting, and setup to work with <a href='http://www.google.com/url?sa=U&amp;start=1&amp;q=http://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers&amp;e=10342'>Conditional Gets</a>.</p>
+
+<p><strong>TextPattern</strong></p>
+
+<p>Rating: Acceptable</p>
+
+<p>Like WordPress, TextPattern didn&#8217;t send any headers for the <a href='http://demo.opensourcecms.com/textpattern/'>Front Page</a>, but the <a href='http://demo.opensourcecms.com/textpattern/?rss=1'>RSS Feed</a> does a perfect job:</p>
+
+<p>Quote from RSS HTTP Headers:</p>
+
+<p>Last-Modified: Mon, 02 May 2005 04:13:50 GMT</p>
+
+<p>Expires: Sat, 02 Jul 2005 04:42:45 GMT</p>
+
+<p>ETag: &#8220;28AD8AFA-904DDC92&#8221;</p>
+
+<p>Woohoo. Last-Modified, Expires, and an ETag. Could use a Cache-Control for more specific policies, and I only downgraded it because of nothing sent on the Front Page.</p>
+
+<p><strong>Conclusion</strong></p>
+
+<p>At least a few proejcts get it right for the RSS Feed, but none of them are correct for the Front Page. I was really disappointed with these results. I had faith that more people understood HTTP Caching. Is there better software out there? Have other web developers given up on HTTP Caching?</p>
+
+<p><strong>Update:</strong> Formating Fixes</p>
+
+<p><strong>Update 2:</strong> Typo Fixes.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/07/01/blog-software/" title="Blog Software">&larr; Blog Software</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/07/05/response-to-debunking-lighttpd/" title="Response to Debunking lighttpd.">Response to Debunking lighttpd. &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>02 July 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>native FastCGI is coming</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>native FastCGI is coming</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>So, the <a href='http://weblog.rubyonrails.com/articles/2005/12/29/apache-gets-serious-about-fastcgi#comments'>Ruby on Rails people are getting excited</a> about Apache HTTPD getting native FastCGI support.</p>
+
+<p>To prove that <a href='http://svn.apache.org/repos/asf/httpd/httpd/branches/fcgi-proxy-dev/modules/proxy/mod_proxy_fcgi.c'>mod_proxy_fcgi</a> isn&#8217;t vaporware, I <a href='http://paul.querna.org/fcgi-test/'>present a live/running demo</a>.</p>
+
+<p>And here is how its configured:</p>
+
+<pre><code>ProxyPass /fcgi-test fcgi-tcp://127.0.0.1:9500/</code></pre>
+
+<p>And here is the source code:</p>
+
+<pre><code>import cgi
+import types
+
+def myapp(environ, start_response):
+    start_response(&#39;200 OK&#39;, [(&#39;Content-Type&#39;, &#39;text/html&#39;)])
+    out = &quot;&quot;
+    # Print all environment variables
+    out = out+&quot;&lt;h3&gt;mod_proxy_fcgi test page&lt;/h3&gt;&quot;
+    out = out+&quot;&lt;dl&gt;&quot;
+    env_keys = environ.keys()
+    env_keys.sort()
+    for e in env_keys:
+        if (type(environ[e]) == types.StringType):
+          out = out+&quot;&lt;dt&gt;&quot;+cgi.escape(e+&#39;=&#39;+&#39;&quot;&#39;+environ[e]+&#39;&quot;&#39;) + &quot;&lt;/dt&gt;&quot;
+    out = out+&quot;&lt;/dl&gt;&quot;
+    return out
+
+if __name__ == &#39;__main__&#39;:
+    from flup.server.fcgi import WSGIServer
+#    from flup.server.ajp import WSGIServer
+    WSGIServer(myapp, bindAddress=(&quot;127.0.0.1&quot;,9500)).run() </code></pre>
+
+<p>Most of the credit really should go to <a href='http://asdf.blogs.com/asdf/'>Garrett</a>. He has been writing most of the actual code. I have just been watching the Firefly DVDs and inserting sneer comments about how XYZ patch doesn&#8217;t work with XYZ library.</p>
+
+<p>Finally, A shout out to the <a href='http://www.saddi.com/software/flup/'>Flup library</a> for python. It supports AJP, FastCGI and SCGI, making it much easier to move applications between all the available connector protocols.</p>
+
+<p><strong>Update:</strong>Okay, like any new code there are bugs. The test page isn&#8217;t working right now&#8230;.. Oh well.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/12/30/the-colo-move-was-good/" title="The colo move was good...">&larr; The colo move was good...</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2006/01/01/using-mod_fcgid-for-ruby-on-rails-applications/" title="Using mod_fcgid for Ruby on Rails Applications">Using mod_fcgid for Ruby on Rails Applications &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>30 December 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+

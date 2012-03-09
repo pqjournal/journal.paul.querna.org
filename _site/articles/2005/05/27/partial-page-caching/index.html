@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Partial Page Caching?</title>
+    
+    <meta name="author" content="Paul Querna">
+    <link href="http://journal.paul.querna.org/atom.xml" rel="alternate" title="Paul Querna's Journal" type="application/atom+xml" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="/assets/themes/pq/js/html5.js"></script>
+    <![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/themes/pq/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/pq/css/pygmentize.css" rel="stylesheet">
+    <link href="/assets/themes/pq/css/pq.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <div class="row">
+          <div class="span4"><h2><a href="/">Paul's Journal</></h2></div>
+        </div>
+        <a href="/"><img src="/assets/themes/pq/img/giants.jpg" class="topimg" width="100%" /></a>
+      </div>
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Partial Page Caching?</h1>
+</div>
+
+<div class="row">
+  <div class="span8 post-content">
+    <p>Over-generalizing, there are 3 common places to add caching in a web based application:</p>
+
+<p>* Data Level Caching</p>
+
+<p>* Full Page Caching</p>
+
+<p>* Partial Page Caching</p>
+
+<p>Data Level Caching means when you do a complex SQL Query or fetching some remote data, you keep a copy of it locally, or in something like <a href='http://www.danga.com/memcached/'>memcached</a>.</p>
+
+<p>Full Page Caching can be done both inside the application via something like <a href='http://smarty.php.net/manual/en/caching.php'>Smarty</a>, or at the HTTP level with <a href='http://httpd.apache.org/docs-2.1/mod/mod_cache.html'>mod_cache</a> or <a href='http://www.squid-cache.org/'>Squid</a>.</p>
+
+<p>What perplexes me is the lack of open source tools that help with Partial Page Caching. The best &#8216;open&#8217; standard for it is <a href='http://www.esi.org/'>Edge Side Includes</a>. But, just look at the ESI site, the last &#8216;news&#8217; item was from 2002. It looks quite dead, and I cannot find any recent chatter about it anywhere. Do people just not do Partial Page Caching? Is it even worth it?</p>
+
+<p>In my experience, doing data level caching can make the biggest difference, to avoid hitting databases or very slow backends, but I am surprised at the lack of open source software using partial page caching. For both of the other caching methods, there are very very good open source tools to help you do the <em>work</em> of caching, but for a Partial Page Cache, I haven&#8217;t seen any tools to help you. Maybe there just isn&#8217;t a very big need, since once you have the data cached, going to the <em>next level of performance</em> many times means caching the entire page&#8230;</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/articles/2005/05/02/tiger-installed/" title="Tiger Installed">&larr; Tiger Installed</a></li>
+      
+        <li><a href="">Archive</a></li>
+      
+        <li class="next"><a href="/articles/2005/06/08/talking-water-fountains-should-be-banned/" title="Talking water fountains should be banned.">Talking water fountains should be banned. &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Author</h4>
+    <div><span>Paul Querna</span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ github</a></span></div>
+    <div><span><a href="https://github.com/pquerna">pquerna @ twitter</a></span></div>
+
+    <h4>Published</h4>
+    <div class="date"><span>27 May 2005</span></div>
+
+  
+
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Paul Querna 2012
+        </p>
+      </footer>
+
+    </div>
+    
+  </body>
+</html>
+
