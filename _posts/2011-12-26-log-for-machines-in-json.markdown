@@ -243,7 +243,7 @@ For [Rackspace Cloud Monitoring](http://www.rackspace.com/cloud/blog/2011/12/15/
 
 Bellow is an example of searching for specific `txnId` in our system in Graylog2:
 
-[![](http://journal.paul.querna.org/wp-content/uploads/2011/12/graylog-txnId-search.png)](http://journal.paul.querna.org/wp-content/uploads/2011/12/graylog-txnId-search.png)
+[![](/wp-content/uploads/2011/12/graylog-txnId-search.png)](/wp-content/uploads/2011/12/graylog-txnId-search.png)
 
 While this example is simple, we have some situations where a single `txnId` spans multiple services, and the ability to trace all of them transparently is critical in a distributed system.
 

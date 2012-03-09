@@ -70,7 +70,7 @@ Apache uses Subversion, and we have complete access control and authentication s
 Using these tools, we built a system of near instant cross-atlanatic and reliable file replication. Compared to our previous metods of abusing rsync, synchronizing data with Subversion is a huge step forward. In addition, because it uses Subversion as its backing store, it is very easy to audit changes, and projects get increased visibility into changes on their own websites.
 
 Data is committed to the Subversion repository by a committer, and a post commit hook notifies the SvnPubSub server running on `eris.apache.org`.  The SvnPubSub server emits an event on its XML streams, which a SvnWcSub process on each web server is listening for.  These SvnWcSub processes decide if the change affects one of the websites we are serving, and if so update their working copies.  Internet users then instantly see the updated content.
-![](http://journal.paul.querna.org/wp-content/uploads/2010/10/svnpubsub.png)
+![](/wp-content/uploads/2010/10/svnpubsub.png)
 
 We started developing this technique within days of the hacking incident.  Today about 13, out of approximately 100 ASF project websites are synchronized using SvnPubSub.  We expect this number to continue to grow as time goes on.  I personally think in the next year or two, we will deprecate the rsync method of site synchronization, as it continues to have performance problems, and we will never be able to overcome the auditability concerns.
 

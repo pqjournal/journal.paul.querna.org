@@ -66,7 +66,7 @@ At this point the Linux users are trembling, unsure how to debug the issue. Luck
 
 
 Using the builtin _Allocations_ instrument, I was looking for how memory was being used.  I expected to just see a large blob of allocation being done inside [v8](http://code.google.com/p/v8/), since Instruments and DTrace that power it do not have visibility inside the VMs internals. Unexpectedly, it quickly became apparent our main use of memory was the `node::crypto::SecureContext::AddRootCerts` function.  After going back to the Javascript, we could see that for every new TLS connection being made, Node was re-parsing the list of root-certificate authorities from their string forms, into the `X509_STORE` object used by OpenSSL:
-[![](http://journal.paul.querna.org/wp-content/uploads/2011/04/pre-fix.jpg)](http://journal.paul.querna.org/wp-content/uploads/2011/04/pre-fix.jpg)
+[![](/wp-content/uploads/2011/04/pre-fix.jpg)](/wp-content/uploads/2011/04/pre-fix.jpg)
 
 
 Just by commenting out one line of Javascript, we were able to reduce memory usage by 20%, and increased the performance of the HTTPS server from 70 requests/second to 700 requests/second.
@@ -80,7 +80,7 @@ Just by commenting out one line of Javascript, we were able to reduce memory usa
 
 
 We thought after fixing the obvious bug in parsing the certificates, we might be done. We went back to the profiling in Instruments.app, and discovered memory usage still was over 500kb per connection:
-[![](http://journal.paul.querna.org/wp-content/uploads/2011/04/compression.jpg)](http://journal.paul.querna.org/wp-content/uploads/2011/04/compression.jpg)
+[![](/wp-content/uploads/2011/04/compression.jpg)](/wp-content/uploads/2011/04/compression.jpg)
 
 We dove into the OpenSSL codebase, and found that Zlib Compression is enabled by default, and there isn't an easy way to turn it off. The [documentation for SSL_COMP_add_compression_method](http://www.openssl.org/docs/ssl/SSL_COMP_add_compression_method.html
 ) says:
@@ -106,7 +106,7 @@ void disable_openssl_compression() {
 This is a _terrible hack_, but it enabled us to test the effect of disabling compression on the server side, and after seeing the results, I think it is worth it.
 
 With this change, we ran the test again, and see an amazing thing, we are only using about 15 megabytes of memory, and we can actually see the v8 garbage collector doing work now:
-[![](http://journal.paul.querna.org/wp-content/uploads/2011/04/all-fixed.jpg)](http://journal.paul.querna.org/wp-content/uploads/2011/04/all-fixed.jpg)
+[![](/wp-content/uploads/2011/04/all-fixed.jpg)](/wp-content/uploads/2011/04/all-fixed.jpg)
 
 
 
@@ -115,7 +115,7 @@ With this change, we ran the test again, and see an amazing thing, we are only u
 
 Going back to Matt's original problem, he is using Node.js as part of the server side infrastructure for [Voxer, a communication application for mobile devices](http://voxer.com/).  He applied the patches, and provided this graph from Cacti showing the massive improvement in free memory:
 
-[![](http://journal.paul.querna.org/wp-content/uploads/2011/04/Cacti.png)](http://journal.paul.querna.org/wp-content/uploads/2011/04/Cacti.png)
+[![](/wp-content/uploads/2011/04/Cacti.png)](/wp-content/uploads/2011/04/Cacti.png)
 
 
 
@@ -150,7 +150,7 @@ def disableSSLCompression(self):
 
 We deployed this to one Twisted Python Service as a test, and you can see the impact on memory use, dropping form 1.15 gigabytes to around 300 megabytes:
 
-[![](http://journal.paul.querna.org/wp-content/uploads/2011/04/twisted-memory.jpg)](http://journal.paul.querna.org/wp-content/uploads/2011/04/twisted-memory.jpg)
+[![](/wp-content/uploads/2011/04/twisted-memory.jpg)](/wp-content/uploads/2011/04/twisted-memory.jpg)
 
 
 

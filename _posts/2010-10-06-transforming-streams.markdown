@@ -28,7 +28,7 @@ Speaking generically, modern web servers don't serve static, pre-computed files.
 
 
 
-![](http://journal.paul.querna.org/wp-content/uploads/2010/10/streamstest.png)
+![](/wp-content/uploads/2010/10/streamstest.png)
 
 
 
@@ -110,7 +110,7 @@ Making the [construction of output filters](http://httpd.apache.org/docs/trunk/d
 
 
 
-![](http://journal.paul.querna.org/wp-content/uploads/2010/10/apache2outputfilters.png)
+![](/wp-content/uploads/2010/10/apache2outputfilters.png)
 
 
 
@@ -151,7 +151,7 @@ Instead of using a linked list of Buckets like the Apache 2 brigade model, Serf'
 
 
 
-![](http://journal.paul.querna.org/wp-content/uploads/2010/10/serfbuckets.png)
+![](/wp-content/uploads/2010/10/serfbuckets.png)
 
 
 In this example, when a socket is writable, it calls the SSL bucket, asking it to fill a buffer.  The SSL bucket calls to its parents, which call their parents, until a buffer has data, and if they give it data, the SSL bucket transforms the data, and returns this now encrypted buffer to the socket.  Then the Serf event loop can write to the socket at its leisure, enabling asynchronous behavoir.
@@ -187,7 +187,7 @@ Node.js is different.  It's streams are built around two main concepts.  The fir
 In practice, you end with something like this:
 
 
-![](http://journal.paul.querna.org/wp-content/uploads/2010/10/nodejsstreams.png)
+![](/wp-content/uploads/2010/10/nodejsstreams.png)
 
 
 

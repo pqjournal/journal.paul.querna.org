@@ -20,7 +20,7 @@ For these reasons, I have been on the lookout for something better.
 
 **Enter Javascript**
 
-[![](http://journal.paul.querna.org/wp-content/uploads/2010/06/rhino50-300x150.jpg)](http://journal.paul.querna.org/wp-content/uploads/2010/06/rhino50.jpg)
+[![](/wp-content/uploads/2010/06/rhino50-300x150.jpg)](/wp-content/uploads/2010/06/rhino50.jpg)
 
 I have to admit, I had a bad first experience with server side Javascript.  At Joost, we used server side Javascript in a custom environment, built on top of [Rhino](http://www.mozilla.org/rhino/) and a proprietary Java framework.  It was painful, we were pushing things too hard, inventing too much ourselves, Rhino was too slow, and the JVM just isn't a great platform for fast cycle web development.
 
@@ -29,7 +29,7 @@ Because you are always fighting the JVM and existing Java code to provide featur
 **Bring on Node.js
 **
 
-[![](http://journal.paul.querna.org/wp-content/uploads/2010/06/nodejs-300x153.png)](http://journal.paul.querna.org/wp-content/uploads/2010/06/nodejs.png)[](http://nodejs.org/)
+[![](/wp-content/uploads/2010/06/nodejs-300x153.png)](/wp-content/uploads/2010/06/nodejs.png)[](http://nodejs.org/)
 
 [Node.js](http://nodejs.org/) however doesn't build on the JVM.  It builds from a clean room environment on top of [Google's v8 engine](http://code.google.com/p/v8/).  I played with v8 back when it was first released, cranking out an [unmaintained mod_v8](http://journal.paul.querna.org/articles/2008/12/23/mod_v8/).  It was fast back then, and has only gotten better.  The best thing is its embedding API -- Mozilla's [Spidermonkey](http://www.mozilla.org/js/spidermonkey/) has been around for ages, but it was always painful to embed and depend on it.
 
