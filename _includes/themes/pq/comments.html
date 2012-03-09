@@ -1,0 +1,29 @@
+  <hr/>
+  <br/>
+  <h4>Comments</h4>
+  <div class="row comment-form">
+    <div class="span8">
+      <p>All comments are moderated via public <a href="https://github.com/pquerna/journal.paul.querna.org/pulls">Pull Requests</a>.</p>
+      <form method="POST" action="/comments.py" class="form-vertical">
+        <fieldset>
+          <input type="hidden" name="targetpost" value="{{ page.comment_slug }}" />
+          <div class="control-group">
+            <label for="name">Name:</label>
+            <input class="span3" type="text" size="30" name="name" />
+          </div>
+          <div class="control-group">
+            <label for="name">Website:</label>
+            <input class="span3" type="text" size="30" name="link" />
+            <span class="help-inline">(optional)</span>
+          </div>
+          <div class="control-group">
+            <label for="comment">Comment:</label>
+            <textarea class="span8" name="comment" rows="8" cols="60" ></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Submit Comment</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
