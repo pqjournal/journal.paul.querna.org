@@ -7,7 +7,9 @@ title: UDP in Node.js
 wordpress_id: '783'
 ---
 
-At Node.js Camp yesterday on UDP in Node.js, and the video got recorded on ustream.
+At Node.js Camp yesterday on UDP in Node.js, and the video was recorded:
+
+<iframe width="560" height="315" src="http://www.youtube.com/embed/NxNcUH_ngjM" frameborder="0" allowfullscreen="true"> </iframe>
 
 Slides for the talk are posted [here](http://paul.querna.org/slides/nodejs-udp-nodecamp2010.pdf).
 
