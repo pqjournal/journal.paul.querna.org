@@ -1,0 +1,20 @@
+---
+date: '2005-10-16 13:14:11'
+layout: post
+slug: google
+status: publish
+title: google
+wordpress_id: '108'
+---
+
+
+[Computerworld](http://www.computerworld.com.au/index.php/id;1401986683;fp;16;fpid;0):
+
+
+> 
+According to Rasmussen, **Google's design philosophy centres on end user loyalty not money**, going beyond the browser's lowest common denominator, to develop simple Web applications that are as dynamic as native applications, and to launch early and often to learn from users.
+
+
+
+The real question is, if you have enough end user loyaltly, can you convert that into money?  I think the answer is yes, at least on average.  Make enough cool things, not all of them will be profitable, but enough will.
+

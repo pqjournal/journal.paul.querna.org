@@ -1,0 +1,37 @@
+---
+date: '2007-10-03 20:57:00'
+layout: post
+slug: dynamo
+status: publish
+title: Dynamo
+wordpress_id: '209'
+---
+
+If you care about distributed systems, you need to read the [paper about Amazon's Dynamo](http://www.allthingsdistributed.com/2007/10/amazons_dynamo.html).
+
+Comments:
+
+
+
+	
+  * Making node joining/leaving an administrative command is not something most academics consider, but it significantly reduces complexity.  We made a similar decision with the PodServer system for Bloglines.  I believe this is the right decision, since a node changing membership on the long term is a rare event.  Even with our growing blog index, we only add new nodes once every 6 months or so. (Plan ahead :-) )
+
+	
+  * Shout out to [BerkeleyDB](http://www.oracle.com/database/berkeley-db.html).  Glad to see other people pushing it hard. Combined with the [older white-paper about Google using BerkeleyDB](http://www.google.com/url?sa=t&ct=res&cd=1&url=http%3A%2F%2Fwww.oracle.com%2Fcustomers%2Fsnapshots%2Fgoogle-oracle-berkeley-db-casestudy.pdf&ei=6mAER7-mAoaUgQOh95DrAw&usg=AFQjCNH5ItttgUP9p5QVke76BnVtltqUBA&sig2=f1qn_GPg8O-jf_S_jjLyLQ) for their Google Accounts system, it just validates my positive feelings on continuing to use it as a core part of the Bloglines architecture.
+
+	
+  * The configurability of N/R/W is a great idea.  Most systems make N configurable, but skimp out on giving full flexibility to the people using the system.
+
+	
+  * I'm convinced I need to read more about [Vector Clocks](http://en.wikipedia.org/wiki/Vector_clocks).  For the Bloglines PodServer, we are blessed with only have a single writer per record due to how our crawlers work, so we just 'cheat' on versioning, but this has caused us pain a few times.
+
+	
+  * I wish Amazon would Open Source Dynamo. I can understand the difficulties in doing that, but its a nice thing to dream about.
+
+	
+  * I think I will propose an [Apache Labs](http://labs.apache.org/) project to start something like Dynamo.  For a basic key/value storage system on a constant hashing ring, without all of the High Availability concerns, you could get something working pretty quickly.   Adding all of the high end features could take time of course.....
+
+
+More discussion over Sam Ruby's Blog: [Key + Data](http://intertwingly.net/blog/2007/10/03/Key-Data).
+
+This all ties in nicely with the [GeekSessions](http://www.geeksessions.com/) 1.2 topic  of "Designing beyond the database", where I [presented last night](http://www.al3x.net/2007/10/notes-from-geeksessions-beyond-database.html).

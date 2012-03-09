@@ -1,0 +1,20 @@
+---
+date: '2006-07-11 00:36:41'
+layout: post
+slug: mod_flvx
+status: publish
+title: mod_flvx
+wordpress_id: '154'
+---
+
+Trying to stream Flash Video?
+
+Tired of [using PHP](http://www.asvguy.com/2005/11/streaming_flash.html)?
+
+I wrote [mod_flvx](http://people.apache.org/~pquerna/modules/mod_flvx.c) to do all of the streaming stuff via an apache module.
+
+To configure, add `AddHandler flv-stream .flv` to your httpd config.
+
+thats all.
+
+EDIT: [Wiki page explaining all of the encoding and flash player needs for using mod_flvx](http://www.mosalov.com/wiki/Flash_streaming_with_mod_flvx).

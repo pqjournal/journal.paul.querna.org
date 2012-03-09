@@ -1,0 +1,44 @@
+---
+date: '2005-01-13 02:58:09'
+layout: post
+slug: i-wish
+status: publish
+title: I wish...
+wordpress_id: '51'
+---
+
+I wish more clients would support [RFC 2817 / TLS Upgrade in HTTP/1.1](http://www.faqs.org/rfcs/rfc2817.html).  Apache HTTPD 2.1 supports it in [mod_ssl](http://httpd.apache.org/docs-2.1/mod/mod_ssl.html#sslengine).  
+  
+
+
+If more clients supported it, then you would not need a separate IP for every SSL enabled virtual host.  That would be cool.  
+  
+
+
+Here is an example config:
+
+
+Quote from TLS Upgrade Example:
+    
+    
+    <VirtualHost *:80>
+        ServerName svn.foo.com
+        CustomLog logs/access_log common
+        ErrorLog logs/error_log
+        <b>SSLEngine Optional</b>
+        SSLCertificateFile conf/svn.foo.com.cert
+        SSLCertificateKeyFile conf/svn.foo.com.key
+        <b>SSLRequireSSL</b> 
+    </VirtualHost>
+    
+
+
+
+There are two key parts, first, setting SSLEngine to 'optional', this allows normal unencrypted HTTP requests initially. Second, the SSLRequireSSL bit tells the client that it *must* ugprade to SSL to continue with any requests.  Its pretty sweet to see it in action. Sort of like START_TLS for other protocols, but designed to work within HTTP's paradign.  
+  
+
+
+I have submitted a bug to Mozilla, [asking for support](https://bugzilla.mozilla.org/show_bug.cgi?id=276813).  It doesn't look like any Mozilla developers are interested yet. darn.  
+  
+
+I guess I will keep making wishes for support of cool protocols features.  I am not motivated enough to attempt to write a patch for mozilla yet.

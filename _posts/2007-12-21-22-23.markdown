@@ -1,0 +1,14 @@
+---
+date: '2007-12-21 12:45:30'
+layout: post
+slug: 22-23
+status: publish
+title: 22->23
+wordpress_id: '220'
+---
+
+Getting [older](http://journal.paul.querna.org/articles/2006/12/21/happy-birthday/)...
+
+Really getting tired this year.  Since ApacheCon in Atlanta on November 11th, I haven't been home in San Jose for more than 6 days straight.
+
+Thankfully, I have the next 2 weeks in Spokane at my parent's house to chill for a bit.

@@ -1,0 +1,12 @@
+---
+date: '2005-10-07 01:48:45'
+layout: post
+slug: bubble-2-0
+status: publish
+title: Bubble 2.0
+wordpress_id: '105'
+---
+
+
+Great article over at the Register [about Web 2.0](http://www.theregister.co.uk/2005/10/07/six_things_about_the_bubble/). I really like the 2nd page, where he talks about the idiots trying to build a global operating system aka Web 2.0 on top of non-reliable services like Flickr.
+

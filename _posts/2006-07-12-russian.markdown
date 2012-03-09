@@ -1,0 +1,39 @@
+---
+date: '2006-07-12 18:04:00'
+layout: post
+slug: russian
+status: publish
+title: Russian
+wordpress_id: '155'
+---
+
+I found [this cool post explaining](http://apachedev.ru/2006/07/13/mod_flvx-peredacha-potokovogo-flash-video/) my [mod_flvx](http://journal.paul.querna.org/articles/2006/07/11/mod_flvx), but I haven't a clue what they are really saying.
+
+
+
+
+I tried using [BableFish](http://babelfish.altavista.com/), but the first line gave me some horrible Bable:
+
+
+
+
+> 
+oEDBccOP ABOUT UCHPEN VMPZE Paul Querna OF CHSHCHMPTSYM OF UPVUFCHEOOSHCHK NPDKHMSH L apache of 2 DMS RPFPLPCHPK RETEDBYUY Flash OF CHYDEP.
+
+
+
+
+
+So, I its something like 'About', My Name, Apache 2, and Flash.
+
+
+
+
+Could someone who knows Russian post a mini-summary of what the article is saying?
+
+
+  
+
+
+
+**EDIT:** [wrowe](http://people.apache.org/~wrowe/) figured out that their website was sending the wrong encoding, and this is causing BableFish to fail on the whole-webpage conversion.  If I paste it in by paragraph I am able to translate it.

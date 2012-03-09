@@ -1,0 +1,26 @@
+---
+date: '2005-03-13 23:01:21'
+layout: post
+slug: problems
+status: publish
+title: Problems?
+wordpress_id: '58'
+---
+
+Quote from Anonymous Coward:
+
+
+
+    
+    
+    I once had a problem.
+    I thought: "Oh, I know: I'll just use XML!"
+     
+    Now I had two problems.
+    
+
+
+
+
+
+From a [Post](http://developers.slashdot.org/comments.pl?sid=142046&cid=11923876) about XML databases. While on the topic of Databases, check out this older article by JWZ on [message summary files](http://www.jwz.org/doc/mailsum.html).  I found it after browsing on his site after reading his article about [message threading](http://www.jwz.org/doc/threading.html) for my [hacking on mod_mbox](http://tsunami.in.force-elite.com/httpd-dev/).

@@ -1,0 +1,31 @@
+---
+date: '2006-08-25 11:11:00'
+layout: post
+slug: fly-sjc
+status: publish
+title: fly sjc
+wordpress_id: '161'
+---
+
+
+[Flying out of San Jose](http://www.sjc.org/) is fun.  There is always someone working for a cool tech company on every flight. So, last night I see a dude in a MySQL shirt, and I walk over:
+
+
+
+
+
+> 
+  Me: Hey, do you happen to work for MySQL?  
+
+   MySQL Dude: Yep.  
+
+   Me: Awesome, If you don't mind, I have some questions [about MySQL Cluster](http://www.mysql.com/products/database/cluster/)...  
+
+
+
+
+
+
+
+PS: I am in [spokompton ](http://www.urbandictionary.com/define.php?term=spokompton) for Friday and Saturday, then I am going to Seattle on Sunday, to watch the [Mariners](http://seattle.mariners.mlb.com/NASApp/mlb/index.jsp?c_id=sea) <strike>play</strike> lose to the Red Sox. Who could of guessed the M's would take such a dive after the All-Star game. Now they are _only_ 14 games back. _hahahahaha_
+

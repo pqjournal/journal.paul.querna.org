@@ -1,0 +1,46 @@
+---
+date: '2004-08-24 19:53:35'
+layout: post
+slug: the-999-out-of-1000-rule
+status: publish
+title: The 999 out of 1000 Rule
+wordpress_id: '32'
+---
+
+[Carroll's](http://www.carroll.edu) 'Speakeasy' board was closed today, and all I got was a letter from the "Carroll Senior Staff":
+
+
+Quote from [http://www.carroll.edu/students/boards.cc:](http://www.carroll.edu/students/boards.cc:)
+
+
+Message to Speakeasy Users,  
+  
+
+
+During the fall 2004 semester, the Speakeasy will be offline. During the next four months, conversations will take place across campus about the best way to encourage and support an open dialogue on important (and fun) topics. In the past, individuals posting comments on the Speakeasy remained anonymous. So one question being posed is "how do we promote discussion, take responsibility for our comments, and encourage involvement of everyone in the Carroll community"? Also, what new developments are occurring that would improve access and security of the Speakeasy?  
+  
+
+
+Please get involved in the discussions. Notices will be posted around campus and on the web of meeting dates, times and places.  
+  
+
+
+Signed,  
+
+Carroll Senior Staff  
+
+
+
+
+  
+  
+
+Sigh. Yet again, in a place where 999 out of a 1000 people respect the enviroment, a single person (or post!) can destroy the entire experience for others. In an MMO, they call em a 'griefer'.  I don't know what you can call them in real life.  
+  
+
+
+The Speakeasy was a great place to bring in different opinions and discuss them in a mostly civil manner. I am truely disappointed  that the Carroll Administration has ordered the shutdown of these boards. Isn't experiencing other viewpoints a big part of what colllege is about?   
+  
+
+
+Not only that, I was planning on posting a complete HOWTO for using Linux on the ResNet to the Speakeasy Tech Board tonight. The new  [PPPoE](http://www.roaringpenguin.com/pppoe/) system they added this year to the ResNet is sort of a pain, but it helps with locating Windows machines infected with the newest [crappyness](http://www.microsoft.com/technet/security/bulletin/ms04-aug.mspx).

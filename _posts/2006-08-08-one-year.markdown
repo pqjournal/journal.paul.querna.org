@@ -1,0 +1,10 @@
+---
+date: '2006-08-08 21:38:38'
+layout: post
+slug: one-year
+status: publish
+title: one year
+wordpress_id: '160'
+---
+
+It's [been one year](http://journal.paul.querna.org/articles/2005/06/21/new-job) since I joined [Bloglines](http://www.bloglines.com/) aka [Ask.com](http://www.ask.com/) aka [IAC Search and Media](http://legal.ask.com/en/docs/about/company_overview.shtml) aka [IAC/InterActive Corp](http://www.iac.com/).

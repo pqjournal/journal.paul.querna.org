@@ -1,0 +1,15 @@
+---
+date: '2005-06-20 19:56:52'
+layout: post
+slug: new-car
+status: publish
+title: New Car.
+wordpress_id: '79'
+---
+
+Purchased a Volkswagen Golf this weekend:  
+
+![My new Golf](http://corelands.com/~chip/golf.jpg)
+  
+2005, 4 Door, Hatchback, 115 hp, yadda, yadda, yadda...
+

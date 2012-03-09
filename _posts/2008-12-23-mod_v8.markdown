@@ -1,0 +1,30 @@
+---
+date: '2008-12-23 17:10:56'
+layout: post
+slug: mod_v8
+status: publish
+title: mod_v8
+wordpress_id: '251'
+---
+
+After using [Rhino](http://www.mozilla.org/rhino/) for server side javascript at [work](http://www.joost.com/), I can say I somewhat like server side javascript.  Others like [Steve were already convinced](http://steve-yegge.blogspot.com/2007/02/next-big-language.html) a long time ago.
+
+However, I don't really like being tied into the whole Java world because of it.
+
+When Google released their [v8 Javascript Engine](http://code.google.com/p/v8/) earlier this year, I always wanted to build an Apache Module for it.
+
+This afternoon I had some time, and so I [created mod_v8](https://svn.i-want-a-pony.com/repos/mod_v8/trunk/).
+
+It doesn't do much beyond a Hello World right now, but it is as simple as this:
+
+
+> 
+
+>     
+>     ap.write("Hello World!");
+> 
+> 
+
+
+
+I'm not sure if I will spend time making it a proper project, I really want to spend more time on making httpd 2.4 before getting too distracted with shiny things....

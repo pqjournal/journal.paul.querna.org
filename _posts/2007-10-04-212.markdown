@@ -1,0 +1,12 @@
+---
+date: '2007-10-04 08:33:49'
+layout: post
+slug: '212'
+status: publish
+title: geeksessions presentation
+wordpress_id: '212'
+---
+
+[Slides from my GeekSessions 1.2 Presentation](http://journal.paul.querna.org/wp-content/uploads/2007/10/bl-geeksessions.pdf)
+
+Video from the presentation and panel are supposed to [show up here](http://www.geeksessions.com/events-page/) at some point soon.

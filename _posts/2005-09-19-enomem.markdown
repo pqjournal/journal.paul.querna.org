@@ -1,0 +1,34 @@
+---
+date: '2005-09-19 22:44:18'
+layout: post
+slug: enomem
+status: publish
+title: ENOMEM?
+wordpress_id: '100'
+---
+
+
+Dear Lazy Web,
+  
+Why does calling `pthread_mutex_lock` and `pthread_mutex_unlock` in a tight loop cause `pthread_create` to error out with ENOMEM?
+
+
+
+I could accept something is wrong with my code changes, but by removing the lock/unlock around the shared variables it works correctly.(`*`)  The lock/unlock are in tight loops, but putting them in doesn't change the flow of the program at all.  Any ideas on how this could be causing a `pthread_create` to fail with ENOMEM?
+
+
+
+`*` Correctly.  It crashes randomly when starting because the variables aren't locked correctly, but sometimes it finishes.
+
+
+
+I would like to blame linux somehow.  I wish this code ran on freebsd so I could.... But testing is for wimps anyways.
+
+
+
+Thanks,
+
+
+
+Paul
+

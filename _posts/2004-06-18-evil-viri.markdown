@@ -1,0 +1,41 @@
+---
+date: '2004-06-18 06:47:00'
+layout: post
+slug: evil-viri
+status: publish
+title: Evil Viri
+wordpress_id: '22'
+---
+
+Today I went to fix a friends computer.  I was told they were unable to install [Norton Internet Security 2004](http://www.symantec.com/sabu/nis/nis_pe/). So I started the installer, thinking my magic touch would make it work.  Nope, get an 'error has occured' without any details on what the hell just happened. 
+
+<side-rant>Can't programers just put a string describtion of an error? Why would you ever tell a user "Error 105". K. Thanks, THATS REAL HELPFUL. I believe [Brice](http://blog.headspin.com/) had this issue several days ago. It is just plain annoying!</side-rant>
+
+  
+  
+
+
+I thought, hey, I will just open the registry, see what is being run on startup, and Kill it!  Great Idea! I open regedit and then it would close without an error about 2 seconds later.  
+  
+At this point, I knew this wasn't your average backyard virus.  
+  
+I Started sniffing around the system32 directory, noticed a file named 'cool.exe'. Say goodbye 'cool.exe'. Nuked that, but now I knew what the virus looked like.  A 68Kb file modified on June 4th. Hah, it stood no chance now, I found it in 3 other places using the magical Windows XP search tool, one of them I couldn't remove because windows said it was in use. 
+
+<side-rant>[I hate NTFS](http://force-elite.com/~chip/images/newart/ntfs-sucks.jpg). Learn about how any Unix File System works, and this is never a problem!</side-rant>
+
+ A little rename and then reboot action and it was clean.  
+  
+
+So, I got Norton to install.  The installer took forever. I think about 30 minutes. I read some of [Slashdot](http://slashdot.org/). Also saw that [Paul Johnson was beheaded](http://www.reuters.co.uk/newsPackageArticle.jhtml?type=topNews&storyID=532181&section=news). Crap.  Norton Internet Security shouldn't take that long to install! It is not that big! Gimmie a Break!  
+  
+
+
+I ran Nortons LiveUpdate, since the virus signatures were over a year old. No dice. LiveUpdate cant contact the Symantec Servers.  I try to go to their website, but it gets the extremely helpful Internet Explorer can't find it in DNS error.  Thats Odd, because Google works fine.  Looked around for a few minutes, and found the virus had change the HOSTS file to make liveupdate.symantec.com resolve to 127.0.0.1. Evil.  In the hosts file it also had the hostnames for every other major Anti-Virus.  Pure Evil.  
+  
+
+
+After fixing up LiveUpdate, and running a scan, it only found 15 other viri. All in All, a good days work.  
+  
+
+
+But more interesting is the evolution of computer viri.  They have evolved to fight the Anti-Virus Products, just like in the real world, evolution can lead to attacks on the Human Immune System.  The serious issue is that Computer Viri are not a product of evolution, but rather of human ingenuity.  This is much scarrier to me, because while humans might not [survive nature](http://impact.arc.nasa.gov/) in the long run, in the short term our ingenuity is dangerous to some [net citizens](http://www.microsoft.com/windows/default.mspx)

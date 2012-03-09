@@ -1,0 +1,31 @@
+---
+date: '2010-03-13 09:45:35'
+layout: post
+slug: sxsw-day-1
+status: publish
+title: sxsw day 1
+wordpress_id: '331'
+---
+
+Everyone from Cloudkick arrived in Austin for SXSW 2010 on Thursday evening, so Day 0 technically.  Bob found us a nice condo to rent just outside the downtown, but still easy walking distance to everything.  We picked up our badges from a relatively short line that night, and then headed over to [Iron Works BBQ](http://www.ironworksbbq.com/) bout 8:45.
+
+On Friday, the first actual day of SXSW:
+
+
+
+	
+  * Grabbed lunch at [Annies](http://www.yelp.com/biz/annies-cafe-and-bar-austin-2), and met [with Jerry Chen](http://github.com/jcsalterego) who has been contributing to the libcloud project.
+
+	
+  * Opened [CASSANDRA-885](https://issues.apache.org/jira/browse/CASSANDRA-885) bug report.  OOMing after the node crashed, as its unable to replay its commit log.
+
+	
+  * Went to a showing of "[_The Girl with the Dragon Tattoo_](http://en.wikipedia.org/wiki/The_Girl_with_the_Dragon_Tattoo_%28film%29)".  The movie was very intense, but I still liked it.  Showing was at the [Alamo](http://www.drafthouse.com/), and having a Margarita while watching was even better.
+
+	
+  * Had dinner with the entire crew at [Stubb's](http://www.stubbsaustin.com/).  Loved the brisket.
+
+	
+  * After some bar hopping, we ended up back at the pad... playing Rock Band.
+
+

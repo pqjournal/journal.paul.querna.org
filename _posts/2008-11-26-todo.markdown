@@ -1,0 +1,27 @@
+---
+date: '2008-11-26 15:20:07'
+layout: post
+slug: todo
+status: publish
+title: todo
+wordpress_id: '242'
+---
+
+(open source) things to do over thanksgiving weekend:
+
+
+
+	
+  * Improve the Simple MPM.
+
+	
+  * Integrate Lua and mod_wombat into httpd trunk.
+
+	
+  * Improve the FastCGI Support in httpd turnk.
+
+	
+  * Finish my little infrastructure stats & graphs project.
+
+
+I'll be happy if I make progress on any one of them.....

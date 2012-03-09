@@ -1,0 +1,58 @@
+---
+date: '2007-04-23 23:21:00'
+layout: post
+slug: monday
+status: publish
+title: Monday
+wordpress_id: '184'
+---
+
+
+
+  * Upgraded our trunk with libevent 1.3b.
+
+
+  * Sent [a patch in for libevent](http://monkeymail.org/archives/libevent-users/2007-April/000604.html), to set the event_base context for the evhttp server and client APIs.
+
+
+  * Figuring out how to structure a shared context for both an HTTP server and HTTP client for our next generation network protocols.
+
+
+  * I like HTTP. I wish I could use it for more stuff.
+
+
+  * 1 for 2 in foosball.
+
+
+  * ApacheCon EU is next week, and I'm not gonna be there.  I should be at ApacheCon US in Atlanta this Fall however.
+
+
+  * Gotta drive up to Oakland tomorrow morning. Bleh.
+
+
+
+
+
+## Metrics:
+
+
+
+
+
+
+  * 2 work meetings.
+
+
+  * 3 work emails sent.
+
+
+  * 8 work svn commits.
+
+
+  * 4 non-work emails sent.
+
+
+  * 0 non-work svn commits.
+
+
+

@@ -1,0 +1,102 @@
+---
+date: '2010-08-11 01:17:27'
+layout: post
+slug: async-tls
+status: publish
+title: Async TLS
+wordpress_id: '458'
+---
+
+We started discussing TLS in Node.js at the meetup in Palo Alto tonight.
+
+Lets imagine you wanted to implement [SSL/TLS](http://en.wikipedia.org/wiki/Transport_Layer_Security) in an Asynchronous framework, like [node.js](http://nodejs.org/).
+
+For the sake of discussion, I will be using OpenSSL as an example.  At least as far as I know, these issues also apply equally to GnuTLS or NSS. I would be happy to be wrong!
+
+
+## The Goal
+
+
+The goal is to provide both a TLS Client and Server API, allowing high level code to determine many of the common behavoirs you need to hook to provide a powerful TLS Platform.  This includes basics like verification of certificates chains, but should also include: [SSL Session Caching](http://journal.paul.querna.org/articles/2007/06/07/ssl-session-caching-in-memcached/), [OCSP stapling](http://en.wikipedia.org/wiki/OCSP_Stapling), [SNI Validation](http://en.wikipedia.org/wiki/Server_Name_Indication), SPDY Protocol hinting, and more.
+
+
+## The Problem
+
+
+OpenSSL can decouple IO operations from sockets, using the [BIO abstraction](http://www.openssl.org/docs/crypto/bio.html).  This means your process can handle the actual socket, and its buffers, which is good for Node.js, and for most other asynchronous systems that don't want to block for SSL to do work.
+
+While the IO operations has a good abstraction in OpenSSL, many common operations, rely upon a callback.
+
+For example, lets consider the [OpenSSL SSL Session Cache API](http://www.openssl.org/docs/ssl/SSL_CTX_sess_set_get_cb.html):
+
+    
+    <code>SSL_CTX_sess_set_new_cb(ctx,    ssl_callback_NewSessionCacheEntry);
+    SSL_CTX_sess_set_get_cb(ctx,    ssl_callback_GetSessionCacheEntry);
+    SSL_CTX_sess_set_remove_cb(ctx, ssl_callback_DelSessionCacheEntry);</code>
+
+
+It is a basic caching API, you have 3 functions for caching an SSL Session object, Add new, Reading existing, and deletion.
+
+If you examine the function signature for the get function, it returns an SSL_SESSION object directly, meaning when you return from the function you must either have the correct session, or return NULL to indicate a cache miss:
+
+    
+    <code>SSL_SESSION *ssl_callback_GetSessionCacheEntry(SSL *ssl,
+                                                   unsigned char *id,
+                                                   int idlen, int *do_copy)
+    {
+      /* Your SSL Session cache goes here! */
+      return NULL;
+    }</code>
+
+
+The difficulty for async systems here, is that they most likely want to now perform file IO, network IO, or potentially other operations that go outside the current C stack in order to fetch the Session.
+
+In Node.js' case, this means you cannot provide a callback as users expect it to work in Node -- they expect to be able to make an async callback, and then notify the caller when they have found the data.
+
+In an ideal world, the Node.js api would look something like the following:
+
+    
+    <code>var sslctx = crypto.createContext{key: privateKey, cert: certificate,
+    session_cache_get: function(session_id, result_callback) {
+      memcached.get(session_id, function(data, err) {
+        result_callback(data, err);
+      })
+    }});
+    var server = http.createServer(..);
+    server.setSecure(sslctx);
+    server.listen(8443);</code>
+
+
+We started talking through the ideas. How could you accomplish this API for TLS in Node?
+
+This cannot work with the standard OpenSSL callbacks, because of how Node.js works, after the initial cache get call returned undefined, we would unwind up the C-stack, and we have no way to notify OpenSSL later on that we got a Session Cache from memcached.
+
+
+## Possible Hacks
+
+
+There are a few more hackish ways to solve this, they include:
+
+
+
+	
+  * Using Co-routines from C. Something like [libtask](http://swtch.com/libtask/) could be used to jump out of the OpenSSL stack, back down to Node.js, and it could resume again once we go the response for the session.
+
+	
+  * Running every SSL Context inside a dedicated thread.  When a callback is invoked, dispatch a message to the main thread, where Node.js will notify the waiting thread once it has an answer.  I think this is actually one of the easier solutions, but it kills the promise of an Evented framework like Node.js, and not having a 1:1 client to thread mapping.
+
+
+
+
+## The Rabbit Hole
+
+
+Hey guys, what if we just implemented the a TLS Protocol parser?
+
+It [wasn't a new idea](http://four.livejournal.com/893082.html).  But then we started talking it through the idea of implementing a TLS protocol parser, but still using OpenSSL for all of the actual cryptography, it seemed to make more and more sense.  This would let an [http-parser style API](http://github.com/ry/http-parser) be used for TLS, which as far as any of us know, has not been done.  The parser could be written in C (or javascript, but thats irrelevant), the TLS record protocol itself isn't too complex, it consistents of a few fixed width fields, a few optional fields, but most of the complexity comes from the implementation of all the cryptography, which none of us have an interest in replacing.
+
+**I am scared.  Reimplementing SSL or TLS just seems wrong.**
+
+But on the other hand, most SSL implementations are tightly coupled to their cryptographic libraries, GnuTLS perhaps being the least so, but these libraries we still designed before many evented style programing paradigms became popular.  It seems like there is a niche to be filled by a liberally licensed, TLS record protocol parser library, which provided stubs to use OpenSSL (or another) backend for the actual cryptography, but basing everything on callbacks to user code.
+
+Is this insane?

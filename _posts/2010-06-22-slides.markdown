@@ -1,0 +1,16 @@
+---
+date: '2010-06-22 23:43:49'
+layout: post
+slug: slides
+status: publish
+title: Velocity Ignite
+wordpress_id: '387'
+---
+
+Gave an [Ignite Velocity](http://en.oreilly.com/velocity2010/public/schedule/detail/15380) talk tonight at Velocity about Apache Libcloud.
+
+The Ignite format is 20 slides, automatically advancing every 15 seconds -- I think I did okay, though I had a few slides where I needed better timing without a doubt, but I was happy enough with it for my first presentation in that format.  It definitely makes you keep moving!
+
+Its different compared to the more traditional slideless "Lightning Talks" -- the Slides can be a hamper with bad timing for topics, but I liked that it kept you ontrack, while most lighting talks tended to get cut off early.
+
+Anyways, I've posted slides for [Apache Libcloud @ Velocity Ignite](http://paul.querna.org/slides/libcloud-ignite.pdf).

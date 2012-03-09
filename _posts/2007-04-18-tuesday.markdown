@@ -1,0 +1,74 @@
+---
+date: '2007-04-18 00:13:00'
+layout: post
+slug: tuesday
+status: publish
+title: tuesday
+wordpress_id: '180'
+---
+
+
+
+  * [Condos in downtown Spokane](http://www.wellsandcompany.biz/pages/sections/condos_loft.htm). Cheap compared to San Jose, not really cheap though.
+
+
+  * I want to [go to outer space](http://antwrp.gsfc.nasa.gov/apod/ap070417.html). 
+
+
+  * Installed BDB 4.5 utilities on a couple hundred machines. yay psh+pfor.
+
+
+    * I still want to [try PCP](http://www.theether.org/pcp/) sometime though.
+
+
+
+
+
+  * 2 wins out of 5 games in foosball. (bad day).
+
+
+  * comcast is not comcastic.
+
+
+  * 100mbit ethernet is too slow inside a data center. GigE is cheap. Get it.
+
+
+  * the internet is not fast enough. transfering data from boston to oakland is too slow.
+
+
+  * found some old code that isn't [endian safe](http://en.wikipedia.org/wiki/Endianness). ack. Geoff is still on a PPC mac, and ran into some problems....
+
+
+
+  * wrote a tool to count users and their subscriptions, and then graph the distribution of subs counts.
+
+
+
+  * Tested BDB 4.5 with large existing databases. Seems to work great so far. Yay.
+
+
+
+
+## Metrics:
+
+
+
+
+
+
+  * 0 work meetings.
+
+
+  * 7 work emails sent.
+
+
+  * 4 work svn commits.
+
+
+  * 0 non-work emails sent.
+
+
+  * 0 non-work svn commits.
+
+
+

@@ -1,0 +1,97 @@
+---
+date: '2007-04-20 23:14:00'
+layout: post
+slug: thursday
+status: publish
+title: Thursday
+wordpress_id: '182'
+---
+
+
+
+  * early morning (3:30am)
+
+
+  * sea sick. Never really been sea sick before.
+
+
+  * Will caught a 32lb Salmon:
+  
+
+[![32lb salmon](http://farm1.static.flickr.com/222/465404791_a6f0babfea_m.jpg)](http://www.flickr.com/photos/73969414@N00/465404791/)
+
+
+    * [Ben has way more details.](http://blog.blowery.org/2007/04/20/thursday/)
+
+
+    * Largest Salmon caught in California so far this season.
+
+
+    * I'm way too tired to describe it more, but it was fun, and I'm definitely going to do it again.
+
+
+
+
+
+  * We saw whales too:
+  
+
+[
+![](http://farm1.static.flickr.com/223/466772161_4e77676f22_m.jpg)
+![](http://farm1.static.flickr.com/205/466772159_f9acc472c2_m.jpg)
+](http://www.flickr.com/photos/73969414@N00/tags/whales/)
+  
+
+Though, the pictures don't do them justice.
+
+
+
+
+  * Didn't get to bed until 3:00am.
+
+    * MySQL-Cluster decided to shirt itself at 10:45pm.
+
+
+    * NDB Cluster debugging sucks
+
+
+    * ndb_restore at least works correctly.
+      * Although, we had to tweak NoOfFragmentLogFiles to get restore working.
+
+
+    * I wish we had went with a home built proprietary system, built on top of BerkeleyDB and our existing clustering tech, rather than trying to use MySQL-Cluster. Hindsight is 20/20 of course.
+
+
+    * Will try to get all of our trace and debug info into a MySQL Bug report or at least a post on the [mysql-clsuter list](http://lists.mysql.com/cluster) next week.
+
+
+
+
+
+
+## Metrics:
+
+
+
+
+
+
+  * 0 work meetings.
+    * 1 offsite. (fishing)
+
+
+
+
+  * 5 work emails.
+
+
+  * 0 work svn commits.
+
+
+  * 3 non-work emails sent.
+
+
+  * 0 non-work svn commits
+
+
+

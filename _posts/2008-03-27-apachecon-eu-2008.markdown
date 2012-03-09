@@ -1,0 +1,20 @@
+---
+date: '2008-03-27 10:43:09'
+layout: post
+slug: apachecon-eu-2008
+status: publish
+title: ApacheCon EU 2008
+wordpress_id: '228'
+---
+
+I will be at [ApacheCon EU 2008](http://www.eu.apachecon.com/eu2008/), in Amsterdam in a week or so.  (April 6-11)
+
+
+
+
+Not giving any talks this year.
+
+
+
+
+I will also be at [Joost](http://www.joost.com/)'s [Leiden](http://en.wikipedia.org/wiki/Leiden) office the week following.  (April 12-19) 

@@ -1,0 +1,34 @@
+url: ://journal.paul.querna.org/
+pygments: True
+paginate: 10
+permalink: /articles/:categories/:year/:month/:day/:title/
+
+exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md"]
+
+title : Paul's Journal
+tagline : Cloud Powered?
+
+production_url : http://journal.paul.querna.org
+
+author :
+  name : Paul Querna
+  email : journal@paul.querna.org
+  github : pquerna
+  twitter : pquerna
+
+site:
+  JB :
+    version : 0.2.9
+    BASE_PATH : false
+    ASSET_PATH : false
+    archive_path: /archive.html
+    categories_path : /categories.html
+    tags_path : /tags.html
+    comments :
+      provider : false
+    analytics :
+      provider : google 
+      google : 
+        tracking_id : 'UA-1014367-1'
+    sharing :
+      provider : false

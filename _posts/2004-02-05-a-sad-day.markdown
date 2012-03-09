@@ -1,0 +1,21 @@
+---
+date: '2004-02-05 02:09:03'
+layout: post
+slug: a-sad-day
+status: publish
+title: A Sad Day
+wordpress_id: '17'
+---
+
+Today [Cyan Worlds](http://www.cyanworlds.com/) announced that [URU Live is ending](http://games.slashdot.org/games/04/02/04/2339251.shtml?tid=127&tid=186&tid=206&tid=209).  
+
+  
+
+I started working for Cyan back in November of 2002. I was still in [High School](http://mhs.mead.k12.wa.us/) back then and would work after school every day.  I remember my first interview where I showed rje and Moose the code to the Mead High School Website and [CCbot](http://force-elite.com/~chip/).  During my last semester in High School I left Mead at noon to work at Cyan the whole afternoon. Besides working [directly on URU](http://www.cyanworlds.com/urucredits/UruCredits_ingame.htm) and other internal projects, I worked on other things including [Big Brother](http://bb4.com/), [Ethereal](http://www.ethereal.com/), [DSW2Make](http://open.cyanworlds.com), and [custom Apache Modules](http://mod-auth.sf.net).  Once I Graduated from High School I began to work at Cyan full time. That summer I did many things, one of the highlights is replacing 'Bugaboo', a custom bug tracking system written in [Lasso](http://www.blueworld.com/Lasso7/) running on a MacOS 8 Server, to [Mantis](http://mantisbt.sf.net).  Many of the modifcations I made to Mantis are now available as [Patches](http://force-elite.com/~chip/patches/mantis).  Since I started attending [Carroll College](http://www.carroll.edu) I have worked at Cyan during my Fall and Winter Breaks.  
+  
+
+
+The experiences I had at Cyan are beyond anything they could of paid me in monetary value.  Not only did I learn more about [Linux Servers](http://www.kernel.org), I found some of my best friends there.  
+  
+
+I am not directly effected by URU Live's closing, I am still a college student and I can find other summer jobs, but my heart is still attached to URU. Cyan Worlds gave me a chance.  A chance to me. Back then I was just some high school computer hacker. There is no way I could ever repay them for all that they have given me.  

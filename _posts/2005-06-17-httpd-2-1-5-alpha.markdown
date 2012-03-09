@@ -1,0 +1,20 @@
+---
+date: '2005-06-17 11:08:58'
+layout: post
+slug: httpd-2-1-5-alpha
+status: publish
+title: httpd 2.1.5-ALPHA
+wordpress_id: '78'
+---
+
+Apache has a 2.1.5-ALPHA posted at:  
+
+[http://httpd.apache.org/dev/dist/](http://httpd.apache.org/dev/dist/)
+  
+
+Change Log:  
+
+[http://httpd.apache.org/dev/dist/CHANGES_2.1](http://httpd.apache.org/dev/dist/CHANGES_2.1)  
+  
+
+We really need people to test the alphas.  I would like to push for a new 2.2.0 stable branch soon, and the more testing we get in alpha means the less bugs we find after going stable....

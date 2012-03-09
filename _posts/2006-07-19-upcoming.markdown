@@ -1,0 +1,15 @@
+---
+date: '2006-07-19 11:51:39'
+layout: post
+slug: upcoming
+status: publish
+title: upcoming
+wordpress_id: '156'
+---
+
+I'll be at [OSCON 2006](http://conferences.oreillynet.com/os2006/) next week.
+
+
+
+
+See [Y'All there](http://www.bloglines.com/search?q=upcoming+oscon&ql=en&s=fr&pop=n&news=m&n=20)

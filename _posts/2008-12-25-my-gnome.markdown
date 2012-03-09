@@ -1,0 +1,13 @@
+---
+date: '2008-12-25 11:08:36'
+layout: post
+slug: my-gnome
+status: publish
+title: My gnome
+wordpress_id: '258'
+---
+
+
+
+
+[![](http://journal.paul.querna.org/wp-content/uploads/2008/12/p-640-480-2993d133-5eba-402b-8f51-be02850d8bc9.jpeg)](http://journal.paul.querna.org/wp-content/uploads/2008/12/p-640-480-2993d133-5eba-402b-8f51-be02850d8bc9.jpeg)

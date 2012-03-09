@@ -1,0 +1,20 @@
+---
+date: '2005-11-20 03:42:56'
+layout: post
+slug: sms
+status: publish
+title: cingular sms
+wordpress_id: '113'
+---
+
+
+I switched to Cingular for my cell phone in August, and I have been mostly happy with it.
+
+
+
+Today I got an SMS Message 67 minutes late.  Has anyone else had this kind of problem with [Cingular](http://www.cingularme.com/do/public?l=en-US&v=cingular)?
+
+
+
+It doesn't give me faith in them as a reliable service.  Unfortunately, the SMS was for a server restarting at $[work](http://www.bloglines.com/).
+

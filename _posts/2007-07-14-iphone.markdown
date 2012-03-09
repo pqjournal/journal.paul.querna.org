@@ -1,0 +1,23 @@
+---
+date: '2007-07-14 23:04:03'
+layout: post
+slug: iphone
+status: publish
+title: iphone
+wordpress_id: '198'
+---
+
+So, I didn't rush to get one on launch day; But enough people have said good things about it, and it doesn't look like a flop, so today I went up to the [Valley Fair Apple Store](http://www.apple.com/retail/valleyfair/) in Santa Clara at about 4pm.
+
+
+
+
+
+
+Walked in, and it was crazy busy, people all huddled around the demo units. I figured they were sold out, but asked an employee, and he said to just go to the checkout.  And so now I have an iPhone.
+
+
+
+
+
+The migration was painless. I ported my existing Cingular/ATT account.  When I originally signed up with Cingular, it took 3 hours to activate the phone in a store.  With Apple, I did it form home, in 3 minutes, via iTunes.  It is about time cell phones stopped sucking.

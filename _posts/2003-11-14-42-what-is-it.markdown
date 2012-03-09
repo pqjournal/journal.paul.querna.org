@@ -1,0 +1,40 @@
+---
+date: '2003-11-14 21:01:10'
+layout: post
+slug: 42-what-is-it
+status: publish
+title: 42... What is it?
+wordpress_id: '10'
+---
+
+I was reading through mod_auth_digest today and found an odd comment:  
+
+  
+
+        /* XXX: WHAT IS THIS CONSTANT? */  
+
+        t.time = 42;  
+
+  
+
+I didn't understand what it mean at all. I looked in the Digest RFC, looked in the Squid Proxies implmentarion of Digest and couldn't figure it out.  
+
+  
+
+I figured it out a couple hours later. 42 is the The Answer to Life, the Universe, and Everything.  
+
+The Wikipedia has some nice info about it: [http://en2.wikipedia.org/wiki/The_Answer_to_Life,_the_Universe,_and_Everything](http://en2.wikipedia.org/wiki/The_Answer_to_Life,_the_Universe,_and_Everything)  
+
+Some Apache coders crack me up.  
+
+  
+
+Also found out that Carroll is hiring a "Nicole Swan" to work as a dedicated Coder for the Carroll Website.  
+
+Her blog is over at [http://www.nicoleswan.com/](http://www.nicoleswan.com/)  
+
+  
+
+Hopefully she is pretty good with PHP.  It sounds like we will get todo a complete site redesign from scatch soon.  Should solve many of the problems that the site currently has.  
+
+

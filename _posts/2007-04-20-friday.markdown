@@ -1,0 +1,54 @@
+---
+date: '2007-04-20 23:50:00'
+layout: post
+slug: friday
+status: publish
+title: Friday
+wordpress_id: '183'
+---
+
+
+
+
+
+
+  * [Feisty Fawn](http://www.ubuntu.com/getubuntu/releasenotes/704tour) installed. [Kernel.org mirror](http://mirrors.kernel.org/ubuntu-releases/feisty/) was giving me 38 mb/s over http.
+
+
+  * Ripping [Aeon Flux](http://en.wikipedia.org/wiki/Aeon_flux) (not the sucky movie).
+
+
+  * Watching [Life of Brian](http://www.imdb.com/title/tt0079470/).
+
+
+  * Ate the Salmon we [caught yesterday](http://journal.paul.querna.org/articles/2007/04/20/thursday) at the Ask.com quarterly All Hands / BBQ in Campbell.  Even with 30 people, we still had Salmon left over.  It was a big fish.
+
+
+  * Feeling pretty tired. Been a long week.
+
+
+
+
+
+## Metrics:
+
+
+
+
+
+
+  * 1 work meetings.
+
+
+  * 8 work emails sent.
+
+
+  * 0 work svn commits.
+
+
+  * 2 non-work emails sent.
+
+
+  * 0 non-work svn commits.
+
+

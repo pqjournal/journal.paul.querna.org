@@ -1,0 +1,12 @@
+---
+date: '2008-10-29 10:19:18'
+layout: post
+slug: chroot-in-2210
+status: publish
+title: chroot in 2.2.10
+wordpress_id: '233'
+---
+
+[Apache HTTP Server 2.2.10](http://mail-archives.apache.org/mod_mbox/httpd-dev/200810.mbox/%3CB1098A29-7B4A-4794-8637-A06464944053@jaguNET.com%3E) was released more than a week ago.
+
+One of the new features I don't think anyone has mentioned much is that we now have built in support for [chroot](http://www.freebsd.org/cgi/man.cgi?query=chroot&sektion=2).  Just add [ChrootDir](http://httpd.apache.org/docs/2.2/mod/mpm_common.html#chrootdir) "/srv/my_root", and all IO in Apache after the initial startup will be inside the chroot.

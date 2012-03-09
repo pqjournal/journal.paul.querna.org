@@ -1,0 +1,38 @@
+---
+date: '2007-09-06 00:06:00'
+layout: post
+slug: its-on
+status: publish
+title: it's on.
+wordpress_id: '204'
+---
+
+Bloglines vs Google Reader:[
+Two Horse Race?](http://www.readwriteweb.com/archives/bloglines_vs_google_reader.php)
+
+
+
+
+
+
+2:29 PM: Google Reader: ["We found it!"](http://www.bloglines.com/preview?siteid=3253453&itemid=74) - Search, Minimize Bar, and new Forums.
+
+
+
+
+
+
+9:00 PM: Bloglines [Beta 1.0.1](http://www.bloglines.com/preview?siteid=11967&itemid=141) - Pin, E-Mail, New Help, and Hotkeys.
+
+
+
+
+
+
+Lets see what next week brings `:-)`
+
+
+
+
+
+PS: Bloglines has had Blog Search within our feeds [for over 15 months](http://www.bloglines.com/preview?siteid=11967&itemid=105), and a minimize bar [for 17 months](http://www.bloglines.com/preview?siteid=11967&itemid=99). Har har har har......

@@ -1,0 +1,118 @@
+---
+date: '2007-04-16 23:38:00'
+layout: post
+slug: monday
+status: publish
+title: monday
+wordpress_id: '179'
+---
+
+* * *
+
+
+
+
+Trying something new here.  I want something between Twitter and a month long complete absence.
+
+
+
+
+* * *
+
+
+
+
+
+
+  * [Geoff](http://mipsisrisc.com/rambling/) started his first day at [$work](http://www.bloglines.com/).
+
+
+  * [Ben](http://www.blowery.org/) and [Rob](http://www.flickr.com/photos/darktones) are in town this week for [$work](http://www.bloglines.com/) stuff.
+
+
+  * Lots of talk about running EMCAScript from inside a [flash 9 VM](http://hecker.org/mozilla/adobe-mozilla-and-tamarin), to generate HTML for things like the Feed Tree. 
+    * Really, we just need to figure out what the cost of copying data is
+
+
+  * Discussed why not having to write an [wireshark](http://www.wireshark.org/) plugin, and re-using HTTP as a transport protocol is good thing.
+
+
+
+    * Okay, so for those who don't know, back at Cyan, Rob and I wrote an Ethereal (since-renamed to wireshark) plugin, which code decoded the Uru Online network packets.  But the unique thing is that it actually ran the real _network layer_ and de-serialization routines, used by the actual engine, inside ethereal, meaning you could easily introspect objects, as they were packed over the wire.  It is still one of the coolest things I have worked on, at least from being in an oh-shit-something-is-broken situation.  To be able to know exactly what is going on with complex network applications is priceless.
+
+
+
+  * Rob merged [Berkeley DB 4.5](http://www.oracle.com/technology/documentation/berkeley-db/db/changeLog.html) to trunk. Woot.
+
+
+  * Researched various **embedded** HTTP Server Libraries:
+  
+    
+    * [shttpd](http://shttpd.sourceforge.net/) - Looks like the best. Actively maintained, good license.
+
+  
+Overall, I was quite disappointed by the overall quality and quantity of embeddable servers.  If you are writing a client, there is [curl](http://curl.haxx.se/) or [serf](http://code.google.com/p/serf/); But if you want a self contained server, and don't want to make [an apache module](http://www.apachetutor.org/) for various reasons, there just aren't many good options.
+
+
+
+  * Re-inventing SOAP and object serialzation system without the sucky parts with a staticly typed language like C++ sucks. I wish I had Python.
+
+
+  * Cookies from the [Pacific Cookie Company](http://www.pacificcookie.com/) are good. And they ship them, extremely quickly.
+
+
+  * I went to Fry's twice today.  Once I came back with a 320GB Firewire Drive, the second time with Firewire 400 cables.  It turns out, it only came with a 9-pin Firewire 800 cable, which doesn't work so well in an original MacBookPro. Guess this means I need a new computer.
+
+
+  * Dinner at the [Brewery](http://www.rockbottom.com/RockBottomWeb/RBR/Home.aspx):
+
+    * [DHH](http://www.loudthinking.com/arc/000608.html) and [Mark](http://diveintomark.org/archives/2007/04/16/dhh-translation) are both crazy.  But, Mark is way funnier.
+      * PS: I _wish_ my scaling problems were about storing only 255 bytes per post.
+
+
+
+    * More on running EMCAScript inside Flash VMs to do 'heavy' client side work.
+
+
+
+
+
+  * Started ripping Dead Like Me, Season 1 DVDs. [Handbarke](http://handbrake.m0k.org/) FTW. (DVD Ripping software for the Mac)
+
+
+
+
+## Metrics:
+
+
+
+
+
+
+  * 1 work meeting
+  * 
+
+  * 3 work emails.
+
+
+  * 3 work svn commits
+
+
+  * 1 non-work email.
+
+
+  * 0 non-work svn commits
+
+
+**edit, more:**
+
+
+
+
+  * I banned 200+ Casino Spammers from Bloglines this morning. I hate spammers.
+
+
+  * Is typo'ing 'shirt' for 'shit', a feature or a bug?
+
+
+

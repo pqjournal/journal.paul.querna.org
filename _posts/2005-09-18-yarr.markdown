@@ -1,0 +1,28 @@
+---
+date: '2005-09-18 18:14:21'
+layout: post
+slug: yarr
+status: publish
+title: YARR
+wordpress_id: '99'
+---
+
+> 
+< rik> remember
+  
+< rik> tomorrow is [International Talk Like A Pirate Day.](http://www.talklikeapirate.com/piratehome.html)
+  
+< DrBacchus> Who could forget?!
+  
+< chipig> tomorrow.
+  
+< fajita> tomorrow is "Kill A Spammer" day. I expect you all to participate.
+  
+< rik> hahah
+  
+< chipig> YARR!
+
+
+
+IRC Bots are so smart.
+

@@ -1,0 +1,49 @@
+---
+date: '2006-06-16 11:07:00'
+layout: post
+slug: un-google
+status: publish
+title: un-google
+wordpress_id: '144'
+---
+
+The Economist has a new article up talking [about Ask, Google and Friends](
+http://www.economist.com/business/displaystory.cfm?story_id=7064434
+).
+
+
+
+
+
+Quote from [Jim Lanzone](http://sp.ask.com/en/docs/about/management.shtml#jl):
+
+
+
+
+> 
+..."we're using search aikido"...
+
+
+
+
+Chris Sherman of [SearchEngineWatch](http://searchenginewatch.com/):
+
+
+
+
+> 
+... thinks that Ask is as good as Google for general web search—but better than Google for finding online maps and images. Ask, he thinks, is therefore starting to resemble Apple in the computer industry...
+
+
+
+
+
+The Apple of Search?
+
+
+
+
+[Not quite yet](http://finance.yahoo.com/q/bc?s=IACI&t=5y&l=on&z=m&q=l&c=AAPL).
+
+
+

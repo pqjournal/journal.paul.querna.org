@@ -1,0 +1,17 @@
+---
+date: '2006-04-23 23:54:00'
+layout: post
+slug: httpd-2-2-2
+status: publish
+title: httpd-2.2.2
+wordpress_id: '136'
+---
+
+Apache HTTP 2.2.2 is almost out.  You can [download and test it from here](http://httpd.apache.org/dev/dist/).  Hopefully we will get the offical release out by mid week, after it has ran on [www.apache.org](http://www.apache.org/server-status) for another day without problems.
+
+
+  
+
+  
+
+**Update April 30 2006:**It has [been released](http://mail-archives.apache.org/mod_mbox/httpd-announce/200604.mbox/%3c44557B8B.3080609@apache.org%3e).  You can [download it now](http://httpd.apache.org/download.cgi).

@@ -1,0 +1,14 @@
+---
+date: '2007-10-08 15:57:45'
+layout: post
+slug: gltail
+status: publish
+title: gltail
+wordpress_id: '214'
+---
+
+We thought [gltail](http://www.fudgie.org/) sounded pretty cool.   So we hooked it into bloglines.com:[![gltail screenshot](http://journal.paul.querna.org/wp-content/uploads/2007/10/gltail.png)](http://journal.paul.querna.org/wp-content/uploads/2007/10/gltail.png)
+
+(Screenshot is clipped to protect user data)
+
+It worked okay for 1 webserver.  But hooking it up to the entire cluster, it was just a little bit too slow -- drawing a new frame once every 8 seconds.  Time to port it to C :-)

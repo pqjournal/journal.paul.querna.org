@@ -1,0 +1,20 @@
+---
+date: '2006-02-25 08:39:45'
+layout: post
+slug: new-code
+status: publish
+title: new code
+wordpress_id: '127'
+---
+
+
+Work has finally slowed down enough that ive had some time this week to hack on code.
+
+
+
+First up, I wrote [mod_renice](http://paul.querna.org/~chip/mod_renice.c).  It is incomplete and might even crash.  It is designed to detect a Subversion REPORT request, that contains an update that is expensive to generate.  When this condition is met, it sets the [Process Priority lower](http://www.freebsd.org/cgi/man.cgi?query=setpriority), so the machine doesn't die.  The [ASF Subversion repo](http://svn.apache.org/repos/asf/) has recently had issues with this.  The [thread on dev@subversion contains more info](http://marc.theaimsgroup.com/?t=114064186700004&r=1&w=2).
+
+
+
+Second hack of the week is [mod_serf](http://people.apache.org/~pquerna/serf-stuff/mod_serf.c).  It uses the [Serf HTTP Client Library](http://svn.webdav.org/repos/projects/serf/trunk) to act as a reverse proxy.  But, we already have a [reverse proxy](http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#proxypass) you ask?  Yes, but the [code is ugly](http://svn.apache.org/repos/asf/httpd/httpd/trunk/modules/proxy/proxy_util.c), and this looked fun to write... so I wrote it.
+

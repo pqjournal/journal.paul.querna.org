@@ -1,0 +1,19 @@
+---
+date: '2006-03-15 23:19:00'
+layout: post
+slug: anasazi
+status: publish
+title: Anasazi
+wordpress_id: '132'
+---
+
+[Theo](http://www.omniticc.com/About/profile.html?personid=1) has proposed a [new distributed group communication project, called Anasazi](http://www.lethargy.org/~jesus/archives/53-Lets-reimplement-the-wheel...-or-at-least-another-GCS..html).  
+  
+
+
+I wish I had more spare time, just to work on it.  Anasazi could be useful by all kinds of projects, not just things at [$work](http://bloglines.com).
+  
+  
+
+There is a [wiki too](http://www.lethargy.org/~jesus/wiki).  Hopefully some companies can be convinced of the value of an open source [GCS](http://en.wikipedia.org/wiki/Multicast), and help with development.  Open Source infrastructure projects, just like the [Apache HTTP Server](http://httpd.apache.org/), are good for everyone involved.
+

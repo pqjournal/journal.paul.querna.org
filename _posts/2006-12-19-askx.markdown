@@ -1,0 +1,42 @@
+---
+date: '2006-12-19 00:12:00'
+layout: post
+slug: askx
+status: publish
+title: AskX
+wordpress_id: '173'
+---
+
+[Check it out](http://www.askx.com/).
+
+
+
+
+
+[More info.](http://about.ask.com/en/docs/about/askx.shtml).
+
+
+
+
+I think there will be a post about it on the [Ask.com Blog in the morning](http://blog.ask.com/).
+
+
+
+
+
+**UPDATE:** Links to first posts about AskX:
+
+
+
+
+
+
+  
+  * Read/Write Web - [ Ask X - New UI for Ask.com Secretly Launched](http://www.readwriteweb.com/archives/ask_x.php)
+
+  
+  * Digg - [Dugg the R/W Web Post](http://digg.com/tech_news/Ask_X_New_UI_for_Ask_com_Secretly_Launched)
+
+
+
+I think I missed the PR kit. Is it supposed to be "AskX" or "Ask X"? 

@@ -1,0 +1,10 @@
+---
+date: '2005-06-21 21:51:41'
+layout: post
+slug: new-job
+status: publish
+title: New Job.
+wordpress_id: '80'
+---
+
+I am extremely excited to announce that I have accepted a Job Offer from [AskJeeves](http://www.askjeeves.com/), at [Bloglines](http://www.bloglines.com/) in [Los Gatos](http://maps.google.com/maps?q=Los+Gatos&spn=0.751215,1.365051&hl=en).  More info coming in the next couple days, but among other things, this means I am moving to [California](http://www.nytimes.com/2005/06/22/national/22raid.html).

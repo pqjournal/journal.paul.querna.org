@@ -1,0 +1,24 @@
+---
+date: '2005-08-13 00:36:25'
+layout: post
+slug: dear-brad
+status: publish
+title: Dear Brad
+wordpress_id: '91'
+---
+
+
+Dear [Brad](http://www.livejournal.com/~brad/),
+
+
+
+[memcached](http://www.danga.com/memcached/) is awesome.  I owe you at least a [few beers](http://www.livejournal.com/users/brad/2140587.html).
+
+
+
+Thanks,
+
+
+
+Paul
+

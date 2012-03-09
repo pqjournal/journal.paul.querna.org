@@ -1,0 +1,24 @@
+---
+date: '2005-03-06 18:07:01'
+layout: post
+slug: suphp
+status: publish
+title: suphp?
+wordpress_id: '57'
+---
+
+[suphp](http://www.suphp.org/Home.html) has been around for awhile now, but I do not understand why anyone would use it.  On their page, it says:
+
+
+Quote from suPHP Homepage:
+
+
+suPHP is a tool for executing PHP scripts with the permissions of their owners. It consists of an Apache module (mod_suphp) and a setuid root binary (suphp) that is called by the Apache module to change the uid of the process executing the PHP interpreter.
+
+
+
+To me, it looks like a bad reimplementation of [CGI and suEXEC](http://httpd.apache.org/docs-2.0/suexec.html).   Their [FAQ](http://www.suphp.org/FAQ.html) isn't very helpful either.  I took a quick look at the source code, and it doesn't even use mod_cgi or mod_cgid to execute the actual process.  [mod_cgid does some neat tricks](http://httpd.apache.org/docs-2.1/mod/mod_cgid.html) to avoid the overhead of forking when you have a multi-threaded server.  
+  
+
+
+It doesn't to have see any advantage over suEXEC.  It is even possible to use [mod_fcgid](http://fastcgi.coremail.cn/doc.htm) to run each FastCGI as a different user, and it would be signifigantly faster than suPHP. So, my question of the day is, Why would anyone use suPHP?
