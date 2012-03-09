@@ -16,19 +16,18 @@ author :
   github : pquerna
   twitter : pquerna
 
-site:
-  JB :
-    version : 0.2.9
-    BASE_PATH : false
-    ASSET_PATH : false
-    archive_path: /archive.html
-    categories_path : /categories.html
-    tags_path : /tags.html
-    comments :
-      provider : false
-    analytics :
-      provider : google 
-      google : 
-        tracking_id : 'UA-1014367-1'
-    sharing :
-      provider : false
+JB :
+  version : 0.2.9
+  BASE_PATH : false
+  ASSET_PATH : false
+  archive_path: /archive.html
+  categories_path : /categories.html
+  tags_path : /tags.html
+  comments :
+    provider : false
+  analytics :
+    provider : google 
+    google : 
+      tracking_id : 'UA-1014367-1'
+  sharing :
+    provider : twitter
