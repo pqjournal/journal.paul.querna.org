@@ -89,7 +89,7 @@
 
 <h2 id='those_pesky_certificate_authority_certificates'>Those Pesky Certificate Authority Certificates</h2>
 
-<p>Using the builtin <em>Allocations</em> instrument, I was looking for how memory was being used. I expected to just see a large blob of allocation being done inside <a href='http://code.google.com/p/v8/'>v8</a>, since Instruments and DTrace that power it do not have visibility inside the VMs internals. Unexpectedly, it quickly became apparent our main use of memory was the <code>node::crypto::SecureContext::AddRootCerts</code> function. After going back to the Javascript, we could see that for every new TLS connection being made, Node was re-parsing the list of root-certificate authorities from their string forms, into the <code>X509_STORE</code> object used by OpenSSL: <a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/pre-fix.jpg'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/pre-fix.jpg' alt='' /></a></p>
+<p>Using the builtin <em>Allocations</em> instrument, I was looking for how memory was being used. I expected to just see a large blob of allocation being done inside <a href='http://code.google.com/p/v8/'>v8</a>, since Instruments and DTrace that power it do not have visibility inside the VMs internals. Unexpectedly, it quickly became apparent our main use of memory was the <code>node::crypto::SecureContext::AddRootCerts</code> function. After going back to the Javascript, we could see that for every new TLS connection being made, Node was re-parsing the list of root-certificate authorities from their string forms, into the <code>X509_STORE</code> object used by OpenSSL: <a href='/wp-content/uploads/2011/04/pre-fix.jpg'><img src='/wp-content/uploads/2011/04/pre-fix.jpg' alt='' /></a></p>
 
 <p>Just by commenting out one line of Javascript, we were able to reduce memory usage by 20%, and increased the performance of the HTTPS server from 70 requests/second to 700 requests/second.</p>
 
@@ -98,7 +98,7 @@
 
 <h2 id='zlib_big_buffers_r_us'>Zlib: Big Buffers &#8220;R&#8221; us</h2>
 
-<p>We thought after fixing the obvious bug in parsing the certificates, we might be done. We went back to the profiling in Instruments.app, and discovered memory usage still was over 500kb per connection: <a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/compression.jpg'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/compression.jpg' alt='' /></a></p>
+<p>We thought after fixing the obvious bug in parsing the certificates, we might be done. We went back to the profiling in Instruments.app, and discovered memory usage still was over 500kb per connection: <a href='/wp-content/uploads/2011/04/compression.jpg'><img src='/wp-content/uploads/2011/04/compression.jpg' alt='' /></a></p>
 
 <p>We dove into the OpenSSL codebase, and found that Zlib Compression is enabled by default, and there isn&#8217;t an easy way to turn it off. The <a href='http://www.openssl.org/docs/ssl/SSL_COMP_add_compression_method.html
 '>documentation for SSL_COMP_add_compression_method</a> says:</p>
@@ -118,13 +118,13 @@
 </div>
 <p>This is a <em>terrible hack</em>, but it enabled us to test the effect of disabling compression on the server side, and after seeing the results, I think it is worth it.</p>
 
-<p>With this change, we ran the test again, and see an amazing thing, we are only using about 15 megabytes of memory, and we can actually see the v8 garbage collector doing work now: <a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/all-fixed.jpg'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/all-fixed.jpg' alt='' /></a></p>
+<p>With this change, we ran the test again, and see an amazing thing, we are only using about 15 megabytes of memory, and we can actually see the v8 garbage collector doing work now: <a href='/wp-content/uploads/2011/04/all-fixed.jpg'><img src='/wp-content/uploads/2011/04/all-fixed.jpg' alt='' /></a></p>
 
 <h2 id='ship_it_to_production'>Ship it to production</h2>
 
 <p>Going back to Matt&#8217;s original problem, he is using Node.js as part of the server side infrastructure for <a href='http://voxer.com/'>Voxer, a communication application for mobile devices</a>. He applied the patches, and provided this graph from Cacti showing the massive improvement in free memory:</p>
 
-<p><a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/Cacti.png'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/Cacti.png' alt='' /></a></p>
+<p><a href='/wp-content/uploads/2011/04/Cacti.png'><img src='/wp-content/uploads/2011/04/Cacti.png' alt='' /></a></p>
 
 <h2 id='what_about_twisted_python'>What about Twisted Python?</h2>
 
@@ -152,7 +152,7 @@
 </div>
 <p>We deployed this to one Twisted Python Service as a test, and you can see the impact on memory use, dropping form 1.15 gigabytes to around 300 megabytes:</p>
 
-<p><a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/twisted-memory.jpg'><img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/twisted-memory.jpg' alt='' /></a></p>
+<p><a href='/wp-content/uploads/2011/04/twisted-memory.jpg'><img src='/wp-content/uploads/2011/04/twisted-memory.jpg' alt='' /></a></p>
 
 <h2 id='conclusion'>Conclusion</h2>
 

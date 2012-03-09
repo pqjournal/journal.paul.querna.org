@@ -50,7 +50,7 @@
 
 <p>Speaking generically, modern web servers don&#8217;t serve static, pre-computed files. Apache could do that fine, and if you really need static performance, CDNs are very good at static files, and relatively cheap. To me, the interesting servers, HTTP and otherwise, are ones that combine data from many sources and apply many transformations like templates, compression, or encryption. Most pages you view today are also completely customized, with silly things like saying <em>Hello $name</em>, to complete customization of what content you see. Dynamic content is only growing in scope, and that is why understanding streams and how to transform them is so important.</p>
 
-<p><img src='http://journal.paul.querna.org/wp-content/uploads/2010/10/streamstest.png' alt='' /></p>
+<p><img src='/wp-content/uploads/2010/10/streamstest.png' alt='' /></p>
 
 <p>The higher level abstraction of taking various client inputs, requesting data, and transforming it, is commonly called a Proxy. Proxies take streams on both ends, apply a transformation, and send it to a client. This is where Node.js comes in &#8211; It is one of the best architectures for proxying and transformations. Ryan Dahl, the creator of Node.js, has talked about Node.js as just a proxy server; In this <a href='http://dailyjs.com/2010/08/11/ryan-dahl-part-2/'>interview with DailyJS</a>, Ryan explains his belief about proxying and transformation of data:</p>
 
@@ -82,7 +82,7 @@
 
 <p>Making the <a href='http://httpd.apache.org/docs/trunk/developer/output-filters.html'>construction of output filters</a> an easy task lead to explosion of various transformation modules. I wrote many modules that exploited this ability, for example: <a href='http://www.outoforder.cc/projects/apache/mod_highlight/'>highlighting source code</a>, another SSL implemation in <a href='http://www.outoforder.cc/projects/apache/mod_gnutls/'>mod_gnutls</a>, and streaming inline <a href='http://www.outoforder.cc/projects/apache/mod_transform/'>XSLT transformations</a>. With Bucket brigades and output filters, it was very easy to write an efficient stream processor, and modules authors all took advantage of this.</p>
 
-<p><img src='http://journal.paul.querna.org/wp-content/uploads/2010/10/apache2outputfilters.png' alt='' /></p>
+<p><img src='/wp-content/uploads/2010/10/apache2outputfilters.png' alt='' /></p>
 
 <p>In the picture above, PHP is your content generator. It pushes a bucket brigade to deflate, which processes it and then hands it to the SSL filter. Once the SSL filter has encrypted the data, it is handed off to the Core Output Filter, which handles many optimizations like doing sendfile if possible or <a href='http://baus.net/on-tcp_cork'>a writev with TCP_CORK</a>, and asynchronous write completion. Overall I believe the output filter architecture was a success. It allowed innovation to happen in modules, and to not be stagnated with patching the core. Apache&#8217;s success has always been about the core providing a framework to build upon, and the output filter APIs struck a good balance between complexity and simplicity for people writing custom modules.</p>
 
@@ -98,7 +98,7 @@
 
 <p>Instead of using a linked list of Buckets like the Apache 2 brigade model, Serf&#8217;s buckets form a hierarchy. The control of flow is also completely different; Instead of being passed a brigade to process, you ask a bucket if it has any data available by making a read() call on it. That bucket in turn calls its parents, asking them if they have data, until you get all the way back to your content generator bucket. Any bucket can return EAGAIN, meaning it doesn&#8217;t have data right now, but it will in the future. This is a <em>pull</em> model for the streams.</p>
 
-<p><img src='http://journal.paul.querna.org/wp-content/uploads/2010/10/serfbuckets.png' alt='' /></p>
+<p><img src='/wp-content/uploads/2010/10/serfbuckets.png' alt='' /></p>
 
 <p>In this example, when a socket is writable, it calls the SSL bucket, asking it to fill a buffer. The SSL bucket calls to its parents, which call their parents, until a buffer has data, and if they give it data, the SSL bucket transforms the data, and returns this now encrypted buffer to the socket. Then the Serf event loop can write to the socket at its leisure, enabling asynchronous behavoir.</p>
 
@@ -112,7 +112,7 @@
 
 <p>In practice, you end with something like this:</p>
 
-<p><img src='http://journal.paul.querna.org/wp-content/uploads/2010/10/nodejsstreams.png' alt='' /></p>
+<p><img src='/wp-content/uploads/2010/10/nodejsstreams.png' alt='' /></p>
 
 <p>An interesting part of the Node.js design is that sys.pump is used in-between most streams, you can build in better flow control and call stack control than in the Apache 2 or even Serf designs. It avoids a long call stack to push data, instead each sys.pump instance is responsible for listening to events on their individual Read Stream, and writing that data, if possible to the output stream.</p>
 

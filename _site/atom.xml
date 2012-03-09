@@ -4,7 +4,7 @@
  <title>Paul's Journal</title>
  <link type="application/atom+xml" href="http://journal.paul.querna.org/atom.xml" rel="self"/>
  <link type="text/html" href="http://journal.paul.querna.org"/>
- <updated>2012-03-09T21:42:31+09:00</updated>
+ <updated>2012-03-09T22:11:39+09:00</updated>
  <id>http://journal.paul.querna.org</id>
  <author>
    <name>Paul Querna</name>
@@ -321,7 +321,7 @@
 
 &lt;p&gt;Bellow is an example of searching for specific &lt;code&gt;txnId&lt;/code&gt; in our system in Graylog2:&lt;/p&gt;
 
-&lt;p&gt;&lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/12/graylog-txnId-search.png'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/12/graylog-txnId-search.png' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href='/wp-content/uploads/2011/12/graylog-txnId-search.png'&gt;&lt;img src='/wp-content/uploads/2011/12/graylog-txnId-search.png' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;While this example is simple, we have some situations where a single &lt;code&gt;txnId&lt;/code&gt; spans multiple services, and the ability to trace all of them transparently is critical in a distributed system.&lt;/p&gt;
 
@@ -639,7 +639,7 @@
 
 &lt;h2 id='those_pesky_certificate_authority_certificates'&gt;Those Pesky Certificate Authority Certificates&lt;/h2&gt;
 
-&lt;p&gt;Using the builtin &lt;em&gt;Allocations&lt;/em&gt; instrument, I was looking for how memory was being used. I expected to just see a large blob of allocation being done inside &lt;a href='http://code.google.com/p/v8/'&gt;v8&lt;/a&gt;, since Instruments and DTrace that power it do not have visibility inside the VMs internals. Unexpectedly, it quickly became apparent our main use of memory was the &lt;code&gt;node::crypto::SecureContext::AddRootCerts&lt;/code&gt; function. After going back to the Javascript, we could see that for every new TLS connection being made, Node was re-parsing the list of root-certificate authorities from their string forms, into the &lt;code&gt;X509_STORE&lt;/code&gt; object used by OpenSSL: &lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/pre-fix.jpg'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/pre-fix.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Using the builtin &lt;em&gt;Allocations&lt;/em&gt; instrument, I was looking for how memory was being used. I expected to just see a large blob of allocation being done inside &lt;a href='http://code.google.com/p/v8/'&gt;v8&lt;/a&gt;, since Instruments and DTrace that power it do not have visibility inside the VMs internals. Unexpectedly, it quickly became apparent our main use of memory was the &lt;code&gt;node::crypto::SecureContext::AddRootCerts&lt;/code&gt; function. After going back to the Javascript, we could see that for every new TLS connection being made, Node was re-parsing the list of root-certificate authorities from their string forms, into the &lt;code&gt;X509_STORE&lt;/code&gt; object used by OpenSSL: &lt;a href='/wp-content/uploads/2011/04/pre-fix.jpg'&gt;&lt;img src='/wp-content/uploads/2011/04/pre-fix.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Just by commenting out one line of Javascript, we were able to reduce memory usage by 20%, and increased the performance of the HTTPS server from 70 requests/second to 700 requests/second.&lt;/p&gt;
 
@@ -648,7 +648,7 @@
 
 &lt;h2 id='zlib_big_buffers_r_us'&gt;Zlib: Big Buffers &amp;#8220;R&amp;#8221; us&lt;/h2&gt;
 
-&lt;p&gt;We thought after fixing the obvious bug in parsing the certificates, we might be done. We went back to the profiling in Instruments.app, and discovered memory usage still was over 500kb per connection: &lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/compression.jpg'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/compression.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;We thought after fixing the obvious bug in parsing the certificates, we might be done. We went back to the profiling in Instruments.app, and discovered memory usage still was over 500kb per connection: &lt;a href='/wp-content/uploads/2011/04/compression.jpg'&gt;&lt;img src='/wp-content/uploads/2011/04/compression.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;We dove into the OpenSSL codebase, and found that Zlib Compression is enabled by default, and there isn&amp;#8217;t an easy way to turn it off. The &lt;a href='http://www.openssl.org/docs/ssl/SSL_COMP_add_compression_method.html
 '&gt;documentation for SSL_COMP_add_compression_method&lt;/a&gt; says:&lt;/p&gt;
@@ -668,13 +668,13 @@
 &lt;/div&gt;
 &lt;p&gt;This is a &lt;em&gt;terrible hack&lt;/em&gt;, but it enabled us to test the effect of disabling compression on the server side, and after seeing the results, I think it is worth it.&lt;/p&gt;
 
-&lt;p&gt;With this change, we ran the test again, and see an amazing thing, we are only using about 15 megabytes of memory, and we can actually see the v8 garbage collector doing work now: &lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/all-fixed.jpg'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/all-fixed.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With this change, we ran the test again, and see an amazing thing, we are only using about 15 megabytes of memory, and we can actually see the v8 garbage collector doing work now: &lt;a href='/wp-content/uploads/2011/04/all-fixed.jpg'&gt;&lt;img src='/wp-content/uploads/2011/04/all-fixed.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id='ship_it_to_production'&gt;Ship it to production&lt;/h2&gt;
 
 &lt;p&gt;Going back to Matt&amp;#8217;s original problem, he is using Node.js as part of the server side infrastructure for &lt;a href='http://voxer.com/'&gt;Voxer, a communication application for mobile devices&lt;/a&gt;. He applied the patches, and provided this graph from Cacti showing the massive improvement in free memory:&lt;/p&gt;
 
-&lt;p&gt;&lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/Cacti.png'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/Cacti.png' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href='/wp-content/uploads/2011/04/Cacti.png'&gt;&lt;img src='/wp-content/uploads/2011/04/Cacti.png' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id='what_about_twisted_python'&gt;What about Twisted Python?&lt;/h2&gt;
 
@@ -702,7 +702,7 @@
 &lt;/div&gt;
 &lt;p&gt;We deployed this to one Twisted Python Service as a test, and you can see the impact on memory use, dropping form 1.15 gigabytes to around 300 megabytes:&lt;/p&gt;
 
-&lt;p&gt;&lt;a href='http://journal.paul.querna.org/wp-content/uploads/2011/04/twisted-memory.jpg'&gt;&lt;img src='http://journal.paul.querna.org/wp-content/uploads/2011/04/twisted-memory.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href='/wp-content/uploads/2011/04/twisted-memory.jpg'&gt;&lt;img src='/wp-content/uploads/2011/04/twisted-memory.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id='conclusion'&gt;Conclusion&lt;/h2&gt;
 
