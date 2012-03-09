@@ -1,0 +1,2057 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+     <loc>http://journal.paul.querna.org/</loc>
+     <changefreq>daily</changefreq>
+     <priority>1.0</priority>
+  </url>
+  <url>
+     <loc>http://journal.paul.querna.org/archive.html</loc>
+     <changefreq>daily</changefreq>
+     <priority>0.8</priority>
+  </url>
+  <url>
+     <loc>http://journal.paul.querna.org/atom.xml</loc>
+     <changefreq>daily</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2012/03/01/march-2012/</loc>
+     <lastmod>2012-03-01</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2012/02/22/designing-network-protocols/</loc>
+     <lastmod>2012-02-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2012/01/05/dreadnot-continuous-deployment/</loc>
+     <lastmod>2012-01-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2011/12/31/2011-timecards/</loc>
+     <lastmod>2011-12-31</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2011/12/26/log-for-machines-in-json/</loc>
+     <lastmod>2011-12-26</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2011/12/18/the-switch-python-to-node-js/</loc>
+     <lastmod>2011-12-18</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2011/12/17/technology-cloud-monitoring/</loc>
+     <lastmod>2011-12-17</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2011/12/09/node-js-interview-venturebeat/</loc>
+     <lastmod>2011-12-09</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2011/12/03/technology-experiences/</loc>
+     <lastmod>2011-12-03</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2011/04/05/openssl-memory-use/</loc>
+     <lastmod>2011-04-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/12/16/rackspace-acquires-cloudkick/</loc>
+     <lastmod>2010-12-16</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/12/15/udp-in-node-js/</loc>
+     <lastmod>2010-12-15</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/11/11/enabling-jna-in-cassandra/</loc>
+     <lastmod>2010-11-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/11/06/disappointed/</loc>
+     <lastmod>2010-11-06</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/11/03/interview-libcloud-apachecon/</loc>
+     <lastmod>2010-11-03</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/11/02/the-case-for-gossip/</loc>
+     <lastmod>2010-11-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/10/23/three-things/</loc>
+     <lastmod>2010-10-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/10/22/evolution-of-apaches-websites/</loc>
+     <lastmod>2010-10-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/10/12/java-trap-2010-edition/</loc>
+     <lastmod>2010-10-12</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/10/06/transforming-streams/</loc>
+     <lastmod>2010-10-06</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/09/24/who-are-you-writing-code-for/</loc>
+     <lastmod>2010-09-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/09/24/cassandra-token-selection/</loc>
+     <lastmod>2010-09-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/09/24/from-the-trenches/</loc>
+     <lastmod>2010-09-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/09/04/limiting-concurrency-node-js/</loc>
+     <lastmod>2010-09-04</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/09/02/nodul-es-cpan-for-node-js/</loc>
+     <lastmod>2010-09-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/08/23/writing-node-js-native-extensions/</loc>
+     <lastmod>2010-08-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/08/11/async-tls/</loc>
+     <lastmod>2010-08-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/07/10/overclocking-mod_ssl/</loc>
+     <lastmod>2010-07-10</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/07/09/the-illusion-of-stability/</loc>
+     <lastmod>2010-07-09</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/06/22/slides/</loc>
+     <lastmod>2010-06-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/06/12/node-js/</loc>
+     <lastmod>2010-06-12</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/06/12/forever-storage/</loc>
+     <lastmod>2010-06-12</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/04/11/internet-security-is-a-failure/</loc>
+     <lastmod>2010-04-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/04/10/living-the-dream/</loc>
+     <lastmod>2010-04-10</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/03/22/sxsw-roundup/</loc>
+     <lastmod>2010-03-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/03/13/sxsw-day-1/</loc>
+     <lastmod>2010-03-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/02/02/facebook-open-source/</loc>
+     <lastmod>2010-02-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/01/25/cloudkick-agent-and-more/</loc>
+     <lastmod>2010-01-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/01/25/httpd-mod_cache-only-caching-your-homepage/</loc>
+     <lastmod>2010-01-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2010/01/25/httpd-disabling-keep-alive-for-hot-linked-images/</loc>
+     <lastmod>2010-01-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/12/13/i-have-a-plan/</loc>
+     <lastmod>2009-12-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/09/02/crazier-than-expected/</loc>
+     <lastmod>2009-09-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/08/24/downtime-page-in-apache/</loc>
+     <lastmod>2009-08-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/08/23/email-is-awesome/</loc>
+     <lastmod>2009-08-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/08/20/zfsfreebsd-pain/</loc>
+     <lastmod>2009-08-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/08/12/comcast-sucks/</loc>
+     <lastmod>2009-08-12</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/08/11/malloc-debugging-on-osx/</loc>
+     <lastmod>2009-08-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/07/29/joining-cloudkick/</loc>
+     <lastmod>2009-07-29</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/07/29/leaving-joost/</loc>
+     <lastmod>2009-07-29</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/06/24/being-unique/</loc>
+     <lastmod>2009-06-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/06/19/new-iphone-camera/</loc>
+     <lastmod>2009-06-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/06/05/leaving-nyc-jfk/</loc>
+     <lastmod>2009-06-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/05/31/leaving-msp/</loc>
+     <lastmod>2009-05-31</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/03/25/happy-birthday-apache/</loc>
+     <lastmod>2009-03-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/03/21/travelling/</loc>
+     <lastmod>2009-03-21</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/02/15/apache-orthrus/</loc>
+     <lastmod>2009-02-15</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2009/01/19/stuck-in-ord/</loc>
+     <lastmod>2009-01-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/12/25/my-gnome/</loc>
+     <lastmod>2008-12-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/12/23/mod_lua-in-apache-trunk/</loc>
+     <lastmod>2008-12-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/12/23/mod_v8/</loc>
+     <lastmod>2008-12-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/11/30/progress-on-apache-24/</loc>
+     <lastmod>2008-11-30</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/11/29/joost-on-the-iphone/</loc>
+     <lastmod>2008-11-29</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/11/26/todo/</loc>
+     <lastmod>2008-11-26</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/11/13/embed-joost/</loc>
+     <lastmod>2008-11-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/11/07/apache-30-podcast/</loc>
+     <lastmod>2008-11-07</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/11/01/i-love-my-iphone/</loc>
+     <lastmod>2008-11-01</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/10/29/new-simple-mpm-in-httpd-trunk/</loc>
+     <lastmod>2008-10-29</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/10/29/chroot-in-2210/</loc>
+     <lastmod>2008-10-29</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/09/24/the-economy/</loc>
+     <lastmod>2008-09-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/09/20/event-mpm-updates-and-mod_dialup/</loc>
+     <lastmod>2008-09-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/05/18/in-spokane/</loc>
+     <lastmod>2008-05-18</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/04/08/apache-http-server-development-for-this-week/</loc>
+     <lastmod>2008-04-08</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/03/27/apachecon-eu-2008/</loc>
+     <lastmod>2008-03-27</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/03/27/traveling/</loc>
+     <lastmod>2008-03-27</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/03/20/march-madness-on-joost/</loc>
+     <lastmod>2008-03-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2008/01/18/joining-joost/</loc>
+     <lastmod>2008-01-18</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/12/27/in-reply-to-bloglines-sucks/</loc>
+     <lastmod>2007-12-27</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/12/21/22-23/</loc>
+     <lastmod>2007-12-21</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/11/29/on-shedding/</loc>
+     <lastmod>2007-11-29</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/11/13/mod_serf-in-trunk/</loc>
+     <lastmod>2007-11-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/11/11/ipod-warning/</loc>
+     <lastmod>2007-11-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/10/25/new-software-mod_timer/</loc>
+     <lastmod>2007-10-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/10/08/gltail/</loc>
+     <lastmod>2007-10-08</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/10/04/212/</loc>
+     <lastmod>2007-10-04</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/10/04/goodbye-rdbms/</loc>
+     <lastmod>2007-10-04</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/10/03/dynamo/</loc>
+     <lastmod>2007-10-03</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/09/26/amazon-mp3-store-is-freaking-awesome/</loc>
+     <lastmod>2007-09-26</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/09/17/testing-css/</loc>
+     <lastmod>2007-09-17</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/09/14/moved-to-wordpress/</loc>
+     <lastmod>2007-09-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/09/11/speaking-at-geeksessions-1-2/</loc>
+     <lastmod>2007-09-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/09/06/its-on/</loc>
+     <lastmod>2007-09-06</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/08/26/the-new-bloglines-beta/</loc>
+     <lastmod>2007-08-26</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/08/14/lies-damn-lies-and-sun/</loc>
+     <lastmod>2007-08-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/07/31/ibloglines-ultimate-pro-edition/</loc>
+     <lastmod>2007-07-31</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/07/26/gadget-apis/</loc>
+     <lastmod>2007-07-26</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/07/19/ibloglines-for-the-iphone/</loc>
+     <lastmod>2007-07-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/07/14/iphone/</loc>
+     <lastmod>2007-07-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/07/14/announcement-cluster-tail-released/</loc>
+     <lastmod>2007-07-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/07/05/where-is-the-campfire-api/</loc>
+     <lastmod>2007-07-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/06/12/ev-certificates/</loc>
+     <lastmod>2007-06-12</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/06/07/ssl-session-caching-in-memcached/</loc>
+     <lastmod>2007-06-07</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/06/06/mod_never_expire/</loc>
+     <lastmod>2007-06-06</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/05/17/day-5-6-seattle/</loc>
+     <lastmod>2007-05-17</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/05/14/day-4-vancouver-bc/</loc>
+     <lastmod>2007-05-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/05/14/day-3-portland-mt-st-helens-bellingham/</loc>
+     <lastmod>2007-05-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/05/12/day-2-stuff-round-portland/</loc>
+     <lastmod>2007-05-12</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/05/12/day-1-san-jose-portland/</loc>
+     <lastmod>2007-05-12</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/05/08/dear-mom/</loc>
+     <lastmod>2007-05-08</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/05/04/road-trip/</loc>
+     <lastmod>2007-05-04</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/04/23/monday/</loc>
+     <lastmod>2007-04-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/04/20/friday/</loc>
+     <lastmod>2007-04-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/04/20/thursday/</loc>
+     <lastmod>2007-04-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/04/18/wednesday/</loc>
+     <lastmod>2007-04-18</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/04/18/tuesday/</loc>
+     <lastmod>2007-04-18</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/04/16/monday/</loc>
+     <lastmod>2007-04-16</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/03/20/reinventing-the-wheel/</loc>
+     <lastmod>2007-03-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/02/14/bloglines-image-wall/</loc>
+     <lastmod>2007-02-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2007/01/21/personal-e-mail-is-dead-to-me/</loc>
+     <lastmod>2007-01-21</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/12/23/apache-org-mailing-lists/</loc>
+     <lastmod>2006-12-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/12/21/happy-birthday/</loc>
+     <lastmod>2006-12-21</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/12/19/askx/</loc>
+     <lastmod>2006-12-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/12/03/wiiiiiiiiiiiiii/</loc>
+     <lastmod>2006-12-03</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/12/02/new-project-dworker/</loc>
+     <lastmod>2006-12-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/11/23/snow/</loc>
+     <lastmod>2006-11-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/11/22/incompetence/</loc>
+     <lastmod>2006-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/11/19/wiiless-in-spokane/</loc>
+     <lastmod>2006-11-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/11/17/holiday-travel-plans/</loc>
+     <lastmod>2006-11-17</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/10/06/things-to-do-at-the-apachecon-us-hackathon-next-week/</loc>
+     <lastmod>2006-10-06</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/09/25/upcoming-apachecon-austin/</loc>
+     <lastmod>2006-09-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/09/14/bloglines-general-manager/</loc>
+     <lastmod>2006-09-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/09/14/using-svnsync/</loc>
+     <lastmod>2006-09-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/09/09/whitelists-for-secure-html/</loc>
+     <lastmod>2006-09-09</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/08/25/fly-sjc/</loc>
+     <lastmod>2006-08-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/08/08/one-year/</loc>
+     <lastmod>2006-08-08</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/07/31/ndb-clusters/</loc>
+     <lastmod>2006-07-31</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/07/24/more-corn/</loc>
+     <lastmod>2006-07-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/07/23/upcoming-airweb-2006/</loc>
+     <lastmod>2006-07-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/07/19/upcoming/</loc>
+     <lastmod>2006-07-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/07/12/russian/</loc>
+     <lastmod>2006-07-12</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/07/11/mod_flvx/</loc>
+     <lastmod>2006-07-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/07/05/warzone-h-h-h-h-h-h-h-h-holiday/</loc>
+     <lastmod>2006-07-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/07/03/preparations/</loc>
+     <lastmod>2006-07-03</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/07/01/gnomdex-day-one/</loc>
+     <lastmod>2006-07-01</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/06/30/gnomedex-t-minues-20-minutes/</loc>
+     <lastmod>2006-06-30</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/06/26/bloglines-engineering-manager/</loc>
+     <lastmod>2006-06-26</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/06/26/going-to-gnomedex/</loc>
+     <lastmod>2006-06-26</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/06/25/posting-about-work/</loc>
+     <lastmod>2006-06-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/06/21/corn/</loc>
+     <lastmod>2006-06-21</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/06/19/testing-testing-1-2-3/</loc>
+     <lastmod>2006-06-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/06/16/un-google/</loc>
+     <lastmod>2006-06-16</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/06/11/myspace-generation/</loc>
+     <lastmod>2006-06-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/06/04/thoughts-on-a-web-toolkit/</loc>
+     <lastmod>2006-06-04</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/05/31/bloglines-blog-search/</loc>
+     <lastmod>2006-05-31</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/05/25/apachecon-us/</loc>
+     <lastmod>2006-05-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/05/18/uru-undead/</loc>
+     <lastmod>2006-05-18</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/04/23/httpd-2-2-2/</loc>
+     <lastmod>2006-04-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/04/13/funny-things-on-the-internet-today/</loc>
+     <lastmod>2006-04-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/03/27/why-sip-sucks/</loc>
+     <lastmod>2006-03-27</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/03/23/niagara-is-fast/</loc>
+     <lastmod>2006-03-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/03/15/anasazi/</loc>
+     <lastmod>2006-03-15</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/03/14/marketing-styles/</loc>
+     <lastmod>2006-03-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/03/13/testing/</loc>
+     <lastmod>2006-03-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/03/10/i-want-a-cupcake-factory-factory-factory/</loc>
+     <lastmod>2006-03-10</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/03/05/why-the-internet-is-awesomr/</loc>
+     <lastmod>2006-03-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/02/25/new-code/</loc>
+     <lastmod>2006-02-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/02/18/blog-software-for-my-mother/</loc>
+     <lastmod>2006-02-18</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/02/14/scary/</loc>
+     <lastmod>2006-02-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/02/11/and-i-will-strike-down-upon-thee-with-great-vengeance-and-furious-anger/</loc>
+     <lastmod>2006-02-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/02/08/public-information/</loc>
+     <lastmod>2006-02-08</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/01/30/on-blog-pinging-again/</loc>
+     <lastmod>2006-01-30</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/01/15/distractions/</loc>
+     <lastmod>2006-01-15</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2006/01/01/using-mod_fcgid-for-ruby-on-rails-applications/</loc>
+     <lastmod>2006-01-01</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/12/30/native-fastcgi-is-coming/</loc>
+     <lastmod>2005-12-30</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/12/30/the-colo-move-was-good/</loc>
+     <lastmod>2005-12-30</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/12/28/mod_append_hostname/</loc>
+     <lastmod>2005-12-28</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/12/19/in-case-you-missed-it/</loc>
+     <lastmod>2005-12-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/12/12/current-status/</loc>
+     <lastmod>2005-12-12</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/12/02/httpd-2-2-0-released/</loc>
+     <lastmod>2005-12-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/11/20/sms/</loc>
+     <lastmod>2005-11-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/11/04/cat-var-log-grep-interesting/</loc>
+     <lastmod>2005-11-04</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/10/22/paying-for-betas/</loc>
+     <lastmod>2005-10-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/10/20/flock-to-companies-without-a-business-plan/</loc>
+     <lastmod>2005-10-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/10/19/forum-software/</loc>
+     <lastmod>2005-10-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/10/16/google/</loc>
+     <lastmod>2005-10-16</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/10/14/welcome-to-the-suck/</loc>
+     <lastmod>2005-10-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/10/11/thought-of-the-day/</loc>
+     <lastmod>2005-10-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/10/07/bubble-2-0/</loc>
+     <lastmod>2005-10-07</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/10/02/curve-balls/</loc>
+     <lastmod>2005-10-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/09/28/blog-pings-are-stupid/</loc>
+     <lastmod>2005-09-28</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/09/25/need-beta-testers/</loc>
+     <lastmod>2005-09-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/09/20/blah-blah-blah/</loc>
+     <lastmod>2005-09-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/09/19/enomem/</loc>
+     <lastmod>2005-09-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/09/18/yarr/</loc>
+     <lastmod>2005-09-18</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/09/09/herbal-essences/</loc>
+     <lastmod>2005-09-09</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/09/05/async-io-in-httpd-2-3/</loc>
+     <lastmod>2005-09-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/09/02/now-running-apache-2/</loc>
+     <lastmod>2005-09-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/08/24/ext3-i-hate-you/</loc>
+     <lastmod>2005-08-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/08/20/quote-of-the-day/</loc>
+     <lastmod>2005-08-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/08/19/at-barcamp/</loc>
+     <lastmod>2005-08-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/08/17/version-numbers-are-cheap/</loc>
+     <lastmod>2005-08-17</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/08/13/dear-brad/</loc>
+     <lastmod>2005-08-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/07/22/first-day-in-rome/</loc>
+     <lastmod>2005-07-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/07/12/traveling-to-rome/</loc>
+     <lastmod>2005-07-12</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/07/11/traveling-in-europe/</loc>
+     <lastmod>2005-07-11</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/07/07/software-culture/</loc>
+     <lastmod>2005-07-07</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/07/05/moved-urls-and-software/</loc>
+     <lastmod>2005-07-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/07/05/response-to-debunking-lighttpd/</loc>
+     <lastmod>2005-07-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/07/02/blog-software-http-caching/</loc>
+     <lastmod>2005-07-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/07/01/blog-software/</loc>
+     <lastmod>2005-07-01</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/06/24/debunking-lighttpd/</loc>
+     <lastmod>2005-06-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/06/24/httpd-2-1-6-alpha-is-available/</loc>
+     <lastmod>2005-06-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/06/21/new-job/</loc>
+     <lastmod>2005-06-21</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/06/20/new-car/</loc>
+     <lastmod>2005-06-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/06/17/httpd-2-1-5-alpha/</loc>
+     <lastmod>2005-06-17</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/06/16/for-the-record/</loc>
+     <lastmod>2005-06-16</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/06/13/abridged-guide-to-http-caching/</loc>
+     <lastmod>2005-06-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/06/08/talking-water-fountains-should-be-banned/</loc>
+     <lastmod>2005-06-08</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/05/27/partial-page-caching/</loc>
+     <lastmod>2005-05-27</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/05/02/tiger-installed/</loc>
+     <lastmod>2005-05-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/04/29/sni-support-in-mozilla/</loc>
+     <lastmod>2005-04-29</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/04/28/coal-isnt-a-fossil-fuel/</loc>
+     <lastmod>2005-04-28</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/04/24/tls-server-name-indication/</loc>
+     <lastmod>2005-04-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/04/16/browser-detection-is-bad/</loc>
+     <lastmod>2005-04-16</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/04/10/gpl-libraries-suck/</loc>
+     <lastmod>2005-04-10</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/04/09/forcing-a-kernel-panic/</loc>
+     <lastmod>2005-04-09</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/04/07/tcp_cork-is-good-for-your-server/</loc>
+     <lastmod>2005-04-07</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/04/06/the-long-road-of-development/</loc>
+     <lastmod>2005-04-06</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/03/31/lt-limit-gt-is-a-bad-idea/</loc>
+     <lastmod>2005-03-31</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/03/30/bucket-brigades-are-beautiful/</loc>
+     <lastmod>2005-03-30</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/03/25/apachecon-europe-2005/</loc>
+     <lastmod>2005-03-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/03/24/and-all-i-got-was-this-t-shirt/</loc>
+     <lastmod>2005-03-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/03/23/please-just-give-up/</loc>
+     <lastmod>2005-03-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/03/23/getting-it-wrong-1-2-3-4-times/</loc>
+     <lastmod>2005-03-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/03/13/problems/</loc>
+     <lastmod>2005-03-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/03/06/suphp/</loc>
+     <lastmod>2005-03-06</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/03/06/eat-your-own-dog-food/</loc>
+     <lastmod>2005-03-06</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/03/02/deceptive/</loc>
+     <lastmod>2005-03-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/02/23/apr-memory-pools-rock/</loc>
+     <lastmod>2005-02-23</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/02/04/how-to-not-write-a-signal-handler-by-example/</loc>
+     <lastmod>2005-02-04</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/01/28/on-opensolaris/</loc>
+     <lastmod>2005-01-28</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2005/01/13/i-wish/</loc>
+     <lastmod>2005-01-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/12/25/working-on-christmas/</loc>
+     <lastmod>2004-12-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/12/15/pdx-has-free-wireless/</loc>
+     <lastmod>2004-12-15</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/12/15/the-trip-begins/</loc>
+     <lastmod>2004-12-15</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/12/05/apr_memcache/</loc>
+     <lastmod>2004-12-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/12/03/on-economics/</loc>
+     <lastmod>2004-12-03</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/12/01/mod_svn_view-development/</loc>
+     <lastmod>2004-12-01</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/11/29/admit-it-when-youre-wrong/</loc>
+     <lastmod>2004-11-29</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/11/29/null-termination-attacks/</loc>
+     <lastmod>2004-11-29</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/11/28/your-joking-right-it-doesnt-compile/</loc>
+     <lastmod>2004-11-28</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/11/27/this-week-in-coding/</loc>
+     <lastmod>2004-11-27</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/11/27/goodbye-comments/</loc>
+     <lastmod>2004-11-27</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/11/03/election-update/</loc>
+     <lastmod>2004-11-03</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/11/01/election-prediction/</loc>
+     <lastmod>2004-11-01</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/10/24/rici/</loc>
+     <lastmod>2004-10-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/10/24/what-if-god-was-one-of-us/</loc>
+     <lastmod>2004-10-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/09/17/dear-economics-professor/</loc>
+     <lastmod>2004-09-17</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/08/25/speakeasy-update/</loc>
+     <lastmod>2004-08-25</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/08/24/where-are-the-doom-3-linux-binaries/</loc>
+     <lastmod>2004-08-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/08/24/the-999-out-of-1000-rule/</loc>
+     <lastmod>2004-08-24</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/08/10/that-uru-thing/</loc>
+     <lastmod>2004-08-10</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/08/10/apple-rocks/</loc>
+     <lastmod>2004-08-10</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/07/31/a-reminder/</loc>
+     <lastmod>2004-07-31</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/07/13/that-perfect-language/</loc>
+     <lastmod>2004-07-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/07/01/soap-isnt-simple/</loc>
+     <lastmod>2004-07-01</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/06/22/sold-out/</loc>
+     <lastmod>2004-06-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/06/22/yet-another-project-idea/</loc>
+     <lastmod>2004-06-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/06/20/the-bandwidth-problem/</loc>
+     <lastmod>2004-06-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/06/18/commit-bits-for-apache/</loc>
+     <lastmod>2004-06-18</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/06/18/evil-viri/</loc>
+     <lastmod>2004-06-18</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/06/17/multiple-apis-arent-cool/</loc>
+     <lastmod>2004-06-17</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/04/07/certifications/</loc>
+     <lastmod>2004-04-07</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/03/13/integration/</loc>
+     <lastmod>2004-03-13</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/03/05/nevada-why-would-i-go-there/</loc>
+     <lastmod>2004-03-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/02/05/a-sad-day/</loc>
+     <lastmod>2004-02-05</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/02/02/biscuits-and-gravy/</loc>
+     <lastmod>2004-02-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2004/01/20/cool-stuff/</loc>
+     <lastmod>2004-01-20</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/11/21/i-will-take-famous-titties-for/</loc>
+     <lastmod>2003-11-21</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/11/16/where-is-apache-going-and-other-misc-ramblings/</loc>
+     <lastmod>2003-11-16</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/11/14/mod_authn_pop3-and-site-design/</loc>
+     <lastmod>2003-11-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/11/14/snmp-is-cool-and-evil/</loc>
+     <lastmod>2003-11-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/11/14/42-what-is-it/</loc>
+     <lastmod>2003-11-14</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/10/27/mod_auth-project-and-what-is-open-source-for-me/</loc>
+     <lastmod>2003-10-27</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/10/19/patches-subversion-and-ferite/</loc>
+     <lastmod>2003-10-19</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/10/01/copyright-this/</loc>
+     <lastmod>2003-10-01</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/09/30/technically-lost/</loc>
+     <lastmod>2003-09-30</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/09/30/leaches/</loc>
+     <lastmod>2003-09-30</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/09/08/why-debian-sucks/</loc>
+     <lastmod>2003-09-08</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/09/04/not-enough-computers/</loc>
+     <lastmod>2003-09-04</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/09/04/google-php-and-apache/</loc>
+     <lastmod>2003-09-04</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+  <url>
+     <loc>http://journal.paul.querna.org/articles/2003/09/02/first-post/</loc>
+     <lastmod>2003-09-02</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>1.0</priority>
+  </url>
+  
+</urlset> 
+

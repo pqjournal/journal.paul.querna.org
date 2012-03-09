@@ -3,7 +3,9 @@ http://journal.paul.querna.org/archive.html
 http://journal.paul.querna.org/atom.xml
 http://journal.paul.querna.org/.htaccess
 http://journal.paul.querna.org/index.html
+http://journal.paul.querna.org/robots.txt
 http://journal.paul.querna.org/sitemap.txt
+http://journal.paul.querna.org/sitemap.xml
 http://journal.paul.querna.org/page2/index.html
 http://journal.paul.querna.org/page3/index.html
 http://journal.paul.querna.org/page4/index.html

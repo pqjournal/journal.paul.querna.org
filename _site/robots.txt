@@ -1,0 +1,4 @@
+User-agent: *
+Sitemap: http://journal.paul.querna.org/sitemap.xml
+Disallow:
+
