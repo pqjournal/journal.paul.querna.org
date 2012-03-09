@@ -5,12 +5,8 @@
   border-top: 4px solid black;
   border-bottom: 4px solid black;
 }
-/*
-.content {
-  font-size: 120%;
-}
 
-p {
-  font-size: 120%;
-}
-*/
+a.header-link:link { color: black; }
+a.header-link:active { color: blue; }
+a.header-link:visited { color: black; }
+a.header-link:hover { color: blue; }
