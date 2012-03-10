@@ -70,6 +70,15 @@ def rand_hash(max_length):
 def git_clone(origin):
     subprocess.check_output(['/usr/bin/git', 'clone', origin, 'wc'], stderr=subprocess.STDOUT)
 
+def git_branch(branchname):
+    subprocess.check_output(['/usr/libexec/git-core/git-checkout', '-b', branchname], stderr=subprocess.STDOUT)
+
+def git_commit(msg):
+    subprocess.check_output(['/usr/bin/git', 'commit', '-m', msg], stderr=subprocess.STDOUT)
+
+def git_add(addpath):
+    subprocess.check_output(['/usr/bin/git', 'add', addpath], stderr=subprocess.STDOUT)
+
 def check_post_exists(base, target):
     post = pjoin(base, '_posts', target + ".markdown")
     if not os.path.exists(post):
@@ -113,6 +122,7 @@ def handle_comment(conf):
         os.chdir(tmppath)
         git_clone(conf['git_root'])
         os.chdir('wc')
+
         target = os.path.basename(targetpost)
         base = pjoin(tmppath, 'wc')
 
@@ -129,8 +139,11 @@ def handle_comment(conf):
         datestr = slugify(unicode(time.strftime('%Y-%m-%d_%H:%M')))
         ipstr = slugify(unicode(os.environ['REMOTE_ADDR']))
         rstr = rand_hash(8)
+        commentname = "%s-%s-%s.yml" % (datestr, ipstr, rstr)
+        cpath = pjoin(base, '_comments', target, commentname)
+        bname = target + '-' + commentname
+        git_branch(bname)
 
-        cpath = pjoin(base, '_comments', target, "%s-%s-%s.yml" % (datestr, ipstr, rstr))
         doc = {
             'ip_address': os.environ['REMOTE_ADDR'],
             'name': name,
@@ -142,6 +155,10 @@ def handle_comment(conf):
         with open(cpath, 'w') as fp:
             yaml.safe_dump(doc, fp)
 
+        git_add(pjoin('_comments', target, commentname))
+        git_commit('New comment')
+        git_push(bname)
+    
         r = Response()
         r.body = open(cpath).read()
         r.send()
