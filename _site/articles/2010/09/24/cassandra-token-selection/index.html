@@ -53,14 +53,9 @@
 <p>When you can&#8217;t double the size of the cluster, its time to do a little math.</p>
 
 <p>First, lets look at how you calculate the ideal token distribution. Cassandra&#8217;s ring is from <code>0</code> to <code>2**127</code> in size. Using this python function, you can get a list of the ideal intiial tokens for a given cluster size of <code>n</code>:</p>
-<div class='highlight'><pre><code class='python'><span class='n'>RING_SIZE</span> <span class='o'>=</span> <span class='mi'>2</span><span class='o'>**</span><span class='mi'>127</span>
-<span class='k'>def</span> <span class='nf'>tokens</span><span class='p'>(</span><span class='n'>n</span><span class='p'>):</span>
-  <span class='n'>rv</span> <span class='o'>=</span> <span class='p'>[]</span>
-  <span class='k'>for</span> <span class='n'>x</span> <span class='ow'>in</span> <span class='nb'>xrange</span><span class='p'>(</span><span class='n'>n</span><span class='p'>):</span> 
-    <span class='n'>rv</span><span class='o'>.</span><span class='n'>append</span><span class='p'>(</span><span class='n'>RING_SIZE</span> <span class='o'>/</span> <span class='n'>n</span> <span class='o'>*</span> <span class='n'>x</span><span class='p'>)</span>
-  <span class='k'>return</span> <span class='n'>rv</span>
-</code></pre>
-</div>
+
+<p>Liquid error: No such file or directory - posix_spawnp</p>
+
 <p>For example, a 5 node cluster would output values like this:</p>
 
 <pre><code>1:      0
@@ -112,7 +107,41 @@
         </div>
     </div>
 
+      <hr/>
+  <br/>
+  <h4>Add Comment</h4>
+  <div class="row comment-form">
+    <div class="span8">
+      <p>All comments are moderated via public <a href="https://github.com/pquerna/journal.paul.querna.org/pulls">Pull Requests</a>.  All comment fields, including your client IP address are visible.</p>
+      <form method="POST" action="/comments.py" class="form-vertical">
+        <fieldset>
+          <input type="hidden" name="targetpost" value="2010-09-24-cassandra-token-selection" />
+            <label for="name">Name:</label>
+            <input class="span3" type="text" size="30" name="name" />
+            <label for="email">E-Mail:</label>
+            <input class="span3" type="text" size="30" name="email" />
+            <span class="help-inline">(optional)</span>
+            <label for="website">Website:</label>
+            <input class="span3" type="text" size="30" name="website" />
+            <span class="help-inline">(optional)</span>
+            <label for="comment">Comment:</label>
+            <textarea class="span8" name="comment" rows="4" cols="60" ></textarea>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Submit Comment</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <hr/>
+  <br/>
+  <h4>Comments</h4>
     
+  <hr/>
+  <br/>
+  
+
   </div>
   
   <div class="span4">

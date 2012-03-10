@@ -49,40 +49,13 @@
 <p>Isaac answered my questions about private NPM registries, but <a href='https://github.com/mranney'>Matt Ranney</a> explained a more interesting problem. He was dialed into a conference call line for Node Office hours (he is currently living in Hawaii.) Matt explained that he is using the new <a href='http://nodejs.org/docs/v0.4/api/tls.html'>TLS module in Node v0.4</a>, and it was using <strong>1 megabyte of memory per connection!</strong> Using 1mb per connection made us think there must be something wrong in Node.js itself, so we wrote up a simple test case client and server.</p>
 
 <p>The TLS server says &#8220;welcome&#8221; to a newly connected client, and then echos anything it receives back to the client:</p>
-<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>tls</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;tls&#39;</span><span class='p'>);</span>
-<span class='kd'>var</span> <span class='nx'>fs</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;fs&#39;</span><span class='p'>);</span>
 
-<span class='kd'>var</span> <span class='nx'>options</span> <span class='o'>=</span> <span class='p'>{</span>
-  <span class='nx'>key</span><span class='o'>:</span> <span class='nx'>fs</span><span class='p'>.</span><span class='nx'>readFileSync</span><span class='p'>(</span><span class='s1'>&#39;test_key.pem&#39;</span><span class='p'>),</span>
-  <span class='nx'>cert</span><span class='o'>:</span> <span class='nx'>fs</span><span class='p'>.</span><span class='nx'>readFileSync</span><span class='p'>(</span><span class='s1'>&#39;test_cert.pem&#39;</span><span class='p'>),</span>
-<span class='p'>};</span>
+<p>Liquid error: No such file or directory - posix_spawnp</p>
 
-<span class='nx'>tls</span><span class='p'>.</span><span class='nx'>createServer</span><span class='p'>(</span><span class='nx'>options</span><span class='p'>,</span> <span class='kd'>function</span> <span class='p'>(</span><span class='nx'>s</span><span class='p'>)</span> <span class='p'>{</span>
-  <span class='nx'>s</span><span class='p'>.</span><span class='nx'>write</span><span class='p'>(</span><span class='s2'>&quot;welcome!\n&quot;</span><span class='p'>);</span>
-  <span class='nx'>console</span><span class='p'>.</span><span class='nx'>log</span><span class='p'>(</span><span class='s1'>&#39;got client&#39;</span><span class='p'>);</span>
-  <span class='nx'>s</span><span class='p'>.</span><span class='nx'>pipe</span><span class='p'>(</span><span class='nx'>s</span><span class='p'>);</span>
-<span class='p'>}).</span><span class='nx'>listen</span><span class='p'>(</span><span class='mi'>8000</span><span class='p'>);</span>
-<span class='nx'>console</span><span class='p'>.</span><span class='nx'>log</span><span class='p'>(</span><span class='s1'>&#39;127.0.0.1:8000&#39;</span><span class='p'>);</span>
-</code></pre>
-</div>
 <p>The client spawns 200 connections, and writes &#8216;hello&#8217; to the server every 5 seconds for each connection:</p>
-<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>tls</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;tls&#39;</span><span class='p'>);</span>
 
-<span class='kd'>function</span> <span class='nx'>go</span><span class='p'>()</span> <span class='p'>{</span>
-  <span class='kd'>var</span> <span class='nx'>s</span> <span class='o'>=</span> <span class='kc'>null</span><span class='p'>;</span>
-  <span class='nx'>s</span> <span class='o'>=</span> <span class='nx'>tls</span><span class='p'>.</span><span class='nx'>connect</span><span class='p'>(</span><span class='mi'>8000</span><span class='p'>,</span> <span class='s1'>&#39;127.0.0.1&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
-    <span class='nx'>setInterval</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
-      <span class='nx'>s</span><span class='p'>.</span><span class='nx'>write</span><span class='p'>(</span><span class='s1'>&#39;hello\n&#39;</span><span class='p'>);</span>
-    <span class='p'>},</span> <span class='mi'>5000</span><span class='p'>);</span>
-  <span class='p'>});</span>  
-<span class='p'>};</span>
+<p>Liquid error: No such file or directory - posix_spawnp</p>
 
-<span class='kd'>var</span> <span class='nx'>i</span><span class='p'>;</span>
-<span class='k'>for</span> <span class='p'>(</span><span class='nx'>i</span> <span class='o'>=</span> <span class='mi'>0</span><span class='p'>;</span> <span class='nx'>i</span><span class='o'>&lt;</span><span class='mi'>200</span><span class='p'>;</span> <span class='nx'>i</span><span class='o'>++</span><span class='p'>)</span> <span class='p'>{</span>
-  <span class='nx'>go</span><span class='p'>();</span>
-<span class='p'>}</span>
-</code></pre>
-</div>
 <p>Running the client and server on my laptop, the server used almost 200 megabytes of memory. This meant the high memory usage per-connection is not just a problem with Matt&#8217;s application, but something deeper in Node.js.</p>
 
 <p>At this point the Linux users are trembling, unsure how to debug the issue. Luckily, I still use <a href='http://en.wikipedia.org/wiki/Mac_OS_X'>Steve&#8217;s operating system</a>, and I fired up <a href='http://en.wikipedia.org/wiki/Instruments_(application'>Instruments.app</a>) to start taking a look at the problem.</p>
@@ -110,12 +83,9 @@
 <p>Recent versions of OpenSSL (&gt;1.0.0) have added <code>SSL_OP_NO_COMPRESSION</code> that can be disable compression per-connection via <a href='http://www.openssl.org/docs/ssl/SSL_CTX_set_options.html'>SSL_CTX_set_options</a>. However, most Linux distributions are still using variations of OpenSSL 0.9.8, meaning this option isn&#8217;t viable for most users.</p>
 
 <p>As an alternative, it is possible to zero out the global list of all OpenSSL compression methods after initializing OpenSSL:</p>
-<div class='highlight'><pre><code class='c'><span class='kt'>void</span> <span class='nf'>disable_openssl_compression</span><span class='p'>()</span> <span class='p'>{</span>
-  <span class='n'>STACK_OF</span><span class='p'>(</span><span class='n'>SSL_COMP</span><span class='p'>)</span><span class='o'>*</span> <span class='n'>comp_methods</span> <span class='o'>=</span> <span class='n'>SSL_COMP_get_compression_methods</span><span class='p'>();</span>
-  <span class='n'>sk_SSL_COMP_zero</span><span class='p'>(</span><span class='n'>comp_methods</span><span class='p'>);</span>
-<span class='p'>};</span>
-</code></pre>
-</div>
+
+<p>Liquid error: No such file or directory - posix_spawnp</p>
+
 <p>This is a <em>terrible hack</em>, but it enabled us to test the effect of disabling compression on the server side, and after seeing the results, I think it is worth it.</p>
 
 <p>With this change, we ran the test again, and see an amazing thing, we are only using about 15 megabytes of memory, and we can actually see the v8 garbage collector doing work now: <a href='/wp-content/uploads/2011/04/all-fixed.jpg'><img src='/wp-content/uploads/2011/04/all-fixed.jpg' alt='' /></a></p>
@@ -131,25 +101,9 @@
 <p>At <a href='https://www.cloudkick.com/'>Rackspace/Cloudkick</a> we use <a href='http://twistedmatrix.com/trac/'>Twisted Python</a> for many production services, including several with many thousands of open TLS connections. We had always just assumed the high memory usage was an issue in Twisted Python itself, not something in OpenSSL. We had tried looking at the memory usage using <a href='http://www.aminus.net/wiki/Dowser'>Dowser</a>, but we never got far, as it always looked like Python wasn&#8217;t misbehaving. This now makes sense, because the OpenSSL objects used in <a href='http://packages.python.org/pyOpenSSL/'>pyOpenSSL</a> wouldn&#8217;t be counted by Dowser.</p>
 
 <p>pyOpenSSL is a limited binding of the most useful functions in OpenSSL, so it doesn&#8217;t provide bindings to the functions that can manipulate the OpenSSL Compression settings. I decided to use the <a href='http://docs.python.org/library/ctypes.html'>ctypes module</a> to avoid needing to distribute a C based extension to disable OpenSSL compression:</p>
-<div class='highlight'><pre><code class='python'><span class='k'>def</span> <span class='nf'>disableSSLCompression</span><span class='p'>(</span><span class='bp'>self</span><span class='p'>):</span>
-  <span class='k'>try</span><span class='p'>:</span>
-    <span class='kn'>import</span> <span class='nn'>ctypes</span>
-    <span class='kn'>import</span> <span class='nn'>glob</span>
-    <span class='n'>openssl</span> <span class='o'>=</span> <span class='n'>ctypes</span><span class='o'>.</span><span class='n'>CDLL</span><span class='p'>(</span><span class='bp'>None</span><span class='p'>,</span> <span class='n'>ctypes</span><span class='o'>.</span><span class='n'>RTLD_GLOBAL</span><span class='p'>)</span>
-    <span class='k'>try</span><span class='p'>:</span>
-      <span class='n'>f</span> <span class='o'>=</span> <span class='n'>openssl</span><span class='o'>.</span><span class='n'>SSL_COMP_get_compression_methods</span>
-    <span class='k'>except</span> <span class='ne'>AttributeError</span><span class='p'>:</span>
-      <span class='n'>ssllib</span> <span class='o'>=</span> <span class='nb'>sorted</span><span class='p'>(</span><span class='n'>glob</span><span class='o'>.</span><span class='n'>glob</span><span class='p'>(</span><span class='s'>&quot;/usr/lib/libssl.so.*&quot;</span><span class='p'>))[</span><span class='mi'>0</span><span class='p'>]</span>
-      <span class='n'>openssl</span> <span class='o'>=</span> <span class='n'>ctypes</span><span class='o'>.</span><span class='n'>CDLL</span><span class='p'>(</span><span class='n'>ssllib</span><span class='p'>,</span> <span class='n'>ctypes</span><span class='o'>.</span><span class='n'>RTLD_GLOBAL</span><span class='p'>)</span>
 
-    <span class='n'>openssl</span><span class='o'>.</span><span class='n'>SSL_COMP_get_compression_methods</span><span class='o'>.</span><span class='n'>restype</span> <span class='o'>=</span> <span class='n'>ctypes</span><span class='o'>.</span><span class='n'>c_void_p</span>
-    <span class='n'>openssl</span><span class='o'>.</span><span class='n'>sk_zero</span><span class='o'>.</span><span class='n'>argtypes</span> <span class='o'>=</span> <span class='p'>[</span><span class='n'>ctypes</span><span class='o'>.</span><span class='n'>c_void_p</span><span class='p'>]</span>
-    <span class='n'>openssl</span><span class='o'>.</span><span class='n'>sk_zero</span><span class='p'>(</span><span class='n'>openssl</span><span class='o'>.</span><span class='n'>SSL_COMP_get_compression_methods</span><span class='p'>())</span>
-  <span class='k'>except</span> <span class='ne'>Exception</span><span class='p'>,</span> <span class='n'>e</span><span class='p'>:</span>
-    <span class='n'>log</span><span class='o'>.</span><span class='n'>msg</span><span class='p'>(</span><span class='s'>&#39;disableSSLCompression: Failed:&#39;</span><span class='p'>)</span>
-    <span class='n'>log</span><span class='o'>.</span><span class='n'>msg</span><span class='p'>(</span><span class='n'>e</span><span class='p'>)</span>
-</code></pre>
-</div>
+<p>Liquid error: No such file or directory - posix_spawnp</p>
+
 <p>We deployed this to one Twisted Python Service as a test, and you can see the impact on memory use, dropping form 1.15 gigabytes to around 300 megabytes:</p>
 
 <p><a href='/wp-content/uploads/2011/04/twisted-memory.jpg'><img src='/wp-content/uploads/2011/04/twisted-memory.jpg' alt='' /></a></p>
@@ -184,7 +138,41 @@
         </div>
     </div>
 
+      <hr/>
+  <br/>
+  <h4>Add Comment</h4>
+  <div class="row comment-form">
+    <div class="span8">
+      <p>All comments are moderated via public <a href="https://github.com/pquerna/journal.paul.querna.org/pulls">Pull Requests</a>.  All comment fields, including your client IP address are visible.</p>
+      <form method="POST" action="/comments.py" class="form-vertical">
+        <fieldset>
+          <input type="hidden" name="targetpost" value="2011-04-05-openssl-memory-use" />
+            <label for="name">Name:</label>
+            <input class="span3" type="text" size="30" name="name" />
+            <label for="email">E-Mail:</label>
+            <input class="span3" type="text" size="30" name="email" />
+            <span class="help-inline">(optional)</span>
+            <label for="website">Website:</label>
+            <input class="span3" type="text" size="30" name="website" />
+            <span class="help-inline">(optional)</span>
+            <label for="comment">Comment:</label>
+            <textarea class="span8" name="comment" rows="4" cols="60" ></textarea>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Submit Comment</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <hr/>
+  <br/>
+  <h4>Comments</h4>
     
+  <hr/>
+  <br/>
+  
+
   </div>
   
   <div class="span4">

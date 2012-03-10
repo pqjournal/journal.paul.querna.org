@@ -61,10 +61,9 @@
 <h2 id='an_example_of_the_problem'>An example of the problem</h2>
 
 <p>An example is this classic error message inside the <a href='http://httpd.apache.org/'>Apache HTTP Server</a>. The following code is called any time a client hits a URL that doesn&#8217;t exist on the file system:</p>
-<div class='highlight'><pre><code class='c'><span class='n'>ap_log_rerror</span><span class='p'>(</span><span class='n'>APLOG_MARK</span><span class='p'>,</span> <span class='n'>APLOG_INFO</span><span class='p'>,</span> <span class='mi'>0</span><span class='p'>,</span> <span class='n'>r</span><span class='p'>,</span>
-  <span class='s'>&quot;File does not exist: %s&quot;</span><span class='p'>,</span> <span class='n'>r</span><span class='o'>-&gt;</span><span class='n'>filename</span><span class='p'>);</span>
-</code></pre>
-</div>
+
+<p>Liquid error: No such file or directory - posix_spawnp</p>
+
 <p>This would generate a log message like the following in your <code>error.log</code>:</p>
 
 <pre><code>[Mon Dec 26 09:14:46 2011] [info] [client 50.57.61.4] File does not exist: /var/www/no-such-file</code></pre>
@@ -76,28 +75,9 @@
 <h2 id='what_if_we_logged_everything_into_json'>What if we logged everything into JSON?</h2>
 
 <p>If we produced a JSON object which contained the same message, it might look something like this:</p>
-<div class='highlight'><pre><code class='javascript'><span class='p'>{</span>
-    <span class='s2'>&quot;timestamp&quot;</span><span class='o'>:</span> <span class='mf'>1324830675.076</span><span class='p'>,</span>
-    <span class='s2'>&quot;status&quot;</span><span class='o'>:</span> <span class='s2'>&quot;404&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;short_message&quot;</span><span class='o'>:</span> <span class='s2'>&quot;File does not exist: /var/www/no-such-file&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;host&quot;</span><span class='o'>:</span> <span class='s2'>&quot;ord1.product.api0&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;facility&quot;</span><span class='o'>:</span> <span class='s2'>&quot;httpd&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;errno&quot;</span><span class='o'>:</span> <span class='s2'>&quot;ENOENT&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;remote_host&quot;</span><span class='o'>:</span> <span class='s2'>&quot;50.57.61.4&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;remote_port&quot;</span><span class='o'>:</span> <span class='s2'>&quot;40100&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;path&quot;</span><span class='o'>:</span> <span class='s2'>&quot;/var/www/no-such-file&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;uri&quot;</span><span class='o'>:</span> <span class='s2'>&quot;/no-such-file&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;level&quot;</span><span class='o'>:</span> <span class='mi'>4</span><span class='p'>,</span>
-    <span class='s2'>&quot;headers&quot;</span><span class='o'>:</span> <span class='p'>{</span>
-        <span class='o'>&lt;</span><span class='nx'>strong</span><span class='o'>&gt;</span><span class='s2'>&quot;user-agent&quot;</span><span class='o'>:</span> <span class='s2'>&quot;BadAgent/1.0&quot;</span><span class='p'>,</span><span class='o'>&lt;</span><span class='err'>/strong&gt;</span>
-        <span class='s2'>&quot;connection&quot;</span><span class='o'>:</span> <span class='s2'>&quot;close&quot;</span><span class='p'>,</span>
-        <span class='s2'>&quot;accept&quot;</span><span class='o'>:</span> <span class='s2'>&quot;*/*&quot;</span>
-    <span class='p'>},</span>
-    <span class='s2'>&quot;method&quot;</span><span class='o'>:</span> <span class='s2'>&quot;GET&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;unique_id&quot;</span><span class='o'>:</span> <span class='s2'>&quot;.rh-g2Tm.h-ord1.product.api0.r-axAIO3bO.c-9210.ts-1324830675.v-24e946e&quot;</span>
-<span class='p'>}</span>
-</code></pre>
-</div>
+
+<p>Liquid error: No such file or directory - posix_spawnp</p>
+
 <p>This example gives a much richer picture of information about the error. We now have data like the <code>User-Agent</code> in an easily consumable form, we could much more easily figure out that <code>BadAgent/1.0</code> is the cause of our 404s. Other information like the source server and a <a href='http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html'>mod_unique_id</a> hash can be used to correlate multiple log entries across the lifetime of an request.</p>
 
 <p>This information is also expandable. As the knowledge of what our product needs to log increases, it is easy to add more data, and we can safely do this without breaking our System Admins precious Perl scripts.</p>
@@ -115,51 +95,21 @@
 <p><a href='https://github.com/pquerna/node-logmagic'>Log Magic is a small and fast logging library for Node.js</a> that I wrote early on for our needs at Rackspace. It only has a few features, and it is only about 300 lines of code.</p>
 
 <p>Log Magic has the concept of a local logger instance, which is used by a single module for logging. A logger instance automatically populates information like the the <code>facility</code> in a log entry. Here is an example of creating a logger instance for a module named <code>&#39;myapp.api.handler</code> and using it:</p>
-<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>log</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;logmagic&#39;</span><span class='p'>).</span><span class='nx'>local</span><span class='p'>(</span><span class='s1'>&#39;myapp.api.handler&#39;</span><span class='p'>);</span>
 
-<span class='nx'>exports</span><span class='p'>.</span><span class='nx'>badApiHandler</span> <span class='o'>=</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>req</span><span class='p'>,</span> <span class='nx'>res</span><span class='p'>)</span> <span class='p'>{</span>
-  <span class='nx'>log</span><span class='p'>.</span><span class='nx'>dbg</span><span class='p'>(</span><span class='s2'>&quot;Something is wrong&quot;</span><span class='p'>,</span> <span class='p'>{</span><span class='nx'>request</span><span class='o'>:</span> <span class='nx'>req</span><span class='p'>});</span>
-  <span class='nx'>res</span><span class='p'>.</span><span class='nx'>end</span><span class='p'>();</span>
-<span class='p'>};</span>
-</code></pre>
-</div>
+<p>Liquid error: No such file or directory - posix_spawnp</p>
+
 <p>The second feature that Log Magic provides is what I call a &#8220;Log Rewriter&#8221;. This enables the programmer to just consistently pass in the <code>request</code> object, and we will take care of picking out the fields we really want to log. In this example, we ensure the logged object always has an <code>accountId</code> and <code>txnId</code> fields set:</p>
-<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>logmagic</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;logmagic&#39;</span><span class='p'>);</span>
-<span class='nx'>logmagic</span><span class='p'>.</span><span class='nx'>addRewriter</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>(</span><span class='nx'>modulename</span><span class='p'>,</span> <span class='nx'>level</span><span class='p'>,</span> <span class='nx'>msg</span><span class='p'>,</span> <span class='nx'>extra</span><span class='p'>)</span> <span class='p'>{</span>
-  <span class='k'>if</span> <span class='p'>(</span><span class='nx'>extra</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>)</span> <span class='p'>{</span>
-    <span class='k'>if</span> <span class='p'>(</span><span class='nx'>extra</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>.</span><span class='nx'>account</span><span class='p'>)</span> <span class='p'>{</span>
-      <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>accountId</span> <span class='o'>=</span> <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>.</span><span class='nx'>account</span><span class='p'>.</span><span class='nx'>getKey</span><span class='p'>();</span>
-    <span class='p'>}</span>
-    <span class='k'>else</span> <span class='p'>{</span>
-      <span class='cm'>/* unauthenticated user */</span>
-      <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>accountId</span> <span class='o'>=</span> <span class='kc'>null</span><span class='p'>;</span>
-    <span class='p'>}</span>
-    <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>txnId</span> <span class='o'>=</span> <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>.</span><span class='nx'>txnId</span><span class='p'>;</span>
-    <span class='k'>delete</span> <span class='nx'>extra</span><span class='p'>.</span><span class='nx'>request</span><span class='p'>;</span>
-  <span class='p'>}</span>
-  <span class='k'>return</span> <span class='nx'>extra</span><span class='p'>;</span>
-<span class='p'>});</span>
-</code></pre>
-</div>
+
+<p>Liquid error: No such file or directory - posix_spawnp</p>
+
 <p>The final feature of Log Magic is dynamic routes and sinks. For the purposes of this article, we are mostly interested in the <code>graylog2-stderr</code>, which outputs a <a href='http://www.graylog2.org/about/gelf'>GELF JSON format</a> message to <code>stderr</code>:</p>
-<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>logmagic</span> <span class='o'>=</span> <span class='nx'>require</span><span class='p'>(</span><span class='s1'>&#39;logmagic&#39;</span><span class='p'>);</span>
-    <span class='nx'>logmagic</span><span class='p'>.</span><span class='nx'>route</span><span class='p'>(</span><span class='s1'>&#39;__root__&#39;</span><span class='p'>,</span> <span class='nx'>logmagic</span><span class='p'>[</span><span class='s1'>&#39;DEBUG&#39;</span><span class='p'>],</span> <span class='s2'>&quot;graylog2-stderr&quot;</span><span class='p'>);</span>
-</code></pre>
-</div>
+
+<p>Liquid error: No such file or directory - posix_spawnp</p>
+
 <p>With this configuration, if we ran that <code>log.dbg</code> example from above, we would get a message like the following:</p>
-<div class='highlight'><pre><code class='javascript'><span class='p'>{</span>
-    <span class='s2'>&quot;version&quot;</span><span class='o'>:</span> <span class='s2'>&quot;1.0&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;host&quot;</span><span class='o'>:</span> <span class='s2'>&quot;product-api0&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;timestamp&quot;</span><span class='o'>:</span> <span class='mf'>1324936418.221</span><span class='p'>,</span>
-    <span class='s2'>&quot;short_message&quot;</span><span class='o'>:</span> <span class='s2'>&quot;Something is wrong&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;full_message&quot;</span><span class='o'>:</span> <span class='kc'>null</span><span class='p'>,</span>
-    <span class='s2'>&quot;level&quot;</span><span class='o'>:</span> <span class='mi'>7</span><span class='p'>,</span>
-    <span class='s2'>&quot;facility&quot;</span><span class='o'>:</span> <span class='s2'>&quot;myapp.api.handler&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;_accountId&quot;</span><span class='o'>:</span> <span class='s2'>&quot;ac42&quot;</span><span class='p'>,</span>
-    <span class='s2'>&quot;_txnId&quot;</span><span class='o'>:</span> <span class='s2'>&quot;.rh-3dT5.h-product-api0.r-pVDF7IRM.c-0.ts-1324936588828.v-062c3d0&quot;</span>
-<span class='p'>}</span>
-</code></pre>
-</div>
+
+<p>Liquid error: No such file or directory - posix_spawnp</p>
+
 <h3 id='other_implementations'>Other implementations</h3>
 
 <p>There are many other libraries that are starting to emerge that can output logs in a JSON or GELF format:</p>
@@ -234,7 +184,41 @@
         </div>
     </div>
 
+      <hr/>
+  <br/>
+  <h4>Add Comment</h4>
+  <div class="row comment-form">
+    <div class="span8">
+      <p>All comments are moderated via public <a href="https://github.com/pquerna/journal.paul.querna.org/pulls">Pull Requests</a>.  All comment fields, including your client IP address are visible.</p>
+      <form method="POST" action="/comments.py" class="form-vertical">
+        <fieldset>
+          <input type="hidden" name="targetpost" value="2011-12-26-log-for-machines-in-json" />
+            <label for="name">Name:</label>
+            <input class="span3" type="text" size="30" name="name" />
+            <label for="email">E-Mail:</label>
+            <input class="span3" type="text" size="30" name="email" />
+            <span class="help-inline">(optional)</span>
+            <label for="website">Website:</label>
+            <input class="span3" type="text" size="30" name="website" />
+            <span class="help-inline">(optional)</span>
+            <label for="comment">Comment:</label>
+            <textarea class="span8" name="comment" rows="4" cols="60" ></textarea>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Submit Comment</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <hr/>
+  <br/>
+  <h4>Comments</h4>
     
+  <hr/>
+  <br/>
+  
+
   </div>
   
   <div class="span4">

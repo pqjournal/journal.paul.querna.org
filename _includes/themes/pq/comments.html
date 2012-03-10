@@ -6,7 +6,7 @@
       <p>All comments are moderated via public <a href="https://github.com/pquerna/journal.paul.querna.org/pulls">Pull Requests</a>.  All comment fields, including your client IP address are visible.</p>
       <form method="POST" action="/comments.py" class="form-vertical">
         <fieldset>
-          <input type="hidden" name="targetpost" value="{{ page.comment_slug }}" />
+          <input type="hidden" name="targetpost" value="{{ page.comments_slug }}" />
             <label for="name">Name:</label>
             <input class="span3" type="text" size="30" name="name" />
             <label for="email">E-Mail:</label>

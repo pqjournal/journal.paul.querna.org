@@ -70,7 +70,41 @@
         </div>
     </div>
 
+      <hr/>
+  <br/>
+  <h4>Add Comment</h4>
+  <div class="row comment-form">
+    <div class="span8">
+      <p>All comments are moderated via public <a href="https://github.com/pquerna/journal.paul.querna.org/pulls">Pull Requests</a>.  All comment fields, including your client IP address are visible.</p>
+      <form method="POST" action="/comments.py" class="form-vertical">
+        <fieldset>
+          <input type="hidden" name="targetpost" value="2004-07-01-soap-isnt-simple" />
+            <label for="name">Name:</label>
+            <input class="span3" type="text" size="30" name="name" />
+            <label for="email">E-Mail:</label>
+            <input class="span3" type="text" size="30" name="email" />
+            <span class="help-inline">(optional)</span>
+            <label for="website">Website:</label>
+            <input class="span3" type="text" size="30" name="website" />
+            <span class="help-inline">(optional)</span>
+            <label for="comment">Comment:</label>
+            <textarea class="span8" name="comment" rows="4" cols="60" ></textarea>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Submit Comment</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <hr/>
+  <br/>
+  <h4>Comments</h4>
     
+  <hr/>
+  <br/>
+  
+
   </div>
   
   <div class="span4">

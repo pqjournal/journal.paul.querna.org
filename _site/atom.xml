@@ -4,7 +4,7 @@
  <title>Paul's Journal</title>
  <link type="application/atom+xml" href="http://journal.paul.querna.org/atom.xml" rel="self"/>
  <link type="text/html" href="http://journal.paul.querna.org"/>
- <updated>2012-03-09T22:11:39+09:00</updated>
+ <updated>2012-03-10T15:45:02+09:00</updated>
  <id>http://journal.paul.querna.org</id>
  <author>
    <name>Paul Querna</name>
@@ -178,10 +178,9 @@
 &lt;h2 id='an_example_of_the_problem'&gt;An example of the problem&lt;/h2&gt;
 
 &lt;p&gt;An example is this classic error message inside the &lt;a href='http://httpd.apache.org/'&gt;Apache HTTP Server&lt;/a&gt;. The following code is called any time a client hits a URL that doesn&amp;#8217;t exist on the file system:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='c'&gt;&lt;span class='n'&gt;ap_log_rerror&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;APLOG_MARK&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;APLOG_INFO&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;r&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-  &lt;span class='s'&gt;&amp;quot;File does not exist: %s&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;r&lt;/span&gt;&lt;span class='o'&gt;-&amp;gt;&lt;/span&gt;&lt;span class='n'&gt;filename&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
+
 &lt;p&gt;This would generate a log message like the following in your &lt;code&gt;error.log&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;[Mon Dec 26 09:14:46 2011] [info] [client 50.57.61.4] File does not exist: /var/www/no-such-file&lt;/code&gt;&lt;/pre&gt;
@@ -193,28 +192,9 @@
 &lt;h2 id='what_if_we_logged_everything_into_json'&gt;What if we logged everything into JSON?&lt;/h2&gt;
 
 &lt;p&gt;If we produced a JSON object which contained the same message, it might look something like this:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;timestamp&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='mf'&gt;1324830675.076&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;status&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;404&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;short_message&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;File does not exist: /var/www/no-such-file&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;host&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;ord1.product.api0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;facility&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;httpd&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;errno&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;ENOENT&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;remote_host&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;50.57.61.4&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;remote_port&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;40100&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;/var/www/no-such-file&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;uri&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;/no-such-file&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='mi'&gt;4&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;headers&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='nx'&gt;strong&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;user-agent&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;BadAgent/1.0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='err'&gt;/strong&amp;gt;&lt;/span&gt;
-        &lt;span class='s2'&gt;&amp;quot;connection&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;close&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='s2'&gt;&amp;quot;accept&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;*/*&amp;quot;&lt;/span&gt;
-    &lt;span class='p'&gt;},&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;method&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;GET&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;unique_id&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;.rh-g2Tm.h-ord1.product.api0.r-axAIO3bO.c-9210.ts-1324830675.v-24e946e&amp;quot;&lt;/span&gt;
-&lt;span class='p'&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
+
 &lt;p&gt;This example gives a much richer picture of information about the error. We now have data like the &lt;code&gt;User-Agent&lt;/code&gt; in an easily consumable form, we could much more easily figure out that &lt;code&gt;BadAgent/1.0&lt;/code&gt; is the cause of our 404s. Other information like the source server and a &lt;a href='http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html'&gt;mod_unique_id&lt;/a&gt; hash can be used to correlate multiple log entries across the lifetime of an request.&lt;/p&gt;
 
 &lt;p&gt;This information is also expandable. As the knowledge of what our product needs to log increases, it is easy to add more data, and we can safely do this without breaking our System Admins precious Perl scripts.&lt;/p&gt;
@@ -232,51 +212,21 @@
 &lt;p&gt;&lt;a href='https://github.com/pquerna/node-logmagic'&gt;Log Magic is a small and fast logging library for Node.js&lt;/a&gt; that I wrote early on for our needs at Rackspace. It only has a few features, and it is only about 300 lines of code.&lt;/p&gt;
 
 &lt;p&gt;Log Magic has the concept of a local logger instance, which is used by a single module for logging. A logger instance automatically populates information like the the &lt;code&gt;facility&lt;/code&gt; in a log entry. Here is an example of creating a logger instance for a module named &lt;code&gt;&amp;#39;myapp.api.handler&lt;/code&gt; and using it:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;log&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;logmagic&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;local&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;myapp.api.handler&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
 
-&lt;span class='nx'&gt;exports&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;badApiHandler&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;req&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;res&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-  &lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;dbg&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;Something is wrong&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;req&lt;/span&gt;&lt;span class='p'&gt;});&lt;/span&gt;
-  &lt;span class='nx'&gt;res&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;end&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
-&lt;span class='p'&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
+
 &lt;p&gt;The second feature that Log Magic provides is what I call a &amp;#8220;Log Rewriter&amp;#8221;. This enables the programmer to just consistently pass in the &lt;code&gt;request&lt;/code&gt; object, and we will take care of picking out the fields we really want to log. In this example, we ensure the logged object always has an &lt;code&gt;accountId&lt;/code&gt; and &lt;code&gt;txnId&lt;/code&gt; fields set:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;logmagic&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;logmagic&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-&lt;span class='nx'&gt;logmagic&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;addRewriter&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;modulename&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;level&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;msg&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-  &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;account&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-      &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;accountId&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;account&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;getKey&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
-    &lt;span class='p'&gt;}&lt;/span&gt;
-    &lt;span class='k'&gt;else&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-      &lt;span class='cm'&gt;/* unauthenticated user */&lt;/span&gt;
-      &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;accountId&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kc'&gt;null&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-    &lt;span class='p'&gt;}&lt;/span&gt;
-    &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;txnId&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;txnId&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-    &lt;span class='k'&gt;delete&lt;/span&gt; &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;request&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-  &lt;span class='p'&gt;}&lt;/span&gt;
-  &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;extra&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-&lt;span class='p'&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
+
 &lt;p&gt;The final feature of Log Magic is dynamic routes and sinks. For the purposes of this article, we are mostly interested in the &lt;code&gt;graylog2-stderr&lt;/code&gt;, which outputs a &lt;a href='http://www.graylog2.org/about/gelf'&gt;GELF JSON format&lt;/a&gt; message to &lt;code&gt;stderr&lt;/code&gt;:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;logmagic&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;logmagic&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-    &lt;span class='nx'&gt;logmagic&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;route&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;__root__&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;logmagic&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;DEBUG&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;graylog2-stderr&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
+
 &lt;p&gt;With this configuration, if we ran that &lt;code&gt;log.dbg&lt;/code&gt; example from above, we would get a message like the following:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;version&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;1.0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;host&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;product-api0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;timestamp&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='mf'&gt;1324936418.221&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;short_message&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;Something is wrong&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;full_message&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='kc'&gt;null&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='mi'&gt;7&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;facility&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;myapp.api.handler&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;_accountId&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;ac42&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='s2'&gt;&amp;quot;_txnId&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;.rh-3dT5.h-product-api0.r-pVDF7IRM.c-0.ts-1324936588828.v-062c3d0&amp;quot;&lt;/span&gt;
-&lt;span class='p'&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
+
 &lt;h3 id='other_implementations'&gt;Other implementations&lt;/h3&gt;
 
 &lt;p&gt;There are many other libraries that are starting to emerge that can output logs in a JSON or GELF format:&lt;/p&gt;
@@ -599,40 +549,13 @@
 &lt;p&gt;Isaac answered my questions about private NPM registries, but &lt;a href='https://github.com/mranney'&gt;Matt Ranney&lt;/a&gt; explained a more interesting problem. He was dialed into a conference call line for Node Office hours (he is currently living in Hawaii.) Matt explained that he is using the new &lt;a href='http://nodejs.org/docs/v0.4/api/tls.html'&gt;TLS module in Node v0.4&lt;/a&gt;, and it was using &lt;strong&gt;1 megabyte of memory per connection!&lt;/strong&gt; Using 1mb per connection made us think there must be something wrong in Node.js itself, so we wrote up a simple test case client and server.&lt;/p&gt;
 
 &lt;p&gt;The TLS server says &amp;#8220;welcome&amp;#8221; to a newly connected client, and then echos anything it receives back to the client:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;tls&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;tls&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;fs&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
 
-&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;options&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-  &lt;span class='nx'&gt;key&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;fs&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;readFileSync&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;test_key.pem&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;),&lt;/span&gt;
-  &lt;span class='nx'&gt;cert&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;fs&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;readFileSync&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;test_cert.pem&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;),&lt;/span&gt;
-&lt;span class='p'&gt;};&lt;/span&gt;
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
 
-&lt;span class='nx'&gt;tls&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;createServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;options&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-  &lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;write&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;welcome!\n&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-  &lt;span class='nx'&gt;console&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;got client&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-  &lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;pipe&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-&lt;span class='p'&gt;}).&lt;/span&gt;&lt;span class='nx'&gt;listen&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;8000&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-&lt;span class='nx'&gt;console&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;127.0.0.1:8000&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 &lt;p&gt;The client spawns 200 connections, and writes &amp;#8216;hello&amp;#8217; to the server every 5 seconds for each connection:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;tls&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;require&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;tls&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
 
-&lt;span class='kd'&gt;function&lt;/span&gt; &lt;span class='nx'&gt;go&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-  &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;s&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kc'&gt;null&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-  &lt;span class='nx'&gt;s&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;tls&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;connect&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;8000&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s1'&gt;&amp;#39;127.0.0.1&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='nx'&gt;setInterval&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-      &lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;write&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s1'&gt;&amp;#39;hello\n&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-    &lt;span class='p'&gt;},&lt;/span&gt; &lt;span class='mi'&gt;5000&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-  &lt;span class='p'&gt;});&lt;/span&gt;  
-&lt;span class='p'&gt;};&lt;/span&gt;
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
 
-&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
-&lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;i&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt; &lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='mi'&gt;200&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt; &lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-  &lt;span class='nx'&gt;go&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
-&lt;span class='p'&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 &lt;p&gt;Running the client and server on my laptop, the server used almost 200 megabytes of memory. This meant the high memory usage per-connection is not just a problem with Matt&amp;#8217;s application, but something deeper in Node.js.&lt;/p&gt;
 
 &lt;p&gt;At this point the Linux users are trembling, unsure how to debug the issue. Luckily, I still use &lt;a href='http://en.wikipedia.org/wiki/Mac_OS_X'&gt;Steve&amp;#8217;s operating system&lt;/a&gt;, and I fired up &lt;a href='http://en.wikipedia.org/wiki/Instruments_(application'&gt;Instruments.app&lt;/a&gt;) to start taking a look at the problem.&lt;/p&gt;
@@ -660,12 +583,9 @@
 &lt;p&gt;Recent versions of OpenSSL (&amp;gt;1.0.0) have added &lt;code&gt;SSL_OP_NO_COMPRESSION&lt;/code&gt; that can be disable compression per-connection via &lt;a href='http://www.openssl.org/docs/ssl/SSL_CTX_set_options.html'&gt;SSL_CTX_set_options&lt;/a&gt;. However, most Linux distributions are still using variations of OpenSSL 0.9.8, meaning this option isn&amp;#8217;t viable for most users.&lt;/p&gt;
 
 &lt;p&gt;As an alternative, it is possible to zero out the global list of all OpenSSL compression methods after initializing OpenSSL:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='c'&gt;&lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='nf'&gt;disable_openssl_compression&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-  &lt;span class='n'&gt;STACK_OF&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SSL_COMP&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;comp_methods&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;SSL_COMP_get_compression_methods&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;
-  &lt;span class='n'&gt;sk_SSL_COMP_zero&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;comp_methods&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
-&lt;span class='p'&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
+
 &lt;p&gt;This is a &lt;em&gt;terrible hack&lt;/em&gt;, but it enabled us to test the effect of disabling compression on the server side, and after seeing the results, I think it is worth it.&lt;/p&gt;
 
 &lt;p&gt;With this change, we ran the test again, and see an amazing thing, we are only using about 15 megabytes of memory, and we can actually see the v8 garbage collector doing work now: &lt;a href='/wp-content/uploads/2011/04/all-fixed.jpg'&gt;&lt;img src='/wp-content/uploads/2011/04/all-fixed.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
@@ -681,25 +601,9 @@
 &lt;p&gt;At &lt;a href='https://www.cloudkick.com/'&gt;Rackspace/Cloudkick&lt;/a&gt; we use &lt;a href='http://twistedmatrix.com/trac/'&gt;Twisted Python&lt;/a&gt; for many production services, including several with many thousands of open TLS connections. We had always just assumed the high memory usage was an issue in Twisted Python itself, not something in OpenSSL. We had tried looking at the memory usage using &lt;a href='http://www.aminus.net/wiki/Dowser'&gt;Dowser&lt;/a&gt;, but we never got far, as it always looked like Python wasn&amp;#8217;t misbehaving. This now makes sense, because the OpenSSL objects used in &lt;a href='http://packages.python.org/pyOpenSSL/'&gt;pyOpenSSL&lt;/a&gt; wouldn&amp;#8217;t be counted by Dowser.&lt;/p&gt;
 
 &lt;p&gt;pyOpenSSL is a limited binding of the most useful functions in OpenSSL, so it doesn&amp;#8217;t provide bindings to the functions that can manipulate the OpenSSL Compression settings. I decided to use the &lt;a href='http://docs.python.org/library/ctypes.html'&gt;ctypes module&lt;/a&gt; to avoid needing to distribute a C based extension to disable OpenSSL compression:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;disableSSLCompression&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-  &lt;span class='k'&gt;try&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;ctypes&lt;/span&gt;
-    &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;glob&lt;/span&gt;
-    &lt;span class='n'&gt;openssl&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;CDLL&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;None&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RTLD_GLOBAL&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-    &lt;span class='k'&gt;try&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-      &lt;span class='n'&gt;f&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;openssl&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;SSL_COMP_get_compression_methods&lt;/span&gt;
-    &lt;span class='k'&gt;except&lt;/span&gt; &lt;span class='ne'&gt;AttributeError&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-      &lt;span class='n'&gt;ssllib&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nb'&gt;sorted&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;glob&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;glob&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;/usr/lib/libssl.so.*&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;))[&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
-      &lt;span class='n'&gt;openssl&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;CDLL&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ssllib&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RTLD_GLOBAL&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
 
-    &lt;span class='n'&gt;openssl&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;SSL_COMP_get_compression_methods&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;restype&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;c_void_p&lt;/span&gt;
-    &lt;span class='n'&gt;openssl&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;sk_zero&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;argtypes&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;ctypes&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;c_void_p&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
-    &lt;span class='n'&gt;openssl&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;sk_zero&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;openssl&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;SSL_COMP_get_compression_methods&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
-  &lt;span class='k'&gt;except&lt;/span&gt; &lt;span class='ne'&gt;Exception&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;e&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='n'&gt;log&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;msg&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;disableSSLCompression: Failed:&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-    &lt;span class='n'&gt;log&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;msg&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;e&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
+
 &lt;p&gt;We deployed this to one Twisted Python Service as a test, and you can see the impact on memory use, dropping form 1.15 gigabytes to around 300 megabytes:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href='/wp-content/uploads/2011/04/twisted-memory.jpg'&gt;&lt;img src='/wp-content/uploads/2011/04/twisted-memory.jpg' alt='' /&gt;&lt;/a&gt;&lt;/p&gt;
